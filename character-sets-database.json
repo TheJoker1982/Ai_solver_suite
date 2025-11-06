@@ -1,0 +1,200 @@
+{
+  "version": "1.0.0",
+  "updated": "2025-10-31",
+  "description": "Comprehensive character set library for crypto and puzzle solving",
+
+  "iana_standard_charsets": {
+    "us_ascii": {
+      "name": "US-ASCII",
+      "charset": "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~",
+      "size": 94,
+      "description": "Standard ASCII printable characters",
+      "use_cases": ["General text", "Passwords", "Keys"]
+    },
+    "alphanumeric": {
+      "name": "Alphanumeric",
+      "charset": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+      "size": 62,
+      "description": "Letters and numbers only",
+      "use_cases": ["Passwords", "Codes", "Identifiers"]
+    },
+    "numeric": {
+      "name": "Numeric",
+      "charset": "0123456789",
+      "size": 10,
+      "description": "Digits only",
+      "use_cases": ["PINs", "Codes", "Numbers"]
+    },
+    "lowercase": {
+      "name": "Lowercase Letters",
+      "charset": "abcdefghijklmnopqrstuvwxyz",
+      "size": 26,
+      "description": "Lowercase alphabet",
+      "use_cases": ["Simple passwords", "Codes"]
+    },
+    "uppercase": {
+      "name": "Uppercase Letters",
+      "charset": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "size": 26,
+      "description": "Uppercase alphabet",
+      "use_cases": ["Codes", "Abbreviations"]
+    }
+  },
+
+  "crypto_specific_charsets": {
+    "base58": {
+      "name": "Base58 (Bitcoin)",
+      "charset": "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz",
+      "size": 58,
+      "description": "Bitcoin Base58 encoding (excludes 0, O, I, l)",
+      "use_cases": ["Bitcoin addresses", "WIF keys", "BIP32 seeds"],
+      "note": "Designed to avoid visual ambiguity"
+    },
+    "base58check": {
+      "name": "Base58Check",
+      "charset": "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz",
+      "size": 58,
+      "description": "Base58 with checksum validation",
+      "use_cases": ["Bitcoin legacy addresses", "Private keys"],
+      "validation": "4-byte checksum"
+    },
+    "bech32": {
+      "name": "Bech32 (SegWit)",
+      "charset": "qpzry9x8gf2tvdw0s3jn54khce6mua7l",
+      "size": 32,
+      "description": "Bitcoin SegWit address encoding",
+      "use_cases": ["SegWit addresses (bc1...)", "Lightning Network"],
+      "prefix": "bc1",
+      "error_detection": "BCH code"
+    },
+    "hexadecimal": {
+      "name": "Hexadecimal",
+      "charset": "0123456789abcdef",
+      "size": 16,
+      "description": "Hex encoding",
+      "use_cases": ["Private keys", "Hashes", "Raw data"],
+      "uppercase_variant": "0123456789ABCDEF"
+    },
+    "mnemonic_wordlist": {
+      "name": "BIP39 Mnemonic Words",
+      "size": 2048,
+      "description": "BIP39 standard word list for seed phrases",
+      "languages": ["english", "spanish", "french", "italian", "japanese", "korean", "chinese_simplified", "chinese_traditional"],
+      "use_cases": ["12-word seeds", "24-word seeds"],
+      "note": "First 4 letters are unique for validation"
+    }
+  },
+
+  "puzzle_solving_charsets": {
+    "bitcoin_private_key_hex": {
+      "name": "Bitcoin Private Key (Hex)",
+      "charset": "0123456789abcdef",
+      "length": 64,
+      "description": "64-character hexadecimal private key",
+      "range": "0000000000000000000000000000000000000000000000000000000000000001 to FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364140"
+    },
+    "wif_compressed": {
+      "name": "WIF Compressed",
+      "prefix": "K or L",
+      "length": 52,
+      "description": "Wallet Import Format (compressed)",
+      "charset": "base58"
+    },
+    "wif_uncompressed": {
+      "name": "WIF Uncompressed",
+      "prefix": "5",
+      "length": 51,
+      "description": "Wallet Import Format (uncompressed)",
+      "charset": "base58"
+    }
+  },
+
+  "dsl_operations": {
+    "enumeration": {
+      "description": "Generate all possible combinations in deterministic order",
+      "operations": [
+        "sequence(charset, length) - Generate all sequences of specific length",
+        "range(start, end) - Generate range with custom charset",
+        "permutations(elements) - All orderings of elements",
+        "combinations(elements, k) - All k-sized subsets"
+      ]
+    },
+    "transformation": {
+      "description": "Transform character sets and strings",
+      "operations": [
+        "reverse(string) - Reverse character order",
+        "uppercase(string) - Convert to uppercase",
+        "lowercase(string) - Convert to lowercase",
+        "encode(string, charset) - Encode using custom charset",
+        "decode(string, charset) - Decode from custom charset"
+      ]
+    },
+    "validation": {
+      "description": "Validate strings against character sets",
+      "operations": [
+        "contains(string, charset) - Check if all chars in charset",
+        "validate_base58(string) - Validate Base58 encoding",
+        "validate_bech32(string) - Validate Bech32 with checksum",
+        "checksum(data) - Calculate checksum"
+      ]
+    },
+    "analysis": {
+      "description": "Analyze character sets and patterns",
+      "operations": [
+        "entropy(charset, length) - Calculate entropy bits",
+        "collision_probability(charset, length, attempts) - Collision chance",
+        "search_space_size(charset, length) - Total combinations",
+        "pattern_match(string, pattern) - Find pattern matches"
+      ]
+    }
+  },
+
+  "common_patterns": {
+    "bitcoin_address_p2pkh": {
+      "pattern": "^1[a-km-zA-HJ-NP-Z1-9]{25,34}$",
+      "description": "Legacy Bitcoin address (P2PKH)",
+      "example": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+    },
+    "bitcoin_address_p2sh": {
+      "pattern": "^3[a-km-zA-HJ-NP-Z1-9]{25,34}$",
+      "description": "Pay-to-Script-Hash address",
+      "example": "3J98t1WpEZ73CNmYviecrnyiWrnqRhWNLy"
+    },
+    "bitcoin_address_bech32": {
+      "pattern": "^bc1[a-z0-9]{39,87}$",
+      "description": "Native SegWit address (Bech32)",
+      "example": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq"
+    },
+    "ethereum_address": {
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Ethereum address",
+      "example": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
+    }
+  },
+
+  "entropy_calculations": {
+    "examples": {
+      "8_char_lowercase": {
+        "charset_size": 26,
+        "length": 8,
+        "total_combinations": "208827064576",
+        "entropy_bits": 37.6,
+        "time_to_crack_1b_per_sec": "3.5 minutes"
+      },
+      "12_char_alphanumeric": {
+        "charset_size": 62,
+        "length": 12,
+        "total_combinations": "3.22e21",
+        "entropy_bits": 71.5,
+        "time_to_crack_1b_per_sec": "102 years"
+      },
+      "64_char_hex": {
+        "charset_size": 16,
+        "length": 64,
+        "total_combinations": "1.16e77",
+        "entropy_bits": 256,
+        "time_to_crack_1b_per_sec": "Age of universe × 10^60"
+      }
+    }
+  }
+}

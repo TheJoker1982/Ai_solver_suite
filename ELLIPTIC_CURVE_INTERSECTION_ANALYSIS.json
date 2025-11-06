@@ -1,0 +1,1780 @@
+{
+  "coordinate_analysis_complete": true,
+  "keys_analyzed": 10,
+  "coordinate_data": [
+    {
+      "key_index": 0,
+      "private_key": "ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74",
+      "method": "direct_segment",
+      "x_coordinate": "0x22d27612f9cedc2d5eead449ff6c0c04b511c0b33b9801e322e915e207e4b6",
+      "y_coordinate": "0xdf5c3bdc738550907afa44357819b727f1cca424bf5bd76bd61039092276cb",
+      "x_80_high": "0x22d27612f9cedc2d5e",
+      "x_80_low": "0x9801e322e915e207e4b6",
+      "y_80_high": "0xdf5c3bdc738550907a",
+      "y_80_low": "0x5bd76bd61039092276cb",
+      "intersection_candidates": [
+        {
+          "combination": "X_high_X_low",
+          "value": "0x22d27612f9cedc2d5e9801e322e915e207e4b6",
+          "bit_length": 150
+        },
+        {
+          "combination": "X_high_Y_low",
+          "value": "0x22d27612f9cedc2d5e5bd76bd61039092276cb",
+          "bit_length": 150
+        },
+        {
+          "combination": "Y_high_X_low",
+          "value": "0xdf5c3bdc738550907a9801e322e915e207e4b6",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_Y_low",
+          "value": "0xdf5c3bdc738550907a5bd76bd61039092276cb",
+          "bit_length": 152
+        }
+      ]
+    },
+    {
+      "key_index": 1,
+      "private_key": "c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404dd",
+      "method": "direct_segment",
+      "x_coordinate": "0xfe6b8c0309e380f2636143b3b4d12a448b002b5eeeba02eb72659ed2e6eae4",
+      "y_coordinate": "0xd53cb06404dba91617c731318feaa3e5138c72caa3dcaa4fd46e15caba83a8",
+      "x_80_high": "0xfe6b8c0309e380f263",
+      "x_80_low": "0xba02eb72659ed2e6eae4",
+      "y_80_high": "0xd53cb06404dba91617",
+      "y_80_low": "0xdcaa4fd46e15caba83a8",
+      "intersection_candidates": [
+        {
+          "combination": "X_high_X_low",
+          "value": "0xfe6b8c0309e380f263ba02eb72659ed2e6eae4",
+          "bit_length": 152
+        },
+        {
+          "combination": "X_high_Y_low",
+          "value": "0xfe6b8c0309e380f263dcaa4fd46e15caba83a8",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_X_low",
+          "value": "0xd53cb06404dba91617ba02eb72659ed2e6eae4",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_Y_low",
+          "value": "0xd53cb06404dba91617dcaa4fd46e15caba83a8",
+          "bit_length": 152
+        }
+      ]
+    },
+    {
+      "key_index": 2,
+      "private_key": "020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f1437",
+      "method": "direct_segment",
+      "x_coordinate": "0x84c93887188fc100ab9b818b996f1be1b30b26a6fa17c3526e7843e13c3717",
+      "y_coordinate": "0x90e4611dca6cefc583bbfb8c7b6c153c9f9c2eb5662dd80e9f3e2569e1a0de",
+      "x_80_high": "0x84c93887188fc100ab",
+      "x_80_low": "0x17c3526e7843e13c3717",
+      "y_80_high": "0x90e4611dca6cefc583",
+      "y_80_low": "0x2dd80e9f3e2569e1a0de",
+      "intersection_candidates": [
+        {
+          "combination": "X_high_X_low",
+          "value": "0x84c93887188fc100ab17c3526e7843e13c3717",
+          "bit_length": 152
+        },
+        {
+          "combination": "X_high_Y_low",
+          "value": "0x84c93887188fc100ab2dd80e9f3e2569e1a0de",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_X_low",
+          "value": "0x90e4611dca6cefc58317c3526e7843e13c3717",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_Y_low",
+          "value": "0x90e4611dca6cefc5832dd80e9f3e2569e1a0de",
+          "bit_length": 152
+        }
+      ]
+    },
+    {
+      "key_index": 3,
+      "private_key": "ef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6",
+      "method": "direct_segment",
+      "x_coordinate": "0xbe4ba23917d98d9845f24413b9e29b69a69b102ae0917a8709eecf59b27581",
+      "y_coordinate": "0x831e39f9e5cbff6d3a820bb48fccc0ba070e5014f76d714103cedbaa18f353",
+      "x_80_high": "0xbe4ba23917d98d9845",
+      "x_80_low": "0x917a8709eecf59b27581",
+      "y_80_high": "0x831e39f9e5cbff6d3a",
+      "y_80_low": "0x6d714103cedbaa18f353",
+      "intersection_candidates": [
+        {
+          "combination": "X_high_X_low",
+          "value": "0xbe4ba23917d98d9845917a8709eecf59b27581",
+          "bit_length": 152
+        },
+        {
+          "combination": "X_high_Y_low",
+          "value": "0xbe4ba23917d98d98456d714103cedbaa18f353",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_X_low",
+          "value": "0x831e39f9e5cbff6d3a917a8709eecf59b27581",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_Y_low",
+          "value": "0x831e39f9e5cbff6d3a6d714103cedbaa18f353",
+          "bit_length": 152
+        }
+      ]
+    },
+    {
+      "key_index": 4,
+      "private_key": "4fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7ed",
+      "method": "direct_segment",
+      "x_coordinate": "0xbba8588e0fbbb9bbeb6f1e5159def164373d100fc6bf716b4597ffef465d3",
+      "y_coordinate": "0x9a1393c769f3c2471fb94bc9d27d7aecd272167df6454c5fa6f8b2138eaacf",
+      "x_80_high": "0xbba8588e0fbbb9bbe",
+      "x_80_low": "0x6bf716b4597ffef465d3",
+      "y_80_high": "0x9a1393c769f3c2471f",
+      "y_80_low": "0x454c5fa6f8b2138eaacf",
+      "intersection_candidates": [
+        {
+          "combination": "X_high_X_low",
+          "value": "0xbba8588e0fbbb9bbe6bf716b4597ffef465d3",
+          "bit_length": 148
+        },
+        {
+          "combination": "X_high_Y_low",
+          "value": "0xbba8588e0fbbb9bbe454c5fa6f8b2138eaacf",
+          "bit_length": 148
+        },
+        {
+          "combination": "Y_high_X_low",
+          "value": "0x9a1393c769f3c2471f6bf716b4597ffef465d3",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_Y_low",
+          "value": "0x9a1393c769f3c2471f454c5fa6f8b2138eaacf",
+          "bit_length": 152
+        }
+      ]
+    },
+    {
+      "key_index": 5,
+      "private_key": "f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe6",
+      "method": "direct_segment",
+      "x_coordinate": "0xb29ec3384b706d3e09e8317fcb7c8a5882974ed1b7feeb8fcaed8e0e985a90",
+      "y_coordinate": "0xa9904fbb9bcdfc4f771c936eceb974d757e8e7d2ff078de731b4e09bef302f",
+      "x_80_high": "0xb29ec3384b706d3e09",
+      "x_80_low": "0xfeeb8fcaed8e0e985a90",
+      "y_80_high": "0xa9904fbb9bcdfc4f77",
+      "y_80_low": "0x78de731b4e09bef302f",
+      "intersection_candidates": [
+        {
+          "combination": "X_high_X_low",
+          "value": "0xb29ec3384b706d3e09feeb8fcaed8e0e985a90",
+          "bit_length": 152
+        },
+        {
+          "combination": "X_high_Y_low",
+          "value": "0xb29ec3384b706d3e09078de731b4e09bef302f",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_X_low",
+          "value": "0xa9904fbb9bcdfc4f77feeb8fcaed8e0e985a90",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_Y_low",
+          "value": "0xa9904fbb9bcdfc4f77078de731b4e09bef302f",
+          "bit_length": 152
+        }
+      ]
+    },
+    {
+      "key_index": 6,
+      "private_key": "ee386bfb5a899fa5ae9f24117c4b1fe649286651ece45b3dc2007cb8a163bf05",
+      "method": "direct_segment",
+      "x_coordinate": "0x603be1f615b3d0ecf9c2ce5be85ff05c4d0aeecbea9494d5c015474a5e3bb9",
+      "y_coordinate": "0xe8353bd3efb58077fcdeba37c737ccc0afdc25667ca49efc0c7cd11ad3517c",
+      "x_80_high": "0x603be1f615b3d0ecf9",
+      "x_80_low": "0x9494d5c015474a5e3bb9",
+      "y_80_high": "0xe8353bd3efb58077fc",
+      "y_80_low": "0xa49efc0c7cd11ad3517c",
+      "intersection_candidates": [
+        {
+          "combination": "X_high_X_low",
+          "value": "0x603be1f615b3d0ecf99494d5c015474a5e3bb9",
+          "bit_length": 151
+        },
+        {
+          "combination": "X_high_Y_low",
+          "value": "0x603be1f615b3d0ecf9a49efc0c7cd11ad3517c",
+          "bit_length": 151
+        },
+        {
+          "combination": "Y_high_X_low",
+          "value": "0xe8353bd3efb58077fc9494d5c015474a5e3bb9",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_Y_low",
+          "value": "0xe8353bd3efb58077fca49efc0c7cd11ad3517c",
+          "bit_length": 152
+        }
+      ]
+    },
+    {
+      "key_index": 7,
+      "private_key": "49286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f",
+      "method": "direct_segment",
+      "x_coordinate": "0x4dc90747d8114cd0a157236164eebd63200365ec059fca4867ecd1b097543f",
+      "y_coordinate": "0xf17daf1dae39253a4719840490c0866cf8440c289080fef37818eaf9d8c5eb",
+      "x_80_high": "0x4dc90747d8114cd0a1",
+      "x_80_low": "0x9fca4867ecd1b097543f",
+      "y_80_high": "0xf17daf1dae39253a47",
+      "y_80_low": "0x80fef37818eaf9d8c5eb",
+      "intersection_candidates": [
+        {
+          "combination": "X_high_X_low",
+          "value": "0x4dc90747d8114cd0a19fca4867ecd1b097543f",
+          "bit_length": 151
+        },
+        {
+          "combination": "X_high_Y_low",
+          "value": "0x4dc90747d8114cd0a180fef37818eaf9d8c5eb",
+          "bit_length": 151
+        },
+        {
+          "combination": "Y_high_X_low",
+          "value": "0xf17daf1dae39253a479fca4867ecd1b097543f",
+          "bit_length": 152
+        },
+        {
+          "combination": "Y_high_Y_low",
+          "value": "0xf17daf1dae39253a4780fef37818eaf9d8c5eb",
+          "bit_length": 152
+        }
+      ]
+    },
+    {
+      "key_index": 8,
+      "private_key": "98da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c62f356208552bb",
+      "method": "direct_segment",
+      "x_coordinate": "0x2346843b542bd14179dbdcf3f56bd822d1623221c644aef66f6c6ee14e5a92",
+      "y_coordinate": "0x865cc08d55632f44c16f4c85371d3aa44e80c8ec52492abb249cf44f6c4c6",
+      "x_80_high": "0x2346843b542bd14179",
+      "x_80_low": "0x44aef66f6c6ee14e5a92",
+      "y_80_high": "0x865cc08d55632f44c",
+      "y_80_low": "0x2492abb249cf44f6c4c6",
+      "intersection_candidates": [
+        {
+          "combination": "X_high_X_low",
+          "value": "0x2346843b542bd1417944aef66f6c6ee14e5a92",
+          "bit_length": 150
+        },
+        {
+          "combination": "X_high_Y_low",
+          "value": "0x2346843b542bd141792492abb249cf44f6c4c6",
+          "bit_length": 150
+        },
+        {
+          "combination": "Y_high_X_low",
+          "value": "0x865cc08d55632f44c44aef66f6c6ee14e5a92",
+          "bit_length": 148
+        },
+        {
+          "combination": "Y_high_Y_low",
+          "value": "0x865cc08d55632f44c2492abb249cf44f6c4c6",
+          "bit_length": 148
+        }
+      ]
+    },
+    {
+      "key_index": 9,
+      "private_key": "83655d23dca3ad961c62f356208552bb9ed529077096966d670c354e4abc9804",
+      "method": "direct_segment",
+      "x_coordinate": "0xb952d74427dd132a320f7f5fd934931c591f6656036a12668fd94c52ec832",
+      "y_coordinate": "0x7ce6113cb6e58827ec92206e41862f6284a3eac3f778ded56562f989db2947",
+      "x_80_high": "0xb952d74427dd132a3",
+      "x_80_low": "0x36a12668fd94c52ec832",
+      "y_80_high": "0x7ce6113cb6e58827ec",
+      "y_80_low": "0x78ded56562f989db2947",
+      "intersection_candidates": [
+        {
+          "combination": "X_high_X_low",
+          "value": "0xb952d74427dd132a336a12668fd94c52ec832",
+          "bit_length": 148
+        },
+        {
+          "combination": "X_high_Y_low",
+          "value": "0xb952d74427dd132a378ded56562f989db2947",
+          "bit_length": 148
+        },
+        {
+          "combination": "Y_high_X_low",
+          "value": "0x7ce6113cb6e58827ec36a12668fd94c52ec832",
+          "bit_length": 151
+        },
+        {
+          "combination": "Y_high_Y_low",
+          "value": "0x7ce6113cb6e58827ec78ded56562f989db2947",
+          "bit_length": 151
+        }
+      ]
+    }
+  ],
+  "intersection_results": [
+    {
+      "key1_index": 0,
+      "key2_index": 1,
+      "combination_type": "X1h_X2h",
+      "value": "0x22d27612f9cedc2d5e00fe6b8c0309e380f263",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 1,
+      "combination_type": "X1h_Y2l",
+      "value": "0x22d27612f9cedc2d5edcaa4fd46e15caba83a8",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 1,
+      "combination_type": "Y1h_X2h",
+      "value": "0xdf5c3bdc738550907a00fe6b8c0309e380f263",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 1,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xdf5c3bdc738550907adcaa4fd46e15caba83a8",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 2,
+      "combination_type": "X1h_X2h",
+      "value": "0x22d27612f9cedc2d5e0084c93887188fc100ab",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 2,
+      "combination_type": "X1h_Y2l",
+      "value": "0x22d27612f9cedc2d5e2dd80e9f3e2569e1a0de",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 2,
+      "combination_type": "Y1h_X2h",
+      "value": "0xdf5c3bdc738550907a0084c93887188fc100ab",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 2,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xdf5c3bdc738550907a2dd80e9f3e2569e1a0de",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 3,
+      "combination_type": "X1h_X2h",
+      "value": "0x22d27612f9cedc2d5e00be4ba23917d98d9845",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 3,
+      "combination_type": "X1h_Y2l",
+      "value": "0x22d27612f9cedc2d5e6d714103cedbaa18f353",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 3,
+      "combination_type": "Y1h_X2h",
+      "value": "0xdf5c3bdc738550907a00be4ba23917d98d9845",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 3,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xdf5c3bdc738550907a6d714103cedbaa18f353",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 4,
+      "combination_type": "X1h_X2h",
+      "value": "0x22d27612f9cedc2d5e000bba8588e0fbbb9bbe",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 4,
+      "combination_type": "X1h_Y2l",
+      "value": "0x22d27612f9cedc2d5e454c5fa6f8b2138eaacf",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 4,
+      "combination_type": "Y1h_X2h",
+      "value": "0xdf5c3bdc738550907a000bba8588e0fbbb9bbe",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 4,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xdf5c3bdc738550907a454c5fa6f8b2138eaacf",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 5,
+      "combination_type": "X1h_X2h",
+      "value": "0x22d27612f9cedc2d5e00b29ec3384b706d3e09",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 5,
+      "combination_type": "X1h_Y2l",
+      "value": "0x22d27612f9cedc2d5e078de731b4e09bef302f",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 5,
+      "combination_type": "Y1h_X2h",
+      "value": "0xdf5c3bdc738550907a00b29ec3384b706d3e09",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 5,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xdf5c3bdc738550907a078de731b4e09bef302f",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 6,
+      "combination_type": "X1h_X2h",
+      "value": "0x22d27612f9cedc2d5e00603be1f615b3d0ecf9",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 6,
+      "combination_type": "X1h_Y2l",
+      "value": "0x22d27612f9cedc2d5ea49efc0c7cd11ad3517c",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 6,
+      "combination_type": "Y1h_X2h",
+      "value": "0xdf5c3bdc738550907a00603be1f615b3d0ecf9",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 6,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xdf5c3bdc738550907aa49efc0c7cd11ad3517c",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 7,
+      "combination_type": "X1h_X2h",
+      "value": "0x22d27612f9cedc2d5e004dc90747d8114cd0a1",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 7,
+      "combination_type": "X1h_Y2l",
+      "value": "0x22d27612f9cedc2d5e80fef37818eaf9d8c5eb",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 7,
+      "combination_type": "Y1h_X2h",
+      "value": "0xdf5c3bdc738550907a004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 7,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xdf5c3bdc738550907a80fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 8,
+      "combination_type": "X1h_X2h",
+      "value": "0x22d27612f9cedc2d5e002346843b542bd14179",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 8,
+      "combination_type": "X1h_Y2l",
+      "value": "0x22d27612f9cedc2d5e2492abb249cf44f6c4c6",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 8,
+      "combination_type": "Y1h_X2h",
+      "value": "0xdf5c3bdc738550907a002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 8,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xdf5c3bdc738550907a2492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 9,
+      "combination_type": "X1h_X2h",
+      "value": "0x22d27612f9cedc2d5e000b952d74427dd132a3",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 9,
+      "combination_type": "X1h_Y2l",
+      "value": "0x22d27612f9cedc2d5e78ded56562f989db2947",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 9,
+      "combination_type": "Y1h_X2h",
+      "value": "0xdf5c3bdc738550907a000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 0,
+      "key2_index": 9,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xdf5c3bdc738550907a78ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 2,
+      "combination_type": "X1h_X2h",
+      "value": "0xfe6b8c0309e380f2630084c93887188fc100ab",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 2,
+      "combination_type": "X1h_Y2l",
+      "value": "0xfe6b8c0309e380f2632dd80e9f3e2569e1a0de",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 2,
+      "combination_type": "Y1h_X2h",
+      "value": "0xd53cb06404dba916170084c93887188fc100ab",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 2,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xd53cb06404dba916172dd80e9f3e2569e1a0de",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 3,
+      "combination_type": "X1h_X2h",
+      "value": "0xfe6b8c0309e380f26300be4ba23917d98d9845",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 3,
+      "combination_type": "X1h_Y2l",
+      "value": "0xfe6b8c0309e380f2636d714103cedbaa18f353",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 3,
+      "combination_type": "Y1h_X2h",
+      "value": "0xd53cb06404dba9161700be4ba23917d98d9845",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 3,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xd53cb06404dba916176d714103cedbaa18f353",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 4,
+      "combination_type": "X1h_X2h",
+      "value": "0xfe6b8c0309e380f263000bba8588e0fbbb9bbe",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 4,
+      "combination_type": "X1h_Y2l",
+      "value": "0xfe6b8c0309e380f263454c5fa6f8b2138eaacf",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 4,
+      "combination_type": "Y1h_X2h",
+      "value": "0xd53cb06404dba91617000bba8588e0fbbb9bbe",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 4,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xd53cb06404dba91617454c5fa6f8b2138eaacf",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 5,
+      "combination_type": "X1h_X2h",
+      "value": "0xfe6b8c0309e380f26300b29ec3384b706d3e09",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 5,
+      "combination_type": "X1h_Y2l",
+      "value": "0xfe6b8c0309e380f263078de731b4e09bef302f",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 5,
+      "combination_type": "Y1h_X2h",
+      "value": "0xd53cb06404dba9161700b29ec3384b706d3e09",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 5,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xd53cb06404dba91617078de731b4e09bef302f",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 6,
+      "combination_type": "X1h_X2h",
+      "value": "0xfe6b8c0309e380f26300603be1f615b3d0ecf9",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 6,
+      "combination_type": "X1h_Y2l",
+      "value": "0xfe6b8c0309e380f263a49efc0c7cd11ad3517c",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 6,
+      "combination_type": "Y1h_X2h",
+      "value": "0xd53cb06404dba9161700603be1f615b3d0ecf9",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 6,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xd53cb06404dba91617a49efc0c7cd11ad3517c",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 7,
+      "combination_type": "X1h_X2h",
+      "value": "0xfe6b8c0309e380f263004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 7,
+      "combination_type": "X1h_Y2l",
+      "value": "0xfe6b8c0309e380f26380fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 7,
+      "combination_type": "Y1h_X2h",
+      "value": "0xd53cb06404dba91617004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 7,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xd53cb06404dba9161780fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 8,
+      "combination_type": "X1h_X2h",
+      "value": "0xfe6b8c0309e380f263002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 8,
+      "combination_type": "X1h_Y2l",
+      "value": "0xfe6b8c0309e380f2632492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 8,
+      "combination_type": "Y1h_X2h",
+      "value": "0xd53cb06404dba91617002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 8,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xd53cb06404dba916172492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 9,
+      "combination_type": "X1h_X2h",
+      "value": "0xfe6b8c0309e380f263000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 9,
+      "combination_type": "X1h_Y2l",
+      "value": "0xfe6b8c0309e380f26378ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 9,
+      "combination_type": "Y1h_X2h",
+      "value": "0xd53cb06404dba91617000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 1,
+      "key2_index": 9,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xd53cb06404dba9161778ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 3,
+      "combination_type": "X1h_X2h",
+      "value": "0x84c93887188fc100ab00be4ba23917d98d9845",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 3,
+      "combination_type": "X1h_Y2l",
+      "value": "0x84c93887188fc100ab6d714103cedbaa18f353",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 3,
+      "combination_type": "Y1h_X2h",
+      "value": "0x90e4611dca6cefc58300be4ba23917d98d9845",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 3,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x90e4611dca6cefc5836d714103cedbaa18f353",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 4,
+      "combination_type": "X1h_X2h",
+      "value": "0x84c93887188fc100ab000bba8588e0fbbb9bbe",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 4,
+      "combination_type": "X1h_Y2l",
+      "value": "0x84c93887188fc100ab454c5fa6f8b2138eaacf",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 4,
+      "combination_type": "Y1h_X2h",
+      "value": "0x90e4611dca6cefc583000bba8588e0fbbb9bbe",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 4,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x90e4611dca6cefc583454c5fa6f8b2138eaacf",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 5,
+      "combination_type": "X1h_X2h",
+      "value": "0x84c93887188fc100ab00b29ec3384b706d3e09",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 5,
+      "combination_type": "X1h_Y2l",
+      "value": "0x84c93887188fc100ab078de731b4e09bef302f",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 5,
+      "combination_type": "Y1h_X2h",
+      "value": "0x90e4611dca6cefc58300b29ec3384b706d3e09",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 5,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x90e4611dca6cefc583078de731b4e09bef302f",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 6,
+      "combination_type": "X1h_X2h",
+      "value": "0x84c93887188fc100ab00603be1f615b3d0ecf9",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 6,
+      "combination_type": "X1h_Y2l",
+      "value": "0x84c93887188fc100aba49efc0c7cd11ad3517c",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 6,
+      "combination_type": "Y1h_X2h",
+      "value": "0x90e4611dca6cefc58300603be1f615b3d0ecf9",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 6,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x90e4611dca6cefc583a49efc0c7cd11ad3517c",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 7,
+      "combination_type": "X1h_X2h",
+      "value": "0x84c93887188fc100ab004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 7,
+      "combination_type": "X1h_Y2l",
+      "value": "0x84c93887188fc100ab80fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 7,
+      "combination_type": "Y1h_X2h",
+      "value": "0x90e4611dca6cefc583004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 7,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x90e4611dca6cefc58380fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 8,
+      "combination_type": "X1h_X2h",
+      "value": "0x84c93887188fc100ab002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 8,
+      "combination_type": "X1h_Y2l",
+      "value": "0x84c93887188fc100ab2492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 8,
+      "combination_type": "Y1h_X2h",
+      "value": "0x90e4611dca6cefc583002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 8,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x90e4611dca6cefc5832492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 9,
+      "combination_type": "X1h_X2h",
+      "value": "0x84c93887188fc100ab000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 9,
+      "combination_type": "X1h_Y2l",
+      "value": "0x84c93887188fc100ab78ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 9,
+      "combination_type": "Y1h_X2h",
+      "value": "0x90e4611dca6cefc583000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 2,
+      "key2_index": 9,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x90e4611dca6cefc58378ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 4,
+      "combination_type": "X1h_X2h",
+      "value": "0xbe4ba23917d98d9845000bba8588e0fbbb9bbe",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 4,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbe4ba23917d98d9845454c5fa6f8b2138eaacf",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 4,
+      "combination_type": "Y1h_X2h",
+      "value": "0x831e39f9e5cbff6d3a000bba8588e0fbbb9bbe",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 4,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x831e39f9e5cbff6d3a454c5fa6f8b2138eaacf",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 5,
+      "combination_type": "X1h_X2h",
+      "value": "0xbe4ba23917d98d984500b29ec3384b706d3e09",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 5,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbe4ba23917d98d9845078de731b4e09bef302f",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 5,
+      "combination_type": "Y1h_X2h",
+      "value": "0x831e39f9e5cbff6d3a00b29ec3384b706d3e09",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 5,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x831e39f9e5cbff6d3a078de731b4e09bef302f",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 6,
+      "combination_type": "X1h_X2h",
+      "value": "0xbe4ba23917d98d984500603be1f615b3d0ecf9",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 6,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbe4ba23917d98d9845a49efc0c7cd11ad3517c",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 6,
+      "combination_type": "Y1h_X2h",
+      "value": "0x831e39f9e5cbff6d3a00603be1f615b3d0ecf9",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 6,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x831e39f9e5cbff6d3aa49efc0c7cd11ad3517c",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 7,
+      "combination_type": "X1h_X2h",
+      "value": "0xbe4ba23917d98d9845004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 7,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbe4ba23917d98d984580fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 7,
+      "combination_type": "Y1h_X2h",
+      "value": "0x831e39f9e5cbff6d3a004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 7,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x831e39f9e5cbff6d3a80fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 8,
+      "combination_type": "X1h_X2h",
+      "value": "0xbe4ba23917d98d9845002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 8,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbe4ba23917d98d98452492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 8,
+      "combination_type": "Y1h_X2h",
+      "value": "0x831e39f9e5cbff6d3a002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 8,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x831e39f9e5cbff6d3a2492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 9,
+      "combination_type": "X1h_X2h",
+      "value": "0xbe4ba23917d98d9845000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 9,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbe4ba23917d98d984578ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 9,
+      "combination_type": "Y1h_X2h",
+      "value": "0x831e39f9e5cbff6d3a000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 3,
+      "key2_index": 9,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x831e39f9e5cbff6d3a78ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 5,
+      "combination_type": "X1h_X2h",
+      "value": "0xbba8588e0fbbb9bbe00b29ec3384b706d3e09",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 5,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbba8588e0fbbb9bbe078de731b4e09bef302f",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 5,
+      "combination_type": "Y1h_X2h",
+      "value": "0x9a1393c769f3c2471f00b29ec3384b706d3e09",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 5,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x9a1393c769f3c2471f078de731b4e09bef302f",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 6,
+      "combination_type": "X1h_X2h",
+      "value": "0xbba8588e0fbbb9bbe00603be1f615b3d0ecf9",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 6,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbba8588e0fbbb9bbea49efc0c7cd11ad3517c",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 6,
+      "combination_type": "Y1h_X2h",
+      "value": "0x9a1393c769f3c2471f00603be1f615b3d0ecf9",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 6,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x9a1393c769f3c2471fa49efc0c7cd11ad3517c",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 7,
+      "combination_type": "X1h_X2h",
+      "value": "0xbba8588e0fbbb9bbe004dc90747d8114cd0a1",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 7,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbba8588e0fbbb9bbe80fef37818eaf9d8c5eb",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 7,
+      "combination_type": "Y1h_X2h",
+      "value": "0x9a1393c769f3c2471f004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 7,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x9a1393c769f3c2471f80fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 8,
+      "combination_type": "X1h_X2h",
+      "value": "0xbba8588e0fbbb9bbe002346843b542bd14179",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 8,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbba8588e0fbbb9bbe2492abb249cf44f6c4c6",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 8,
+      "combination_type": "Y1h_X2h",
+      "value": "0x9a1393c769f3c2471f002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 8,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x9a1393c769f3c2471f2492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 9,
+      "combination_type": "X1h_X2h",
+      "value": "0xbba8588e0fbbb9bbe000b952d74427dd132a3",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 9,
+      "combination_type": "X1h_Y2l",
+      "value": "0xbba8588e0fbbb9bbe78ded56562f989db2947",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 9,
+      "combination_type": "Y1h_X2h",
+      "value": "0x9a1393c769f3c2471f000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 4,
+      "key2_index": 9,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x9a1393c769f3c2471f78ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 6,
+      "combination_type": "X1h_X2h",
+      "value": "0xb29ec3384b706d3e0900603be1f615b3d0ecf9",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 6,
+      "combination_type": "X1h_Y2l",
+      "value": "0xb29ec3384b706d3e09a49efc0c7cd11ad3517c",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 6,
+      "combination_type": "Y1h_X2h",
+      "value": "0xa9904fbb9bcdfc4f7700603be1f615b3d0ecf9",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 6,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xa9904fbb9bcdfc4f77a49efc0c7cd11ad3517c",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 7,
+      "combination_type": "X1h_X2h",
+      "value": "0xb29ec3384b706d3e09004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 7,
+      "combination_type": "X1h_Y2l",
+      "value": "0xb29ec3384b706d3e0980fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 7,
+      "combination_type": "Y1h_X2h",
+      "value": "0xa9904fbb9bcdfc4f77004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 7,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xa9904fbb9bcdfc4f7780fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 8,
+      "combination_type": "X1h_X2h",
+      "value": "0xb29ec3384b706d3e09002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 8,
+      "combination_type": "X1h_Y2l",
+      "value": "0xb29ec3384b706d3e092492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 8,
+      "combination_type": "Y1h_X2h",
+      "value": "0xa9904fbb9bcdfc4f77002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 8,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xa9904fbb9bcdfc4f772492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 9,
+      "combination_type": "X1h_X2h",
+      "value": "0xb29ec3384b706d3e09000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 9,
+      "combination_type": "X1h_Y2l",
+      "value": "0xb29ec3384b706d3e0978ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 9,
+      "combination_type": "Y1h_X2h",
+      "value": "0xa9904fbb9bcdfc4f77000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 5,
+      "key2_index": 9,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xa9904fbb9bcdfc4f7778ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 7,
+      "combination_type": "X1h_X2h",
+      "value": "0x603be1f615b3d0ecf9004dc90747d8114cd0a1",
+      "bit_length": 151,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 7,
+      "combination_type": "X1h_Y2l",
+      "value": "0x603be1f615b3d0ecf980fef37818eaf9d8c5eb",
+      "bit_length": 151,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 7,
+      "combination_type": "Y1h_X2h",
+      "value": "0xe8353bd3efb58077fc004dc90747d8114cd0a1",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 7,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xe8353bd3efb58077fc80fef37818eaf9d8c5eb",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 8,
+      "combination_type": "X1h_X2h",
+      "value": "0x603be1f615b3d0ecf9002346843b542bd14179",
+      "bit_length": 151,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 8,
+      "combination_type": "X1h_Y2l",
+      "value": "0x603be1f615b3d0ecf92492abb249cf44f6c4c6",
+      "bit_length": 151,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 8,
+      "combination_type": "Y1h_X2h",
+      "value": "0xe8353bd3efb58077fc002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 8,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xe8353bd3efb58077fc2492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 9,
+      "combination_type": "X1h_X2h",
+      "value": "0x603be1f615b3d0ecf9000b952d74427dd132a3",
+      "bit_length": 151,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 9,
+      "combination_type": "X1h_Y2l",
+      "value": "0x603be1f615b3d0ecf978ded56562f989db2947",
+      "bit_length": 151,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 9,
+      "combination_type": "Y1h_X2h",
+      "value": "0xe8353bd3efb58077fc000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 6,
+      "key2_index": 9,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xe8353bd3efb58077fc78ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 7,
+      "key2_index": 8,
+      "combination_type": "X1h_X2h",
+      "value": "0x4dc90747d8114cd0a1002346843b542bd14179",
+      "bit_length": 151,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 7,
+      "key2_index": 8,
+      "combination_type": "X1h_Y2l",
+      "value": "0x4dc90747d8114cd0a12492abb249cf44f6c4c6",
+      "bit_length": 151,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 7,
+      "key2_index": 8,
+      "combination_type": "Y1h_X2h",
+      "value": "0xf17daf1dae39253a47002346843b542bd14179",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 7,
+      "key2_index": 8,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xf17daf1dae39253a472492abb249cf44f6c4c6",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 7,
+      "key2_index": 9,
+      "combination_type": "X1h_X2h",
+      "value": "0x4dc90747d8114cd0a1000b952d74427dd132a3",
+      "bit_length": 151,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 7,
+      "key2_index": 9,
+      "combination_type": "X1h_Y2l",
+      "value": "0x4dc90747d8114cd0a178ded56562f989db2947",
+      "bit_length": 151,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 7,
+      "key2_index": 9,
+      "combination_type": "Y1h_X2h",
+      "value": "0xf17daf1dae39253a47000b952d74427dd132a3",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 7,
+      "key2_index": 9,
+      "combination_type": "Y1h_Y2l",
+      "value": "0xf17daf1dae39253a4778ded56562f989db2947",
+      "bit_length": 152,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 8,
+      "key2_index": 9,
+      "combination_type": "X1h_X2h",
+      "value": "0x2346843b542bd14179000b952d74427dd132a3",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 8,
+      "key2_index": 9,
+      "combination_type": "X1h_Y2l",
+      "value": "0x2346843b542bd1417978ded56562f989db2947",
+      "bit_length": 150,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 8,
+      "key2_index": 9,
+      "combination_type": "Y1h_X2h",
+      "value": "0x865cc08d55632f44c000b952d74427dd132a3",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    },
+    {
+      "key1_index": 8,
+      "key2_index": 9,
+      "combination_type": "Y1h_Y2l",
+      "value": "0x865cc08d55632f44c78ded56562f989db2947",
+      "bit_length": 148,
+      "puzzle_160_candidate": true
+    }
+  ],
+  "puzzle_160_candidates": 180,
+  "structure_understanding": "X_Y_80_bit_combinations"
+}

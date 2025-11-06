@@ -1,0 +1,2 @@
+currency,amount,rate,method,uri,status,timestamp,data
+BTC,412,,bitcoinLightning,,pending,1751417803001,{}

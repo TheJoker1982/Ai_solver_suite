@@ -1,0 +1,11 @@
+BITCOIN PUZZLE 71 MASTER SEED
+========================================
+
+24-Word Mnemonic Phrase:
+abandon ability about achieve across action address advance advice agent agree allow answer biology alter almost alley argue alert asthma away argue age barrel
+
+Breakthrough Private Key:
+00000000000000000000000000000000000000000000004000004ab34fe3af96
+
+Security: Store securely, never share
+Compatible with: Electrum, Hardware wallets, BIP39 wallets

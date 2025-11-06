@@ -1,0 +1,17 @@
+{
+  "signature": "0000000000000000000000000000000000000000000000000000000045a8a251",
+  "style": "four-paladrones",
+  "complexity": "moderate",
+  "analysis": {
+    "interestScore": 76,
+    "bitcoinRelevance": 27,
+    "entropy": "0.86",
+    "patterns": [
+      "00",
+      "000",
+      "0000"
+    ]
+  },
+  "explanation": "This signature incorporates the Four Paladrones methodology using constants 523454, 42, 71, and 91. The signature shows high interest for Bitcoin puzzle analysis.",
+  "generated": "2025-06-22T06:03:28.457Z"
+}

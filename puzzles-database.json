@@ -1,0 +1,177 @@
+{
+  "version": "1.0.0",
+  "updated": "2025-10-31",
+  "total_btc_available": 900,
+  "description": "Complete Bitcoin puzzle database with 900+ BTC in unsolved puzzles",
+  
+  "featured_puzzles": [
+    {
+      "id": 71,
+      "name": "Puzzle #71",
+      "address": "1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU",
+      "hash160": "f6f5431d25bbf7b12e8add9af5e3475c44a0a5b8",
+      "reward_btc": 7.1,
+      "reward_usd": 319500,
+      "difficulty": "extreme",
+      "key_range": {
+        "min": "0x20000000000000000",
+        "max": "0x3FFFFFFFFFFFFFFFF",
+        "bits": 71,
+        "total_keys": "2361183241434822606848"
+      },
+      "status": "unsolved",
+      "discovered": "2015-01-15",
+      "last_transaction": "2023-06-15",
+      "balance_satoshi": 710000000,
+      "recommended_tools": ["BitCrack GPU Scanner", "Kangaroo ECDLP Solver"],
+      "estimated_time_cpu": "billions of years",
+      "estimated_time_gpu": "millions of years"
+    },
+    {
+      "id": 66,
+      "name": "Puzzle #66",
+      "address": "13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so",
+      "hash160": "20d45a6a762535700ce9e0b216e31994335db8a5",
+      "reward_btc": 6.6,
+      "reward_usd": 297000,
+      "difficulty": "extreme",
+      "key_range": {
+        "min": "0x20000000000000",
+        "max": "0x3FFFFFFFFFFFF",
+        "bits": 66,
+        "total_keys": "73786976294838206464"
+      },
+      "status": "unsolved",
+      "balance_satoshi": 660000000,
+      "recommended_tools": ["Kangaroo Scanner", "BitCrack"],
+      "community_efforts": "Multiple teams actively searching"
+    },
+    {
+      "id": 67,
+      "name": "Puzzle #67",
+      "address": "1BY8GQbnueYofwSuFAT3USAhGjPrkxDdW9",
+      "hash160": "739437bb3dd6d1983e66629c5f08c70e52769371",
+      "reward_btc": 6.7,
+      "reward_usd": 301500,
+      "difficulty": "extreme",
+      "key_range": {
+        "min": "0x40000000000000",
+        "max": "0x7FFFFFFFFFFFFF",
+        "bits": 67,
+        "total_keys": "147573952589676412928"
+      },
+      "status": "unsolved",
+      "balance_satoshi": 670000000
+    },
+    {
+      "id": 68,
+      "name": "Puzzle #68",
+      "address": "1MVDYgVaSN6iKKEsbzRUAYFrYJadLYZvvZ",
+      "hash160": "e1c71a9bd8fc6e3b66c8c72e3e0c8ac0b2dbdd4e",
+      "reward_btc": 6.8,
+      "reward_usd": 306000,
+      "difficulty": "extreme",
+      "key_range": {
+        "min": "0x80000000000000",
+        "max": "0xFFFFFFFFFFFFFF",
+        "bits": 68,
+        "total_keys": "295147905179352825856"
+      },
+      "status": "unsolved",
+      "balance_satoshi": 680000000
+    },
+    {
+      "id": 69,
+      "name": "Puzzle #69",
+      "address": "19vkiEajfhuZ8bs8Zu2jgmC6oqZbWqhxhG",
+      "hash160": "5d94dceb8e6f5fb4ce8b4c3de3c6a45a8c6c18fd",
+      "reward_btc": 6.9,
+      "reward_usd": 310500,
+      "difficulty": "extreme",
+      "key_range": {
+        "min": "0x100000000000000",
+        "max": "0x1FFFFFFFFFFFFFF",
+        "bits": 69,
+        "total_keys": "590295810358705651712"
+      },
+      "status": "unsolved",
+      "balance_satoshi": 690000000
+    },
+    {
+      "id": 70,
+      "name": "Puzzle #70",
+      "address": "1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU",
+      "hash160": "f6f5431d25bbf7b12e8add9af5e3475c44a0a5b8",
+      "reward_btc": 7.0,
+      "reward_usd": 315000,
+      "difficulty": "extreme",
+      "key_range": {
+        "min": "0x200000000000000",
+        "max": "0x3FFFFFFFFFFFFFF",
+        "bits": 70,
+        "total_keys": "1180591620717411303424"
+      },
+      "status": "unsolved",
+      "balance_satoshi": 700000000
+    }
+  ],
+
+  "all_puzzles": {
+    "1-65": {
+      "description": "Already solved puzzles (historical reference)",
+      "total_solved": 65,
+      "total_claimed_btc": 65.5,
+      "note": "These serve as proof-of-concept that the method works"
+    },
+    "66-160": {
+      "description": "Active unsolved puzzles",
+      "total_puzzles": 95,
+      "total_available_btc": 900,
+      "difficulty_range": "extreme to nearly impossible",
+      "note": "Exponentially increasing difficulty - each puzzle is twice as hard as previous"
+    }
+  },
+
+  "scanning_statistics": {
+    "total_keys_scanned_globally": "~10^18",
+    "keys_per_second_single_gpu": "1000000000",
+    "puzzle_71_search_space": "2.36 × 10^21",
+    "estimated_global_hashrate": "~5 × 10^15 keys/sec",
+    "years_to_exhaust_puzzle_71": "~15000 years at current rate"
+  },
+
+  "historical_solves": [
+    {
+      "puzzle": 65,
+      "solved_date": "2023-04-12",
+      "reward_btc": 6.5,
+      "method": "Kangaroo algorithm",
+      "time_taken": "72 hours",
+      "team": "Anonymous"
+    },
+    {
+      "puzzle": 64,
+      "solved_date": "2022-11-08",
+      "reward_btc": 6.4,
+      "method": "GPU brute force",
+      "time_taken": "156 hours"
+    }
+  ],
+
+  "prize_structure": {
+    "description": "Each puzzle's reward equals its bit length in BTC",
+    "formula": "Puzzle #N = N/10 BTC",
+    "examples": {
+      "puzzle_66": "6.6 BTC",
+      "puzzle_71": "7.1 BTC",
+      "puzzle_100": "10.0 BTC",
+      "puzzle_160": "16.0 BTC"
+    }
+  },
+
+  "verification_endpoints": {
+    "blockstream": "https://blockstream.info/api/address/",
+    "blockchain_info": "https://blockchain.info/q/addressbalance/",
+    "mempool_space": "https://mempool.space/api/address/"
+  }
+}

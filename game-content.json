@@ -1,0 +1,414 @@
+{
+  "version": "1.0.0",
+  "updated": "2025-10-31",
+  "description": "All game content, achievements, missions, ranks, and leaderboards",
+
+  "ranks": [
+    {
+      "id": 1,
+      "name": "Geek Squad",
+      "min_level": 1,
+      "max_level": 20,
+      "color": "#00ff88",
+      "icon": "🤓",
+      "description": "New to the crypto game. Learning the ropes.",
+      "perks": ["Basic tools access", "10 AI queries/day", "Community chat"]
+    },
+    {
+      "id": 2,
+      "name": "Hacking Crew",
+      "min_level": 21,
+      "max_level": 40,
+      "color": "#00c8ff",
+      "icon": "👾",
+      "description": "Getting serious. Building your squad.",
+      "perks": ["Scanner access", "Squad formation", "20 AI queries/day"]
+    },
+    {
+      "id": 3,
+      "name": "Elite Hackers",
+      "min_level": 41,
+      "max_level": 60,
+      "color": "#ff00ff",
+      "icon": "🎯",
+      "description": "Top tier skills. Making real money.",
+      "perks": ["Premium tools", "Squad leader", "50 AI queries/day"]
+    },
+    {
+      "id": 4,
+      "name": "Crypto Lords",
+      "min_level": 61,
+      "max_level": 80,
+      "color": "#ffd700",
+      "icon": "👑",
+      "description": "Legendary status. Solving impossible puzzles.",
+      "perks": ["All tools", "VIP lounge", "Unlimited AI queries"]
+    },
+    {
+      "id": 5,
+      "name": "Crypto Kingpin",
+      "min_level": 81,
+      "max_level": 100,
+      "color": "#ff0066",
+      "icon": "💎",
+      "description": "The ultimate rank. Master of the crypto underworld.",
+      "perks": ["God mode", "Custom everything", "Platform revenue share"]
+    }
+  ],
+
+  "achievements": [
+    {
+      "id": "first_login",
+      "name": "Welcome to the Heist",
+      "description": "Complete your first login",
+      "icon": "🎮",
+      "rarity": "common",
+      "xp_reward": 50,
+      "category": "getting_started"
+    },
+    {
+      "id": "first_ai_query",
+      "name": "AI Assisted",
+      "description": "Ask the AI assistant for help",
+      "icon": "🤖",
+      "rarity": "common",
+      "xp_reward": 25,
+      "category": "tools"
+    },
+    {
+      "id": "first_scan",
+      "name": "Scanner Rookie",
+      "description": "Run your first brute force scan",
+      "icon": "🔍",
+      "rarity": "common",
+      "xp_reward": 100,
+      "category": "scanning"
+    },
+    {
+      "id": "1000_scans",
+      "name": "Scanning Machine",
+      "description": "Complete 1,000 scans",
+      "icon": "⚡",
+      "rarity": "rare",
+      "xp_reward": 500,
+      "category": "scanning"
+    },
+    {
+      "id": "million_keys",
+      "name": "Million Key Club",
+      "description": "Scan 1 million keys",
+      "icon": "🎯",
+      "rarity": "epic",
+      "xp_reward": 1000,
+      "category": "scanning"
+    },
+    {
+      "id": "billion_keys",
+      "name": "Billion Key Legend",
+      "description": "Scan 1 billion keys",
+      "icon": "💫",
+      "rarity": "legendary",
+      "xp_reward": 5000,
+      "category": "scanning"
+    },
+    {
+      "id": "first_btc",
+      "name": "First Bitcoin",
+      "description": "Earn your first 0.001 BTC",
+      "icon": "💰",
+      "rarity": "rare",
+      "xp_reward": 500,
+      "category": "earnings"
+    },
+    {
+      "id": "btc_whale",
+      "name": "BTC Whale",
+      "description": "Earn 1 full Bitcoin",
+      "icon": "🐋",
+      "rarity": "legendary",
+      "xp_reward": 10000,
+      "category": "earnings"
+    },
+    {
+      "id": "squad_leader",
+      "name": "Squad Commander",
+      "description": "Create and lead a squad",
+      "icon": "👑",
+      "rarity": "epic",
+      "xp_reward": 750,
+      "category": "social"
+    },
+    {
+      "id": "puzzle_solver",
+      "name": "Puzzle Breaker",
+      "description": "Solve your first puzzle",
+      "icon": "🎊",
+      "rarity": "legendary",
+      "xp_reward": 25000,
+      "category": "puzzles"
+    },
+    {
+      "id": "speed_demon",
+      "name": "Speed Demon",
+      "description": "Complete 10 scans in under 1 minute",
+      "icon": "🏎️",
+      "rarity": "epic",
+      "xp_reward": 1500,
+      "category": "speed"
+    },
+    {
+      "id": "night_owl",
+      "name": "Night Owl",
+      "description": "Complete 100 scans between midnight and 6am",
+      "icon": "🦉",
+      "rarity": "rare",
+      "xp_reward": 300,
+      "category": "dedication"
+    },
+    {
+      "id": "streak_7",
+      "name": "Week Warrior",
+      "description": "Maintain a 7-day login streak",
+      "icon": "🔥",
+      "rarity": "rare",
+      "xp_reward": 350,
+      "category": "streaks"
+    },
+    {
+      "id": "streak_30",
+      "name": "Monthly Master",
+      "description": "Maintain a 30-day login streak",
+      "icon": "💎",
+      "rarity": "epic",
+      "xp_reward": 2000,
+      "category": "streaks"
+    },
+    {
+      "id": "social_butterfly",
+      "name": "Social Butterfly",
+      "description": "Add 10 friends",
+      "icon": "🦋",
+      "rarity": "common",
+      "xp_reward": 100,
+      "category": "social"
+    },
+    {
+      "id": "event_winner",
+      "name": "Event Champion",
+      "description": "Win a global competition event",
+      "icon": "🏆",
+      "rarity": "legendary",
+      "xp_reward": 5000,
+      "category": "competitions"
+    },
+    {
+      "id": "tool_master",
+      "name": "Tool Master",
+      "description": "Use all 45+ tools at least once",
+      "icon": "🛠️",
+      "rarity": "epic",
+      "xp_reward": 3000,
+      "category": "tools"
+    },
+    {
+      "id": "early_adopter",
+      "name": "Early Adopter",
+      "description": "Join during launch month",
+      "icon": "🚀",
+      "rarity": "rare",
+      "xp_reward": 1000,
+      "category": "special"
+    }
+  ],
+
+  "missions": {
+    "daily": [
+      {
+        "id": "daily_login",
+        "name": "Daily Check-in",
+        "description": "Log in to the platform",
+        "xp_reward": 50,
+        "btc_reward": 0,
+        "requirements": { "type": "login", "count": 1 }
+      },
+      {
+        "id": "daily_scans",
+        "name": "Daily Scans",
+        "description": "Complete 10 scans",
+        "xp_reward": 100,
+        "btc_reward": 0.00000100,
+        "requirements": { "type": "scans", "count": 10 }
+      },
+      {
+        "id": "daily_ai",
+        "name": "AI Consultation",
+        "description": "Ask AI assistant 3 questions",
+        "xp_reward": 75,
+        "btc_reward": 0,
+        "requirements": { "type": "ai_queries", "count": 3 }
+      }
+    ],
+    "weekly": [
+      {
+        "id": "weekly_keys",
+        "name": "Million Keys",
+        "description": "Scan 1 million keys this week",
+        "xp_reward": 500,
+        "btc_reward": 0.00001000,
+        "requirements": { "type": "keys_scanned", "count": 1000000 }
+      },
+      {
+        "id": "weekly_squad",
+        "name": "Squad Earnings",
+        "description": "Earn 0.001 BTC with your squad",
+        "xp_reward": 750,
+        "btc_reward": 0.00005000,
+        "requirements": { "type": "squad_earnings", "amount": 0.001 }
+      },
+      {
+        "id": "weekly_social",
+        "name": "Social Climber",
+        "description": "Add 5 new friends",
+        "xp_reward": 200,
+        "btc_reward": 0,
+        "requirements": { "type": "friends_added", "count": 5 }
+      }
+    ],
+    "special": [
+      {
+        "id": "puzzle_71_attempt",
+        "name": "Challenge Puzzle 71",
+        "description": "Attempt to solve Puzzle #71",
+        "xp_reward": 1000,
+        "btc_reward": 0,
+        "requirements": { "type": "puzzle_attempt", "puzzle_id": 71 }
+      },
+      {
+        "id": "event_participation",
+        "name": "Join Global Event",
+        "description": "Participate in a global competition",
+        "xp_reward": 500,
+        "btc_reward": 0,
+        "requirements": { "type": "event_join", "count": 1 }
+      }
+    ]
+  },
+
+  "leaderboard_categories": [
+    {
+      "id": "top_earners",
+      "name": "Top Earners",
+      "description": "Highest BTC earnings",
+      "metric": "total_btc_earned",
+      "icon": "💰",
+      "prizes": {
+        "1st": "0.01 BTC",
+        "2nd": "0.005 BTC",
+        "3rd": "0.001 BTC"
+      }
+    },
+    {
+      "id": "most_scans",
+      "name": "Most Scans",
+      "description": "Total scans completed",
+      "metric": "total_scans",
+      "icon": "🔍",
+      "prizes": {
+        "1st": "5000 XP",
+        "2nd": "2500 XP",
+        "3rd": "1000 XP"
+      }
+    },
+    {
+      "id": "squad_leaders",
+      "name": "Squad Leaders",
+      "description": "Best performing squads",
+      "metric": "squad_earnings",
+      "icon": "👥",
+      "prizes": {
+        "1st": "0.02 BTC (split)",
+        "2nd": "0.01 BTC (split)",
+        "3rd": "0.005 BTC (split)"
+      }
+    },
+    {
+      "id": "speed_runners",
+      "name": "Speed Runners",
+      "description": "Fastest scan completion",
+      "metric": "scans_per_hour",
+      "icon": "⚡",
+      "prizes": {
+        "1st": "Premium upgrade",
+        "2nd": "1 month free",
+        "3rd": "500 XP"
+      }
+    },
+    {
+      "id": "streak_masters",
+      "name": "Streak Masters",
+      "description": "Longest login streaks",
+      "metric": "current_streak",
+      "icon": "🔥",
+      "prizes": {
+        "1st": "0.005 BTC",
+        "2nd": "0.002 BTC",
+        "3rd": "0.001 BTC"
+      }
+    }
+  ],
+
+  "global_events": [
+    {
+      "id": "puzzle_rush_weekly",
+      "name": "Weekly Puzzle Rush",
+      "description": "Race to scan the most keys targeting Puzzle #71",
+      "frequency": "weekly",
+      "duration_hours": 168,
+      "prize_pool_btc": 0.1,
+      "participants_required": 10
+    },
+    {
+      "id": "squad_showdown",
+      "name": "Squad Showdown",
+      "description": "Squad vs Squad earnings competition",
+      "frequency": "bi_weekly",
+      "duration_hours": 336,
+      "prize_pool_btc": 0.2,
+      "participants_required": 20
+    },
+    {
+      "id": "speed_challenge",
+      "name": "Speed Challenge",
+      "description": "Complete the most scans in 24 hours",
+      "frequency": "monthly",
+      "duration_hours": 24,
+      "prize_pool_btc": 0.05,
+      "participants_required": 50
+    }
+  ],
+
+  "xp_formula": {
+    "base_xp_per_level": 100,
+    "level_multiplier": 1.5,
+    "formula": "100 * (level ^ 1.5)",
+    "examples": {
+      "level_10": 3162,
+      "level_50": 35355,
+      "level_100": 100000
+    }
+  },
+
+  "commission_structure": {
+    "puzzle_solve": {
+      "platform_fee": "10%",
+      "user_payout": "90%",
+      "example": "Puzzle #71 (7.1 BTC) = 6.39 BTC to user, 0.71 BTC platform fee"
+    },
+    "squad_earnings": {
+      "platform_fee": "10%",
+      "solver_share": "70%",
+      "squad_pool": "20%",
+      "example": "1 BTC solved = 0.7 BTC solver, 0.2 BTC squad, 0.1 BTC platform"
+    }
+  }
+}

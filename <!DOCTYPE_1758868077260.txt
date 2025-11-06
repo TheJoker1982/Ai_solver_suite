@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cognitive Partner</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/manifest+json,{
+        &quot;short_name&quot;: &quot;AI Partner&quot;,
+        &quot;name&quot;: &quot;AI Cognitive Partner&quot;,
+        &quot;start_url&quot;: &quot;.&quot;,
+        &quot;display&quot;: &quot;standalone&quot;,
+        &quot;theme_color&quot;: &quot;#000000&quot;,
+        &quot;background_color&quot;: &quot;#000000&quot;
+    }">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Eye Tracking Library -->
+    <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+
+    <!-- React Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel to translate JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Crypto Libraries (Browser Bundles) -->
+    <script src="https://bundle.run/bitcoinjs-lib@6.1.5"></script>
+    <script src="https://bundle.run/tiny-secp256k1@2.2.3"></script>
+    <script src="https://bundle.run/ecpair@2.1.0"></script>
+    <script src="https://bundle.run/bip32@4.0.0"></script>
+    
+    <style>
+        body { background-color: #111827; }
+        .gaze-dot { position: fixed; width: 20px; height: 20px; background: red; border-radius: 50%; opacity: 0.5; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- Initialize Crypto Libraries from window object ---
+        const { ECPairFactory } = window.ecpair;
+        const tinysecp = window.tinysecp256k1;
+        const ECPair = ECPairFactory(tinysecp);
+        const { BIP32Factory } = window.bip32;
+        const bip32 = BIP32Factory(tinysecp);
+        const bitcoin = window.bitcoinjsLib;
+
+        // --- React Application Code Starts Here ---
+        const { useState, useEffect, useRef } = React;
+
+        const Icon = ({ path, className = "w-6 h-6" }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}><path fillRule="evenodd" d={path} clipRule="evenodd" /></svg>);
+        const SparklesIcon = () => <Icon path="M10.828 2.25a.75.75 0 01.75.75v.516a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM18.75 12a.75.75 0 01.75-.75h.516a.75.75 0 010 1.5h-.516a.75.75 0 01-.75-.75zM11.58 15.18a.75.75 0 00-1.06 1.06l.368.368a.75.75 0 001.06-1.06l-.368-.368zM5.25 12a.75.75 0 01.75-.75h.516a.75.75 0 010 1.5H6a.75.75 0 01-.75-.75zM7.72 8.28a.75.75 0 00-1.06-1.06l-.368.368a.75.75 0 101.06 1.06l.368-.368zM12 18.75a.75.75 0 01.75-.75h.008a.75.75 0 010 1.5H12.75a.75.75 0 01-.75-.75zM16.28 8.28a.75.75 0 001.06-1.06l-.368-.368a.75.75 0 00-1.06 1.06l.368-.368z" />;
+        const PaperAirplaneIcon = () => <Icon path="M6.429 2.428a.75.75 0 01.595.033l12 6a.75.75 0 010 1.378l-12 6A.75.75 0 016 15.378V9.75a.75.75 0 01.75-.75h3a.75.75 0 010 1.5h-3v4.622l9.697-4.848L6.75 5.628V4.125a.75.75 0 01.429-.697z"/>;
+        const ClipboardIcon = () => <Icon path="M5.507 4.058A2.25 2.25 0 017.75 2.25h8.5A2.25 2.25 0 0118.5 4.5v.516a.75.75 0 01-1.5 0V4.5a.75.75 0 00-.75-.75h-8.5a.75.75 0 00-.75.75v10.5a.75.75 0 00.75.75h.516a.75.75 0 010 1.5H7.75a2.25 2.25 0 01-2.25-2.25V4.058zM15.632 6.75a.75.75 0 01.75.75v10.5a2.25 2.25 0 01-2.25 2.25h-8.5A2.25 2.25 0 013.382 18V7.5a.75.75 0 011.5 0v10.5a.75.75 0 00.75.75h8.5a.75.75 0 00.75-.75V7.5a.75.75 0 01.75-.75z" />;
+        const EyeIcon = () => <Icon path="M12 4.5C7.029 4.5 3 8.356 3 12.75c0 4.394 4.029 8.25 9 8.25s9-3.856 9-8.25C21 8.356 16.971 4.5 12 4.5zM12 18a5.25 5.25 0 100-10.5 5.25 5.25 0 000 10.5zM12 15a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" />;
+
+        function App() {
+            const [status, setStatus] = useState('Ready');
+            const [isLoading, setIsLoading] = useState(false);
+            const [chatHistory, setChatHistory] = useState([]);
+            const [userInput, setUserInput] = useState('');
+            const [gazePosition, setGazePosition] = useState({ x: -100, y: -100 });
+            const [isGazeActive, setIsGazeActive] = useState(false);
+            const [workbenchContent, setWorkbenchContent] = useState(
+                "check balance for 1MphE42h5nS32P47p3a8vB7XvQLy12K1j1\n\nfind derivation path for [WIF] to [HASH160]"
+            );
+            const [apiKey, setApiKey] = useState('');
+
+            const [interpretationEngine, setInterpretationEngine] = useState([
+                {
+                    trigger: 'check balance for',
+                    interpretation: 'Fetches the live balance of a Bitcoin address from the blockchain.',
+                    action: async (param) => {
+                        const address = param.replace('check balance for', '').trim();
+                        const apiUrl = `https://blockstream.info/api/address/${address}`;
+                        try {
+                            setStatus(`Querying blockchain...`);
+                            const response = await fetch(apiUrl);
+                            if (!response.ok) return `ERROR: Could not fetch data for address. It may be invalid or the network is busy.`;
+                            const data = await response.json();
+                            const stats = data.chain_stats;
+                            const balance = stats.funded_txo_sum - stats.spent_txo_sum;
+                            const btcBalance = balance / 100000000;
+                            return `💰 Balance for ${address}:\n- Total Received: ${(stats.funded_txo_sum / 100000000).toFixed(8)} BTC\n- Final Balance: ${btcBalance.toFixed(8)} BTC`;
+                        } catch (e) { return `ERROR: Failed to connect to the blockchain explorer. ${e.message}`; }
+                    },
+                    type: 'Live Blockchain Query'
+                },
+                {
+                    trigger: 'find derivation path for',
+                    interpretation: 'Finds a simple HD wallet derivation path between a parent WIF and a child address hash.',
+                    action: (param) => {
+                        try {
+                            const parts = param.split(' to ');
+                            const wif = parts[0].replace('find derivation path for', '').trim();
+                            const targetHash = parts[1].trim();
+                            const keyPair = ECPair.fromWIF(wif);
+                            const parentNode = bip32.fromPrivateKey(keyPair.privateKey, Buffer.alloc(32));
+                            for (let i = 0; i < 2000; i++) {
+                                const child = parentNode.derive(0).derive(i);
+                                const { hash } = bitcoin.payments.p2pkh({ pubkey: child.publicKey });
+                                if (hash.toString('hex') === targetHash) {
+                                    return `✅ LINK FOUND!\n- Derivation Path: m/0/${i}\n- Child Public Key: ${child.publicKey.toString('hex')}`;
+                                }
+                            }
+                            return `❌ No direct child link found within the first 2000 addresses using a standard m/0/i path.`;
+                        } catch (e) { return `ERROR: Could not perform derivation. Check your WIF and hash format. Details: ${e.message}`; }
+                    },
+                    type: 'BitcoinJS - HD Derivation'
+                },
+            ]);
+
+            const chatEndRef = useRef(null);
+            useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [chatHistory]);
+            
+            useEffect(() => {
+                const savedApiKey = localStorage.getItem('gemini-api-key');
+                if (savedApiKey) {
+                    setApiKey(savedApiKey);
+                } else {
+                     // Prompt for key on first load if not found
+                    setTimeout(() => {
+                        const newKey = prompt("Welcome! Please enter your Google Gemini API key to enable learning and conversational features:");
+                        if (newKey) {
+                            setApiKey(newKey);
+                            localStorage.setItem('gemini-api-key', newKey);
+                            setChatHistory(prev => [...prev, { role: 'system', text: "API Key saved. You can now chat with the AI." }]);
+                        }
+                    }, 1000);
+                }
+            }, []);
+
+            useEffect(() => {
+                if (isGazeActive) {
+                    webgazer.setGazeListener((data, _) => { if (data) setGazePosition({ x: data.x, y: data.y }); }).begin();
+                } else {
+                    if (window.webgazer && window.webgazer.isReady()) window.webgazer.pause();
+                }
+            }, [isGazeActive]);
+
+            const systemPrompt = `You are "Cognito", an advanced AI cognitive partner specializing in cryptography. Your goal is to assist the user by expanding their toolkit...`;
+
+            const callCognitoAI = async (text) => {
+                 setStatus('Consulting AI...');
+                 setChatHistory(prev => [...prev, { role: 'user', text }]);
+                 
+                 if (!apiKey) {
+                      setChatHistory(prev => [...prev, { role: 'system', text: `Conversational AI is disabled. Please enter your Google Gemini API key to enable learning.` }]);
+                      setIsLoading(false);
+                      setStatus('Error: API Key Missing');
+                      return;
+                 }
+
+                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+
+                 const payload = {
+                     contents: [{ role: "user", parts: [{ text }] }],
+                     systemInstruction: { parts: [{ text: systemPrompt }] },
+                 };
+
+                 try {
+                     const response = await fetch(apiUrl, {
+                         method: 'POST',
+                         headers: { 'Content-Type': 'application/json' },
+                         body: JSON.stringify(payload)
+                     });
+                     if (!response.ok) throw new Error(`API call failed: ${response.status}`);
+                     const result = await response.json();
+                     const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                     if (aiText) {
+                         setChatHistory(prev => [...prev, { role: 'model', text: aiText }]);
+                     } else {
+                         throw new Error("No text returned from AI.");
+                     }
+                 } catch (error) {
+                     setChatHistory(prev => [...prev, { role: 'model', text: `Error: ${error.message}` }]);
+                 }
+            };
+
+            const handleCommand = async (text, source) => {
+                setIsLoading(true);
+                setStatus(`Processing... [${source}]`);
+                setUserInput('');
+
+                for (const rule of interpretationEngine) {
+                    if (text.toLowerCase().startsWith(rule.trigger)) {
+                        setStatus(`Executing: ${rule.type}`);
+                        const result = await Promise.resolve(rule.action(text));
+                        setChatHistory(prev => [...prev, {role: 'user', text}, {role: 'model', text: result, isAction: true}]);
+                        setIsLoading(false);
+                        setStatus('Ready');
+                        return;
+                    }
+                }
+                
+                // If no tool matches, treat it as a chat message for the AI
+                await callCognitoAI(text);
+                setIsLoading(false);
+                setStatus('Ready');
+            };
+
+            const executeGazeCommand = () => {
+                const gazeTarget = document.elementFromPoint(gazePosition.x, gazePosition.y);
+                if (gazeTarget) {
+                    let commandText = gazeTarget.value || gazeTarget.innerText;
+                    if (gazeTarget.tagName === 'TEXTAREA') {
+                        // Find the line the user is looking at in the textarea
+                        const text = gazeTarget.value;
+                        const lineHeight = parseFloat(window.getComputedStyle(gazeTarget).lineHeight);
+                        const relativeY = gazePosition.y - gazeTarget.getBoundingClientRect().top;
+                        const lineNum = Math.floor(relativeY / lineHeight);
+                        commandText = text.split('\n')[lineNum];
+                    }
+                    if (commandText && commandText.trim()) {
+                        handleCommand(commandText.trim(), 'GAZE');
+                    }
+                }
+            };
+
+            return (
+                <div className="bg-gray-900 text-gray-200 font-sans h-screen flex flex-col">
+                    {isGazeActive && <div className="gaze-dot" style={{ left: gazePosition.x, top: gazePosition.y }}></div>}
+                    <header className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between shadow-lg flex-shrink-0">
+                        <h1 className="text-xl font-bold text-cyan-400 flex items-center gap-2"><SparklesIcon /> AI Partner</h1>
+                        <div className="flex items-center gap-4">
+                            <button onClick={() => setIsGazeActive(!isGazeActive)} className={`px-3 py-2 rounded font-semibold text-white flex items-center gap-2 ${isGazeActive ? 'bg-red-600' : 'bg-indigo-600'}`}>
+                                <EyeIcon/> {isGazeActive ? 'Stop Gaze' : 'Start Gaze'}
+                            </button>
+                            <button onClick={executeGazeCommand} disabled={!isGazeActive || isLoading} className="px-3 py-2 rounded font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600">Execute Gaze</button>
+                        </div>
+                    </header>
+
+                    <main className="flex-grow flex flex-col md:flex-row p-4 gap-4 overflow-hidden">
+                        <div className="md:w-1/3 bg-gray-800 rounded-lg p-4 shadow-md flex flex-col h-1/2 md:h-full">
+                            <h2 className="text-lg font-semibold border-b border-gray-600 pb-2 mb-3 flex items-center gap-2 text-cyan-400">Content Workbench</h2>
+                            <textarea
+                                value={workbenchContent}
+                                onChange={(e) => setWorkbenchContent(e.target.value)}
+                                className="w-full h-full bg-gray-900 text-gray-200 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 font-mono text-sm resize-none"
+                                placeholder="Paste text, keys, or transactions to analyze..."
+                            ></textarea>
+                        </div>
+
+                        <div className="md:w-2/3 bg-black rounded-lg shadow-md flex flex-col h-1/2 md:h-full">
+                            <div className="flex-grow p-4 overflow-y-auto space-y-4">
+                                {chatHistory.map((msg, index) => (
+                                    <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                        {msg.role === 'system' ? (
+                                            <div className="text-center w-full text-sm text-yellow-400 italic">--- {msg.text} ---</div>
+                                        ) : (
+                                            <div className={`p-3 rounded-lg max-w-xl ${msg.role === 'user' ? 'bg-blue-800' : (msg.isAction ? 'bg-green-800' : 'bg-gray-700')}`}>
+                                                <pre className="whitespace-pre-wrap font-sans">{msg.text}</pre>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                                <div ref={chatEndRef} />
+                            </div>
+                            <form onSubmit={(e) => { e.preventDefault(); handleCommand(userInput, 'TYPED'); }} className="p-4 border-t border-gray-700 flex items-center gap-3 flex-shrink-0">
+                                <input
+                                    type="text"
+                                    value={userInput}
+                                    onChange={(e) => setUserInput(e.target.value)}
+                                    placeholder="Type a command or chat with the AI..."
+                                    className="w-full bg-gray-700 text-gray-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    disabled={isLoading}
+                                />
+                                <button type="submit" disabled={isLoading || !userInput.trim()} className="bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-600 text-white p-3 rounded-lg">
+                                    <PaperAirplaneIcon />
+                                </button>
+                            </form>
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
+
+

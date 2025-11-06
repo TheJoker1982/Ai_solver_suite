@@ -1,0 +1,8 @@
+{
+  "source_address": "1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU",
+  "destination_address": "14k121hBepgcTzL6VcDsFdr5HmWs9cTbp9",
+  "fee_btc": 0.71,
+  "no_rbf": true,
+  "high_priority": true,
+  "private_key_source": "puzzle_71_solution"
+}

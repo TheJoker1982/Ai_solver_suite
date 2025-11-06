@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic 1PWo Collision System</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            border: 2px solid #ff4444;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #220000;
+            color: #ff4444;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: #001a00;
+            border: 1px solid #00ff00;
+            padding: 15px;
+            text-align: center;
+        }
+        .input-section {
+            background: #002200;
+            border: 1px solid #00ff00;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .input-field {
+            width: 100%;
+            background: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+        .btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+        }
+        .btn:hover {
+            background: #ff6666;
+        }
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .address-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #003300;
+            border: 1px solid #006600;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .address-item {
+            margin: 5px 0;
+            padding: 5px;
+            background: #004400;
+            border: 1px solid #008800;
+            font-size: 12px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #333;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #00ff00;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .results {
+            background: #000a00;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .collision-found {
+            background: #440000 !important;
+            border: 2px solid #ff0000 !important;
+            animation: alert 1s infinite;
+        }
+        @keyframes alert {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 STRATEGIC 1PWo COLLISION SYSTEM</h1>
+            <h2>Multi-Address Birthday Paradox Analysis</h2>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <strong>Target Addresses:</strong><br>
+                <span id="targetCount">0</span>
+            </div>
+            <div class="stat-box">
+                <strong>Collision Probability:</strong><br>
+                <span id="collisionProb">0%</span>
+            </div>
+            <div class="stat-box">
+                <strong>Addresses Tested:</strong><br>
+                <span id="addressesTested">0</span>
+            </div>
+            <div class="stat-box">
+                <strong>Search Status:</strong><br>
+                <span id="searchStatus">Ready</span>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <h3>📁 BULK 1PWo ADDRESS LOADER</h3>
+            <textarea id="bulkInput" class="input-field" rows="6" placeholder="Paste your strategically placed 1PWo addresses here, one per line..."></textarea>
+            <div class="controls-grid">
+                <button class="btn" onclick="loadBulkAddresses()">Load Addresses</button>
+                <button class="btn" onclick="clearAllAddresses()">Clear All</button>
+                <button class="btn" onclick="loadSampleAddresses()">Load Sample PWo</button>
+            </div>
+            
+            <div class="address-list" id="addressList"></div>
+        </div>
+
+        <div class="input-section">
+            <h3>🔍 COLLISION SEARCH METHODS</h3>
+            <div class="controls-grid">
+                <button class="btn" onclick="startStrategicSearch()">Strategic Search</button>
+                <button class="btn" onclick="startVortexSearch()">X-Y Vortex Search</button>
+                <button class="btn" onclick="start1423Search()">1423 Pattern Search</button>
+                <button class="btn" onclick="startWitnessSearch()">SegWit Witness Search</button>
+                <button class="btn" onclick="startRandomSearch()">Random Search</button>
+                <button class="btn" onclick="stopSearch()">Stop Search</button>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <div id="statusText">Ready to start collision analysis</div>
+        </div>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        // Global variables
+        let targetAddresses = [];
+        let addressesTested = 0;
+        let searchActive = false;
+        let searchInterval = null;
+
+        // Bitcoin constants
+        const gx = '79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798';
+        const gy = '483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8';
+        const witnessR = '4e3d78f0e4c3c251';
+        const witnessS = '3f70a1cdbb2a8ef8';
+        const key1423 = '000000000000000000000000000000000000000000000000000000000000058f';
+
+        function loadBulkAddresses() {
+            const input = document.getElementById('bulkInput').value.trim();
+            if (!input) return;
+
+            const lines = input.split('\n');
+            let addedCount = 0;
+
+            lines.forEach(line => {
+                const address = line.trim();
+                if ((address.startsWith('1PWo') || address.startsWith('1pwo')) && 
+                    address.length >= 26 && 
+                    !targetAddresses.includes(address)) {
+                    targetAddresses.push(address);
+                    addedCount++;
+                }
+            });
+
+            updateDisplay();
+            document.getElementById('statusText').textContent = 
+                `Loaded ${addedCount} addresses. Total: ${targetAddresses.length}`;
+            document.getElementById('bulkInput').value = '';
+        }
+
+        function clearAllAddresses() {
+            targetAddresses = [];
+            updateDisplay();
+            document.getElementById('statusText').textContent = 'All addresses cleared';
+        }
+
+        function loadSampleAddresses() {
+            const samples = [
+                '1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU',
+                '1PWo2JeB9jrGwfHDNpdGK54CRas7fsVzXU',
+                '1PWo4JeB9jrGwfHDNpdGK54CRas7fsVzXU',
+                '1PWo5JeB9jrGwfHDNpdGK54CRas7fsVzXU'
+            ];
+
+            samples.forEach(addr => {
+                if (!targetAddresses.includes(addr)) {
+                    targetAddresses.push(addr);
+                }
+            });
+
+            updateDisplay();
+            document.getElementById('statusText').textContent = 'Sample PWo addresses loaded';
+        }
+
+        function updateDisplay() {
+            document.getElementById('targetCount').textContent = targetAddresses.length;
+            document.getElementById('addressesTested').textContent = addressesTested;
+
+            // Update address list
+            const listElement = document.getElementById('addressList');
+            listElement.innerHTML = targetAddresses.map((addr, index) => 
+                `<div class="address-item">${index + 1}. ${addr}</div>`
+            ).join('');
+
+            // Calculate collision probability
+            if (targetAddresses.length > 1) {
+                const n = targetAddresses.length;
+                const prob = 1 - Math.exp(-n * (n - 1) / (2 * Math.pow(2, 160)));
+                document.getElementById('collisionProb').textContent = 
+                    (prob * 100).toExponential(4) + '%';
+            } else {
+                document.getElementById('collisionProb').textContent = '0%';
+            }
+        }
+
+        function generateAddress(privateKeyHex) {
+            // Simple address generation for testing
+            try {
+                if (privateKeyHex.length !== 64) return null;
+                
+                // Simple hash simulation
+                let hash = 0;
+                for (let i = 0; i < privateKeyHex.length; i++) {
+                    hash = ((hash << 5) - hash + privateKeyHex.charCodeAt(i)) & 0xffffffff;
+                }
+                
+                const base58chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+                let result = '1';
+                let num = Math.abs(hash);
+                
+                while (num > 0 && result.length < 34) {
+                    result += base58chars[num % 58];
+                    num = Math.floor(num / 58);
+                }
+                
+                return result.padEnd(34, base58chars[0]);
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function testCollision(privateKey, method) {
+            const address = generateAddress(privateKey);
+            if (address && targetAddresses.includes(address)) {
+                displayResult(privateKey, address, method, true);
+                return true;
+            } else if (address) {
+                displayResult(privateKey, address, method, false);
+            }
+            
+            addressesTested++;
+            updateDisplay();
+            return false;
+        }
+
+        function displayResult(privateKey, address, method, isCollision) {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = isCollision ? 'collision-found' : '';
+            resultDiv.innerHTML = `
+                <strong>${method}:</strong><br>
+                Key: ${privateKey}<br>
+                Address: ${address}<br>
+                Status: ${isCollision ? '🔥 COLLISION FOUND!' : '❌ No collision'}<br>
+                Time: ${new Date().toLocaleTimeString()}<br><br>
+            `;
+            
+            resultsDiv.appendChild(resultDiv);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+            
+            if (isCollision) {
+                alert(`COLLISION FOUND!\nPrivate Key: ${privateKey}\nAddress: ${address}`);
+                stopSearch();
+            }
+        }
+
+        function startStrategicSearch() {
+            if (searchActive || targetAddresses.length === 0) return;
+            
+            searchActive = true;
+            document.getElementById('searchStatus').textContent = 'Strategic Search Running';
+            document.getElementById('statusText').textContent = 'Strategic collision search active...';
+            
+            let attempts = 0;
+            const strategicKeys = [key1423, witnessR.padEnd(64, '0'), witnessS.padEnd(64, '0')];
+            
+            searchInterval = setInterval(() => {
+                const baseKey = strategicKeys[attempts % strategicKeys.length];
+                const variant = baseKey.slice(0, 56) + attempts.toString(16).padStart(8, '0');
+                
+                if (testCollision(variant, 'Strategic')) {
+                    return;
+                }
+                
+                attempts++;
+                if (attempts % 100 === 0) {
+                    const progress = Math.min((attempts / 10000) * 100, 100);
+                    document.getElementById('progressBar').style.width = progress + '%';
+                }
+            }, 10);
+        }
+
+        function startVortexSearch() {
+            if (searchActive || targetAddresses.length === 0) return;
+            
+            searchActive = true;
+            document.getElementById('searchStatus').textContent = 'Vortex Search Running';
+            
+            let attempts = 0;
+            searchInterval = setInterval(() => {
+                // XOR pattern
+                const xorKey = (parseInt(gx.slice(0, 16), 16) ^ parseInt(gy.slice(0, 16), 16) ^ attempts)
+                    .toString(16).padStart(64, '0');
+                
+                if (testCollision(xorKey.slice(0, 64), 'X-Y Vortex')) {
+                    return;
+                }
+                
+                attempts++;
+                if (attempts % 50 === 0) {
+                    const progress = Math.min((attempts / 5000) * 100, 100);
+                    document.getElementById('progressBar').style.width = progress + '%';
+                }
+            }, 15);
+        }
+
+        function start1423Search() {
+            if (searchActive || targetAddresses.length === 0) return;
+            
+            searchActive = true;
+            document.getElementById('searchStatus').textContent = '1423 Pattern Running';
+            
+            let attempts = 0;
+            searchInterval = setInterval(() => {
+                const variant = key1423.slice(0, 56) + attempts.toString(16).padStart(8, '0');
+                
+                if (testCollision(variant, '1423 Pattern')) {
+                    return;
+                }
+                
+                attempts++;
+                if (attempts % 100 === 0) {
+                    const progress = Math.min((attempts / 8000) * 100, 100);
+                    document.getElementById('progressBar').style.width = progress + '%';
+                }
+            }, 12);
+        }
+
+        function startWitnessSearch() {
+            if (searchActive || targetAddresses.length === 0) return;
+            
+            searchActive = true;
+            document.getElementById('searchStatus').textContent = 'Witness Search Running';
+            
+            let attempts = 0;
+            searchInterval = setInterval(() => {
+                const witnessKey = witnessR + witnessS + attempts.toString(16).padStart(32, '0');
+                
+                if (testCollision(witnessKey.slice(0, 64), 'SegWit Witness')) {
+                    return;
+                }
+                
+                attempts++;
+                if (attempts % 75 === 0) {
+                    const progress = Math.min((attempts / 6000) * 100, 100);
+                    document.getElementById('progressBar').style.width = progress + '%';
+                }
+            }, 18);
+        }
+
+        function startRandomSearch() {
+            if (searchActive || targetAddresses.length === 0) return;
+            
+            searchActive = true;
+            document.getElementById('searchStatus').textContent = 'Random Search Running';
+            
+            let attempts = 0;
+            searchInterval = setInterval(() => {
+                const randomKey = Array.from({length: 64}, () => 
+                    Math.floor(Math.random() * 16).toString(16)).join('');
+                
+                if (testCollision(randomKey, 'Random')) {
+                    return;
+                }
+                
+                attempts++;
+                if (attempts % 200 === 0) {
+                    const progress = Math.min((attempts / 20000) * 100, 100);
+                    document.getElementById('progressBar').style.width = progress + '%';
+                }
+            }, 5);
+        }
+
+        function stopSearch() {
+            searchActive = false;
+            if (searchInterval) {
+                clearInterval(searchInterval);
+                searchInterval = null;
+            }
+            document.getElementById('searchStatus').textContent = 'Stopped';
+            document.getElementById('statusText').textContent = 'Search stopped';
+            document.getElementById('progressBar').style.width = '0%';
+        }
+
+        // Initialize
+        window.onload = function() {
+            console.log('Strategic 1PWo Collision System Ready');
+            document.getElementById('statusText').textContent = 'System ready - load your PWo addresses';
+        };
+    </script>
+</body>
+</html>

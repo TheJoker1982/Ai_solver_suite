@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Puzzle 71 - Tools Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .tool-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--tool-color);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .tool-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--tool-color);
+        }
+
+        .tool-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .tool-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .tool-features li {
+            padding: 5px 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .tool-features li::before {
+            content: '✓ ';
+            color: #00ff88;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: var(--tool-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .shortcut-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .quick-access {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .quick-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .stats-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 15px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Tool-specific colors */
+        .main-solver { --tool-color: #667eea; }
+        .blockchain-monitor { --tool-color: #9C27B0; }
+        .network-heatmap { --tool-color: #2c3e50; }
+        .entropy-analyzer { --tool-color: #1a1a2e; }
+        .hash-explorer { --tool-color: #ff6b35; }
+        .token-manager { --tool-color: #f7931a; }
+        .live-support { --tool-color: #00d4aa; }
+        .learning-path { --tool-color: #764ba2; }
+
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tool-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bitcoin Puzzle 71 Tools Dashboard</h1>
+            <p>Your complete toolkit for systematic Bitcoin address generation and analysis</p>
+        </div>
+
+        <div class="quick-access">
+            <h3>Quick Access - All Tools</h3>
+            <div class="quick-buttons">
+                <button class="btn" style="background: #667eea;" onclick="window.open('working_morpher.html', '_blank')">Main Solver</button>
+                <button class="btn" style="background: #9C27B0;" onclick="window.open('multichain_monitor.html', '_blank')">Blockchain Monitor</button>
+                <button class="btn" style="background: #2c3e50;" onclick="window.open('network_heatmap.html', '_blank')">Network Heatmap</button>
+                <button class="btn" style="background: #1a1a2e;" onclick="window.open('entropy_analyzer.html', '_blank')">Entropy Analyzer</button>
+                <button class="btn" style="background: #3498db;" onclick="window.open('bitcoin_academy.html', '_blank')">Bitcoin Academy</button>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value">9</div>
+                <div class="stat-label">Powerful Tools</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">16</div>
+                <div class="stat-label">Network Types</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">71</div>
+                <div class="stat-label">Target Puzzle</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">∞</div>
+                <div class="stat-label">Possibilities</div>
+            </div>
+        </div>
+
+        <div class="tools-grid">
+            <!-- Main Bitcoin Puzzle 71 Solver -->
+            <div class="tool-card main-solver">
+                <div class="tool-icon">⚡</div>
+                <div class="tool-title">Bitcoin Puzzle 71 Solver</div>
+                <div class="tool-description">
+                    The core systematic address generation engine with Lightning Network support and multi-chain compatibility.
+                </div>
+                <ul class="tool-features">
+                    <li>Systematic G-point nonce sequences (71-80)</li>
+                    <li>Lightning Network channel integration</li>
+                    <li>16 network types with proper derivations</li>
+                    <li>Y=G relationship enforcement</li>
+                    <li>Testnet support with 6 test networks</li>
+                    <li>Real-time address generation</li>
+                </ul>
+                <div class="tool-actions">
+                    <button class="btn" onclick="window.open('working_morpher.html', '_blank')">Open Solver</button>
+                    <button class="btn btn-secondary" onclick="copyShortcut('Main Interface')">Copy Link</button>
+                </div>
+                <div class="shortcut-info">No keyboard shortcut - Main interface</div>
+            </div>
+
+            <!-- Multi-Chain Blockchain Monitor -->
+            <div class="tool-card blockchain-monitor">
+                <div class="tool-icon">🔗</div>
+                <div class="tool-title">Live Multi-Chain Monitor</div>
+                <div class="tool-description">
+                    Real-time monitoring of 8 blockchain networks with transaction streams and market data.
+                </div>
+                <ul class="tool-features">
+                    <li>8 blockchain networks (Bitcoin, Ethereum, etc.)</li>
+                    <li>Live block height tracking</li>
+                    <li>Cross-chain transaction monitoring</li>
+                    <li>Market data and pricing</li>
+                    <li>Auto-refresh functionality</li>
+                    <li>Comprehensive data export</li>
+                </ul>
+                <div class="tool-actions">
+                    <button class="btn" onclick="window.open('multichain_monitor.html', '_blank')">Open Monitor</button>
+                    <button class="btn btn-secondary" onclick="copyShortcut('Ctrl+B')">Shortcut: Ctrl+B</button>
+                </div>
+                <div class="shortcut-info">Keyboard shortcut: Ctrl+B</div>
+            </div>
+
+            <!-- Network Connectivity Heatmap -->
+            <div class="tool-card network-heatmap">
+                <div class="tool-icon">📡</div>
+                <div class="tool-title">Network Connectivity Heatmap</div>
+                <div class="tool-description">
+                    Global network performance monitoring across regions and providers for optimal connectivity.
+                </div>
+                <ul class="tool-features">
+                    <li>6 global regions monitoring</li>
+                    <li>6 major carrier comparison</li>
+                    <li>Real-time latency testing</li>
+                    <li>Visual performance indicators</li>
+                    <li>Network topology visualization</li>
+                    <li>Connectivity quality reports</li>
+                </ul>
+                <div class="tool-actions">
+                    <button class="btn" onclick="window.open('network_heatmap.html', '_blank')">Open Heatmap</button>
+                    <button class="btn btn-secondary" onclick="copyShortcut('Ctrl+N')">Shortcut: Ctrl+N</button>
+                </div>
+                <div class="shortcut-info">Keyboard shortcut: Ctrl+N</div>
+            </div>
+
+            <!-- Cryptographic Entropy Analyzer -->
+            <div class="tool-card entropy-analyzer">
+                <div class="tool-icon">🎲</div>
+                <div class="tool-title">Cryptographic Entropy Analyzer</div>
+                <div class="tool-description">
+                    Advanced randomness and security analysis for validating cryptographic key quality.
+                </div>
+                <ul class="tool-features">
+                    <li>Shannon entropy calculation</li>
+                    <li>Pattern detection algorithms</li>
+                    <li>Statistical randomness tests</li>
+                    <li>Security strength scoring</li>
+                    <li>Visual distribution analysis</li>
+                    <li>Comprehensive recommendations</li>
+                </ul>
+                <div class="tool-actions">
+                    <button class="btn" onclick="window.open('entropy_analyzer.html', '_blank')">Open Analyzer</button>
+                    <button class="btn btn-secondary" onclick="copyShortcut('Ctrl+R')">Shortcut: Ctrl+R</button>
+                </div>
+                <div class="shortcut-info">Keyboard shortcut: Ctrl+R</div>
+            </div>
+
+            <!-- Hash Function Explorer -->
+            <div class="tool-card hash-explorer">
+                <div class="tool-icon">🔍</div>
+                <div class="tool-title">Hash Function Explorer</div>
+                <div class="tool-description">
+                    Interactive exploration of 9 cryptographic hash algorithms with difficulty ratings.
+                </div>
+                <ul class="tool-features">
+                    <li>9 hash algorithms with ratings</li>
+                    <li>Real-time hash testing</li>
+                    <li>Network-specific implementations</li>
+                    <li>Entropy calculations</li>
+                    <li>Performance metrics</li>
+                    <li>Security level analysis</li>
+                </ul>
+                <div class="tool-actions">
+                    <button class="btn" onclick="openHashExplorer()">Open Explorer</button>
+                    <button class="btn btn-secondary" onclick="copyShortcut('Ctrl+E')">Shortcut: Ctrl+E</button>
+                </div>
+                <div class="shortcut-info">Keyboard shortcut: Ctrl+E (from main interface)</div>
+            </div>
+
+            <!-- Multi-Asset Token Manager -->
+            <div class="tool-card token-manager">
+                <div class="tool-icon">🎨</div>
+                <div class="tool-title">Multi-Asset Token Manager</div>
+                <div class="tool-description">
+                    Comprehensive token and NFT support across 8 standards and 5 blockchain networks.
+                </div>
+                <ul class="tool-features">
+                    <li>8 token standards (ERC-20/721/1155, etc.)</li>
+                    <li>5 blockchain networks</li>
+                    <li>1Legacy format support</li>
+                    <li>NFT collection generation</li>
+                    <li>Contract address creation</li>
+                    <li>Protocol compliance checking</li>
+                </ul>
+                <div class="tool-actions">
+                    <button class="btn" onclick="openTokenManager()">Open Manager</button>
+                    <button class="btn btn-secondary" onclick="copyShortcut('Ctrl+T')">Shortcut: Ctrl+T</button>
+                </div>
+                <div class="shortcut-info">Keyboard shortcut: Ctrl+T (from main interface)</div>
+            </div>
+
+            <!-- Live Support System -->
+            <div class="tool-card live-support">
+                <div class="tool-icon">💬</div>
+                <div class="tool-title">Live Support System</div>
+                <div class="tool-description">
+                    Real-time chat interface with intelligent responses for Bitcoin Puzzle 71 operations.
+                </div>
+                <ul class="tool-features">
+                    <li>Intelligent response system</li>
+                    <li>Quick support buttons</li>
+                    <li>Message history tracking</li>
+                    <li>Contextual help</li>
+                    <li>Troubleshooting assistance</li>
+                    <li>16 network guidance</li>
+                </ul>
+                <div class="tool-actions">
+                    <button class="btn" onclick="openLiveSupport()">Open Support</button>
+                    <button class="btn btn-secondary" onclick="copyShortcut('Ctrl+S')">Shortcut: Ctrl+S</button>
+                </div>
+                <div class="shortcut-info">Keyboard shortcut: Ctrl+S (from main interface)</div>
+            </div>
+
+            <!-- Learning Path System -->
+            <div class="tool-card learning-path">
+                <div class="tool-icon">📚</div>
+                <div class="tool-title">Blockchain Learning Path</div>
+                <div class="tool-description">
+                    AI-driven learning recommendations with adaptive content based on user interactions.
+                </div>
+                <ul class="tool-features">
+                    <li>4 skill levels (Beginner to Expert)</li>
+                    <li>Personalized recommendations</li>
+                    <li>Progress tracking</li>
+                    <li>Interactive modules</li>
+                    <li>Practical exercises</li>
+                    <li>Intelligent progression</li>
+                </ul>
+                <div class="tool-actions">
+                    <button class="btn" onclick="openLearningPath()">Open Learning</button>
+                    <button class="btn btn-secondary" onclick="copyShortcut('Ctrl+L')">Shortcut: Ctrl+L</button>
+                </div>
+                <div class="shortcut-info">Keyboard shortcut: Ctrl+L (from main interface)</div>
+            </div>
+
+            <!-- Bitcoin Academy -->
+            <div class="tool-card" style="--tool-color: #3498db;">
+                <div class="tool-icon">🎓</div>
+                <div class="tool-title">Bitcoin Academy</div>
+                <div class="tool-description">
+                    Comprehensive educational platform with courses, tutorials, and interactive demonstrations.
+                </div>
+                <ul class="tool-features">
+                    <li>6 structured courses (Beginner to Expert)</li>
+                    <li>Step-by-step tutorials</li>
+                    <li>Interactive demonstrations</li>
+                    <li>Knowledge quizzes</li>
+                    <li>Complete reference guide</li>
+                    <li>Hands-on learning exercises</li>
+                </ul>
+                <div class="tool-actions">
+                    <button class="btn" onclick="window.open('bitcoin_academy.html', '_blank')">Open Academy</button>
+                    <button class="btn btn-secondary" onclick="copyShortcut('Educational Platform')">Copy Link</button>
+                </div>
+                <div class="shortcut-info">Comprehensive learning platform</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.1); border-radius: 20px;">
+            <h3>Complete Bitcoin Puzzle 71 Toolkit</h3>
+            <p style="margin: 15px 0; opacity: 0.9;">
+                All tools integrated with systematic Lightning channel support, proper protocol compliance, 
+                and comprehensive analysis capabilities for breakthrough Bitcoin operations.
+            </p>
+            <button class="btn" style="background: #00ff88; color: #000; padding: 15px 30px; font-size: 1.1rem;" 
+                    onclick="window.open('working_morpher.html', '_blank')">
+                Start Your Bitcoin Puzzle 71 Journey
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function copyShortcut(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification(`Copied: ${text}`);
+            });
+        }
+
+        function openHashExplorer() {
+            window.open('working_morpher.html', '_blank');
+            showNotification('Opening main interface - use Ctrl+E for Hash Explorer');
+        }
+
+        function openTokenManager() {
+            window.open('working_morpher.html', '_blank');
+            showNotification('Opening main interface - use Ctrl+T for Token Manager');
+        }
+
+        function openLiveSupport() {
+            window.open('working_morpher.html', '_blank');
+            showNotification('Opening main interface - use Ctrl+S for Live Support');
+        }
+
+        function openLearningPath() {
+            window.open('working_morpher.html', '_blank');
+            showNotification('Opening main interface - use Ctrl+L for Learning Path');
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #00ff88 0%, #00d4aa 100%);
+                color: #000;
+                padding: 15px 25px;
+                border-radius: 10px;
+                font-weight: bold;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

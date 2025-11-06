@@ -1,0 +1,249 @@
+{
+  "version": "1.0.0",
+  "updated": "2025-10-31",
+  "total_tools": 45,
+  "categories": ["scanners", "crypto", "analysis", "wallets", "utilities"],
+
+  "brute_force_scanners": {
+    "bitcrack": {
+      "name": "BitCrack GPU Scanner",
+      "id": "bitcrack_scanner",
+      "type": "gpu_accelerated",
+      "description": "Industrial-grade GPU-accelerated Bitcoin private key scanner using CUDA/OpenCL",
+      "performance": "~1 billion keys/second per GPU",
+      "supported_gpus": ["NVIDIA RTX 3090", "RTX 4090", "AMD RX 6900 XT"],
+      "algorithm": "Brute force enumeration with parallel GPU processing",
+      "use_cases": ["Puzzle solving", "Lost wallet recovery", "Key space exploration"],
+      "pricing": {
+        "free_tier": "100,000 keys/day",
+        "premium": "$0.05/hour unlimited"
+      },
+      "features": [
+        "CUDA and OpenCL support",
+        "Batch processing",
+        "Resume capability",
+        "Real-time progress tracking",
+        "Multiple GPU support"
+      ],
+      "installation": "embedded",
+      "platform": "cross_platform"
+    },
+    "kangaroo": {
+      "name": "Kangaroo ECDLP Solver",
+      "id": "kangaroo_scanner",
+      "type": "algorithm_based",
+      "description": "Pollard's Kangaroo algorithm for solving Elliptic Curve Discrete Logarithm Problem",
+      "performance": "Optimized for known-range puzzles",
+      "algorithm": "Collision-based search using wild and tame kangaroos",
+      "use_cases": ["Puzzle #66-71", "Known range searches", "ECDLP challenges"],
+      "pricing": {
+        "free_tier": "10,000 iterations/day",
+        "premium": "$0.05/hour unlimited"
+      },
+      "features": [
+        "Distinguished point method",
+        "Parallel kangaroo spawning",
+        "Progress checkpointing",
+        "Memory-efficient design"
+      ],
+      "optimal_for": "Puzzles with known bit range",
+      "installation": "embedded",
+      "platform": "cross_platform"
+    },
+    "keyhunt": {
+      "name": "KeyHunt Scanner",
+      "id": "keyhunt_scanner",
+      "type": "multi_mode",
+      "description": "Multi-mode Bitcoin key hunting tool with random, sequential, and bloom filter modes",
+      "performance": "CPU-optimized with multiple search strategies",
+      "modes": {
+        "random": "Random key generation and testing",
+        "sequential": "Sequential range scanning",
+        "bloom_filter": "Probabilistic address matching",
+        "vanity": "Custom pattern searching"
+      },
+      "pricing": {
+        "free_tier": "50,000 keys/day",
+        "premium": "$0.05/hour unlimited"
+      },
+      "features": [
+        "Multiple search modes",
+        "Bloom filter optimization",
+        "CPU multi-threading",
+        "Pattern matching"
+      ],
+      "installation": "embedded",
+      "platform": "cross_platform"
+    }
+  },
+
+  "crypto_tools": {
+    "hd_wallet_core": {
+      "name": "HD Wallet Generator",
+      "id": "hd_wallet",
+      "description": "BIP32/39/44 compliant hierarchical deterministic wallet generator",
+      "features": [
+        "Mnemonic seed phrase generation (12/24 words)",
+        "BIP32 key derivation",
+        "BIP44 multi-coin support",
+        "Address generation (P2PKH, P2SH, Bech32)",
+        "Secure key storage"
+      ],
+      "pricing": {
+        "free_tier": "100 derivations/day",
+        "premium": "Unlimited"
+      },
+      "security": "Military-grade encryption",
+      "installation": "embedded"
+    },
+    "qr_generator": {
+      "name": "Crypto QR Generator",
+      "id": "qr_tool",
+      "description": "Generate QR codes for Bitcoin addresses and payment requests",
+      "features": [
+        "Address QR codes",
+        "Payment request QR (BIP21)",
+        "Custom branding",
+        "High-resolution export"
+      ],
+      "pricing": "Free unlimited",
+      "installation": "embedded"
+    },
+    "transaction_builder": {
+      "name": "Transaction Builder",
+      "id": "tx_builder",
+      "description": "Create and sign Bitcoin transactions with fee optimization",
+      "features": [
+        "UTXO selection",
+        "Fee estimation",
+        "Multi-sig support",
+        "RBF support",
+        "Transaction broadcasting"
+      ],
+      "pricing": {
+        "free_tier": "10 transactions/day",
+        "premium": "Unlimited"
+      },
+      "installation": "embedded"
+    }
+  },
+
+  "analysis_tools": {
+    "charset_dsl": {
+      "name": "Character Set DSL",
+      "id": "charset_workbench",
+      "description": "Domain-specific language for character set manipulation and enumeration",
+      "features": [
+        "IANA character set support",
+        "Base58/Bech32 encoding",
+        "Pattern matching",
+        "Deterministic enumeration",
+        "Hex operations"
+      ],
+      "pricing": "Free unlimited",
+      "installation": "embedded"
+    },
+    "blockchain_explorer": {
+      "name": "Blockchain Explorer",
+      "id": "blockchain_terminal",
+      "description": "Real-time blockchain data analysis for BTC, ETH, BCH",
+      "features": [
+        "Block exploration",
+        "Transaction lookup",
+        "Address balance checking",
+        "Mempool analysis",
+        "Network statistics"
+      ],
+      "apis": {
+        "bitcoin": "Blockstream API",
+        "ethereum": "Infura RPC",
+        "bitcoin_cash": "Blockchair API"
+      },
+      "pricing": "Free unlimited",
+      "installation": "embedded"
+    },
+    "utxo_scanner": {
+      "name": "UTXO Scanner",
+      "id": "utxo_tool",
+      "description": "Scan and analyze unspent transaction outputs",
+      "features": [
+        "UTXO discovery",
+        "Balance calculation",
+        "Dust detection",
+        "Consolidation planning"
+      ],
+      "pricing": {
+        "free_tier": "100 addresses/day",
+        "premium": "Unlimited"
+      },
+      "installation": "embedded"
+    }
+  },
+
+  "ai_tools": {
+    "ai_assistant": {
+      "name": "AI Puzzle Solver Assistant",
+      "id": "ai_chat",
+      "description": "GPT-5 powered AI assistant with 45+ tool knowledge bank",
+      "model": "gpt-5",
+      "features": [
+        "Tool recommendations",
+        "Strategy guidance",
+        "Error debugging",
+        "Learning from patterns",
+        "Personalized insights"
+      ],
+      "pricing": {
+        "free_tier": "10 queries/day",
+        "premium": "Unlimited queries"
+      },
+      "installation": "embedded"
+    },
+    "ai_debugger": {
+      "name": "AI Debugger",
+      "id": "ai_debug",
+      "description": "Real-time error monitoring and AI-powered debugging assistance",
+      "features": [
+        "Automatic error detection",
+        "API call monitoring",
+        "Performance tracking",
+        "Instant AI help",
+        "Visual error notifications"
+      ],
+      "pricing": "Free unlimited",
+      "installation": "embedded"
+    }
+  },
+
+  "tier_requirements": {
+    "free": {
+      "price": "$0/month",
+      "features": [
+        "10 AI queries/day",
+        "100 HD derivations/day",
+        "100,000 scanner keys/day",
+        "Basic tools access",
+        "Community support"
+      ]
+    },
+    "premium": {
+      "price": "$0.99/month",
+      "features": [
+        "Unlimited AI queries",
+        "Unlimited HD derivations",
+        "Scanner access ($0.05/hour)",
+        "All tools unlocked",
+        "Priority support",
+        "10% puzzle commission"
+      ]
+    }
+  },
+
+  "platform_support": {
+    "web": true,
+    "ios": true,
+    "android": true,
+    "desktop": true,
+    "offline_mode": "Partial (core tools work offline)"
+  }
+}

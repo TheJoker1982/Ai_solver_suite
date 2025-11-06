@@ -1,0 +1,21 @@
+{
+  "puzzle_solving_strategy": {
+    "approach": "Solve directly to master-controlled addresses",
+    "puzzle_72": "m/44'/0'/0'/7/72 \u2192 Maximum security",
+    "puzzle_73": "m/44'/0'/0'/7/73 \u2192 Maximum security",
+    "puzzle_74": "m/44'/0'/0'/7/74 \u2192 Maximum security",
+    "advantage": "No individual key vulnerability"
+  },
+  "spending_system": {
+    "grocery_money": "m/44'/0'/0'/8/100 \u2192 $100 transactions",
+    "daily_spending": "m/44'/0'/0'/8/1 \u2192 Regular expenses",
+    "emergency_access": "m/44'/0'/0'/9/911 \u2192 Emergency funds",
+    "all_revocable": true
+  },
+  "security_protocol": {
+    "master_seed_storage": "Offline, maximum security",
+    "derived_key_usage": "Temporary, purpose-specific",
+    "compromise_response": "Immediate revocation and path change",
+    "fund_protection": "Master maintains ultimate control"
+  }
+}

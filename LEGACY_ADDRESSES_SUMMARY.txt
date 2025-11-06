@@ -1,0 +1,30 @@
+LEGACY ADDRESS GENERATION SUMMARY
+=================================
+Total: 36 legacy addresses
+Target: 1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU
+Matches: 0
+
+KEY MATHEMATICAL LEGACY ADDRESSES:
+----------------------------------
+Math_Direct_4^20: 1AF4csdPKzJtjmNWZq566ahtSdmdjeLhwo
+Math_Direct_47%_of_235: 16RWC3y8MVc7Mn253hwLwBFUMHYGyns1SH
+Math_Direct_88%_of_N: 1HxcxEUoGMswPhFLsqWoUBgGDEpoa9PSns
+Math_Direct_2^35: 17aWzYJNGvV2dPga6M2N9oP76ZTiRw1QRb
+Math_Direct_4^20_mod_N: 1EmS1ACu8783xW9ZFxeQuBb9EDU6jYPtif
+Math_Direct_47%_235_squared: 18K4fiQUvJUiTtomeDzKUNfEgq4AoEQnmd
+Math_Direct_47%_235_cubed: 1Cr9jF6b6LyFUTjKsDrZSFLGLXzkgFBGm2
+
+CORE NUMBERS LEGACY ADDRESSES:
+------------------------------
+Core_N_original: 14gNXPvfKZT9FRotDczPMWpMG5fEzLw2oN
+Core_N_inverted: 1MrVn8GqJk7PhHiJkH4gtzGRVKu65auYGx
+Core_Double_invert: 112bdCzatpzxstxEauGrWRpWGBsBfgnJKn
+Core_N_NEW: 1Nh6T1RKKdz8bqfX2ybryWJesiJ6GxfHsF
+Core_N_NEW_mod_N: 1CAogRjoRXei33P4h8NxwKQLtTDyPV9L4P
+
+PHONETIC SEQUENCE LEGACY ADDRESSES:
+-----------------------------------
+Phonetic_Line48: 1AH6uDHwB8TMoJoTrA1E4WEhZCwiYJFEPn
+Phonetic_Flipped: 1K9AH7UtHJPugUeSqCtxtWeqiNWQq3ps1w
+Phonetic_Ordinal: 1441S7emhxzKVWjKreqQNL8K3YvHg2hkjL
+Phonetic_Mirrored: 14sYAZ4mXGydGUzuofCWhfi6TXt6trVYNL

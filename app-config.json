@@ -1,0 +1,273 @@
+{
+  "app_metadata": {
+    "name": "CRYPTO HEIST",
+    "version": "1.0.0",
+    "build": 1,
+    "tagline": "GTA-Style Crypto Gaming Platform",
+    "description": "The ultimate Bitcoin puzzle-solving platform with 900 BTC in prizes. Progress from Geek Squad to Crypto Kingpin through real puzzle solving, brute force scanning, and squad collaboration.",
+    "category": "Finance & Gaming",
+    "age_rating": "17+",
+    "platforms": ["iOS", "Android", "Web", "Desktop"],
+    "release_date": "2025-11-01",
+    "last_updated": "2025-10-31"
+  },
+
+  "app_store_info": {
+    "ios": {
+      "bundle_id": "com.cryptoheist.app",
+      "app_store_url": "https://apps.apple.com/app/crypto-heist",
+      "minimum_ios": "14.0",
+      "supported_devices": ["iPhone", "iPad"],
+      "keywords": ["bitcoin", "puzzle", "crypto", "gaming", "blockchain", "money"]
+    },
+    "android": {
+      "package_name": "com.cryptoheist.app",
+      "play_store_url": "https://play.google.com/store/apps/details?id=com.cryptoheist.app",
+      "minimum_android": "8.0",
+      "target_sdk": "34",
+      "keywords": ["bitcoin", "puzzle", "crypto", "gaming", "blockchain", "earning"]
+    }
+  },
+
+  "monetization": {
+    "subscription": {
+      "free_tier": {
+        "price": "$0/month",
+        "features": [
+          "10 AI queries per day",
+          "100 HD wallet derivations per day",
+          "100,000 scanner keys per day",
+          "Basic tools access",
+          "Community chat",
+          "5 puzzle attempts per day"
+        ],
+        "limits": {
+          "ai_queries_daily": 10,
+          "hd_derivations_daily": 100,
+          "scanner_keys_daily": 100000,
+          "puzzle_attempts_daily": 5
+        }
+      },
+      "premium_tier": {
+        "price": "$0.99/month",
+        "price_annual": "$9.99/year",
+        "features": [
+          "Unlimited AI queries",
+          "Unlimited HD wallet derivations",
+          "Scanner access at $0.05/hour",
+          "All 45+ tools unlocked",
+          "Priority support",
+          "No ads",
+          "10% puzzle commission",
+          "VIP lounge access",
+          "Custom profile badges"
+        ],
+        "limits": {
+          "ai_queries_daily": "unlimited",
+          "hd_derivations_daily": "unlimited",
+          "scanner_hours_monthly": "pay-per-use",
+          "puzzle_attempts_daily": "unlimited"
+        }
+      }
+    },
+    "pay_per_use": {
+      "scanner_usage": {
+        "rate": "$0.05/hour",
+        "description": "GPU-accelerated brute force scanning",
+        "billing": "Per minute (minimum 5 minutes)"
+      }
+    },
+    "revenue_share": {
+      "puzzle_solves": {
+        "platform_commission": "10%",
+        "user_payout": "90%",
+        "minimum_withdrawal": "0.001 BTC"
+      }
+    },
+    "payment_methods": {
+      "accepted": ["Credit Card", "Apple Pay", "Google Pay", "Bitcoin", "Lightning Network"],
+      "stripe_enabled": true,
+      "crypto_payments_enabled": true
+    }
+  },
+
+  "backend_api": {
+    "production_url": "https://api.cryptoheist.io",
+    "staging_url": "https://staging-api.cryptoheist.io",
+    "websocket_url": "wss://api.cryptoheist.io",
+    "endpoints": {
+      "auth": "/api/auth",
+      "puzzles": "/api/puzzles",
+      "tools": "/api/tools",
+      "ai": "/api/ai",
+      "leaderboards": "/api/leaderboards",
+      "social": "/api/social",
+      "payments": "/api/payments"
+    },
+    "rate_limits": {
+      "free_tier": "100 requests/minute",
+      "premium_tier": "1000 requests/minute"
+    }
+  },
+
+  "blockchain_apis": {
+    "bitcoin": {
+      "primary": "https://blockstream.info/api",
+      "fallback": "https://blockchain.info",
+      "mempool": "https://mempool.space/api"
+    },
+    "ethereum": {
+      "primary": "https://mainnet.infura.io/v3",
+      "fallback": "https://eth.llamarpc.com"
+    },
+    "bitcoin_cash": {
+      "primary": "https://api.blockchair.com/bitcoin-cash"
+    }
+  },
+
+  "embedded_data": {
+    "puzzles": "app-data/puzzles-database.json",
+    "tools": "app-data/tools-database.json",
+    "charsets": "app-data/character-sets-database.json",
+    "game_content": "app-data/game-content.json",
+    "knowledge_bank": "knowledge-bank.json",
+    "offline_mode": true,
+    "data_update_frequency": "daily"
+  },
+
+  "features": {
+    "core": [
+      "Bitcoin puzzle solving",
+      "Brute force scanners (BitCrack, Kangaroo, KeyHunt)",
+      "AI assistant (GPT-5)",
+      "HD wallet generator",
+      "Character set workbench",
+      "Blockchain terminals (BTC/ETH/BCH)",
+      "Real-time scanning"
+    ],
+    "social": [
+      "Squad system",
+      "Global chat",
+      "Direct messaging",
+      "Friend system",
+      "Activity feed",
+      "Leaderboards"
+    ],
+    "gamification": [
+      "Level progression (1-100)",
+      "5 rank tiers",
+      "25+ achievements",
+      "Daily/weekly missions",
+      "XP system",
+      "Streak bonuses",
+      "Global events"
+    ],
+    "earnings": [
+      "Profit sharing",
+      "Payout system",
+      "QR code withdrawals",
+      "Squad contributions",
+      "Commission tracking",
+      "Real BTC rewards"
+    ]
+  },
+
+  "security": {
+    "authentication": {
+      "methods": ["Email/Password", "Google OAuth", "GitHub OAuth", "Apple Sign In"],
+      "2fa_enabled": true,
+      "session_timeout": "30 days"
+    },
+    "data_encryption": {
+      "at_rest": "AES-256",
+      "in_transit": "TLS 1.3",
+      "private_keys": "Hardware-backed keystore"
+    },
+    "privacy": {
+      "gdpr_compliant": true,
+      "ccpa_compliant": true,
+      "data_retention": "User controlled",
+      "deletion_policy": "Instant on request"
+    }
+  },
+
+  "offline_capabilities": {
+    "available_offline": [
+      "View puzzles database",
+      "Browse tools catalog",
+      "Character set operations",
+      "HD wallet generation (local)",
+      "QR code generation",
+      "View achievements and stats"
+    ],
+    "requires_internet": [
+      "Brute force scanning",
+      "AI assistant",
+      "Leaderboards",
+      "Social features",
+      "Blockchain verification",
+      "Payouts"
+    ]
+  },
+
+  "performance_targets": {
+    "app_size": "< 50 MB",
+    "launch_time": "< 2 seconds",
+    "api_response": "< 500ms",
+    "scanner_performance": "1 billion keys/sec (GPU)",
+    "concurrent_users": "100,000+"
+  },
+
+  "analytics": {
+    "providers": ["Firebase Analytics", "Mixpanel"],
+    "tracked_events": [
+      "app_open",
+      "tool_used",
+      "scan_completed",
+      "puzzle_attempted",
+      "achievement_unlocked",
+      "purchase_completed",
+      "user_upgraded"
+    ],
+    "user_privacy": "Anonymized data only"
+  },
+
+  "support": {
+    "contact_email": "support@cryptoheist.io",
+    "docs_url": "https://docs.cryptoheist.io",
+    "community_discord": "https://discord.gg/cryptoheist",
+    "twitter": "@cryptoheist",
+    "github": "https://github.com/cryptoheist/app"
+  },
+
+  "legal": {
+    "terms_url": "https://cryptoheist.io/terms",
+    "privacy_url": "https://cryptoheist.io/privacy",
+    "disclaimers": [
+      "Cryptocurrency involves risk",
+      "No guaranteed earnings",
+      "18+ required for real money features",
+      "Comply with local gambling laws"
+    ]
+  },
+
+  "build_configuration": {
+    "react_native": {
+      "version": "0.72",
+      "expo_sdk": "49"
+    },
+    "dependencies": [
+      "react-native-crypto",
+      "bitcoinjs-lib",
+      "bip39",
+      "bip32",
+      "socket.io-client",
+      "react-native-qrcode-svg",
+      "react-native-payments"
+    ],
+    "native_modules": [
+      "react-native-hardware-security",
+      "react-native-biometrics"
+    ]
+  }
+}
