@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRYPTO HEIST - 3D Interactive City</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="/effects-controller.js"></script>
+    <script src="/ai-debugger.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            outline: none;
+        }
+
+        #loadingScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a2e 0%, #000 50%, #1a0033 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s;
+        }
+
+        #loadingScreen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .progress-container {
+            width: 400px;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            width: 0%;
+            transition: width 0.3s;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        .loading-text {
+            color: #00ffff;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+        }
+
+        #tutorialOverlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ffff;
+            border-radius: 12px;
+            padding: 2rem;
+            color: white;
+            z-index: 100;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            max-width: 500px;
+            transition: opacity 0.5s;
+        }
+
+        #tutorialOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .tutorial-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            color: #00ffff;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .tutorial-controls {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tutorial-key {
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+            padding: 0.5rem;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .tutorial-action {
+            padding: 0.5rem;
+        }
+
+        #minimap {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            z-index: 50;
+        }
+
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            z-index: 50;
+        }
+
+        .hud-item {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            backdrop-filter: blur(5px);
+        }
+
+        .hud-label {
+            color: #00ffff;
+            font-size: 0.9rem;
+        }
+
+        .hud-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #returnButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 50;
+            transition: all 0.3s;
+        }
+
+        #returnButton:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+        }
+
+        #easterEggNotification {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #F7931A;
+            border-radius: 8px;
+            padding: 1.5rem;
+            color: white;
+            z-index: 100;
+            box-shadow: 0 0 30px rgba(247, 147, 26, 0.5);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        #easterEggNotification.show {
+            opacity: 1;
+        }
+
+        .waypoint-marker {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #F7931A;
+            border: 2px solid #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #F7931A;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        #blockInfo {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            padding: 1rem;
+            color: white;
+            z-index: 100;
+            display: none;
+            pointer-events: none;
+        }
+
+        .block-info-title {
+            font-family: 'Orbitron', monospace;
+            color: #00ffff;
+            margin-bottom: 0.5rem;
+        }
+
+        #vipDeniedMessage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(139, 0, 0, 0.9);
+            border: 2px solid #ff0000;
+            border-radius: 12px;
+            padding: 2rem;
+            color: white;
+            z-index: 100;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            display: none;
+            text-align: center;
+        }
+
+        .vip-denied-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            color: #ff0000;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    
+    <div id="loadingScreen">
+        <div class="loading-title">INITIALIZING CRYPTO CITY</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="loading-text" id="loadingText">Loading assets...</div>
+    </div>
+
+    <div id="tutorialOverlay">
+        <div class="tutorial-title">🎮 CONTROLS</div>
+        <div class="tutorial-controls">
+            <div class="tutorial-key">WASD</div>
+            <div class="tutorial-action">Move around the city</div>
+            <div class="tutorial-key">MOUSE</div>
+            <div class="tutorial-action">Look around</div>
+            <div class="tutorial-key">E</div>
+            <div class="tutorial-action">Interact with objects</div>
+            <div class="tutorial-key">CLICK</div>
+            <div class="tutorial-action">Select blockchain blocks</div>
+        </div>
+        <div style="text-align: center; color: #888; margin-top: 1rem;">
+            Auto-closing in <span id="tutorialTimer">5</span> seconds...
+        </div>
+    </div>
+
+    <div id="hud">
+        <div class="hud-item">
+            <div class="hud-label">POSITION</div>
+            <div class="hud-value" id="hudPosition">X: 0, Z: 0</div>
+        </div>
+        <div class="hud-item">
+            <div class="hud-label">EASTER EGGS</div>
+            <div class="hud-value" id="hudEggs">0 / 5</div>
+        </div>
+        <div class="hud-item">
+            <div class="hud-label">FPS</div>
+            <div class="hud-value" id="hudFPS">60</div>
+        </div>
+    </div>
+
+    <button id="returnButton" onclick="window.location.href='/index.html'">← RETURN TO DASHBOARD</button>
+
+    <canvas id="minimap"></canvas>
+
+    <div id="easterEggNotification">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎉</div>
+        <div id="eggMessage" style="font-family: 'Orbitron', monospace; font-size: 1.2rem;"></div>
+    </div>
+
+    <div id="blockInfo">
+        <div class="block-info-title">BLOCKCHAIN BLOCK</div>
+        <div id="blockDetails"></div>
+    </div>
+
+    <div id="vipDeniedMessage">
+        <div class="vip-denied-title">🚫 ACCESS DENIED</div>
+        <div>This VIP Lounge is exclusive to <strong>Crypto Lords</strong> (Level 61+)</div>
+        <div style="margin-top: 1rem; color: #FFD700;">Keep playing to unlock!</div>
+        <button onclick="document.getElementById('vipDeniedMessage').style.display='none'" 
+                style="margin-top: 1.5rem; padding: 0.5rem 1.5rem; background: #444; color: white; border: 1px solid #666; border-radius: 4px; cursor: pointer;">
+            CLOSE
+        </button>
+    </div>
+
+    <script>
+        console.log('3D Preview: Script starting...');
+        
+        let engine, scene, camera, ground;
+        let easterEggsFound = 0;
+        let userRank = 'Geek Squad';
+        let userLevel = 1;
+        let easterEggs = [];
+        let blockchainBlocks = [];
+        
+        function waitForBabylon() {
+            if (typeof BABYLON === 'undefined') {
+                console.log('Waiting for BABYLON to load...');
+                setTimeout(waitForBabylon, 100);
+                return;
+            }
+            
+            try {
+                console.log('BABYLON loaded! Initializing engine...');
+                const canvas = document.getElementById('renderCanvas');
+                console.log('Canvas element:', canvas);
+                
+                if (!canvas) {
+                    console.error('ERROR: Canvas element not found!');
+                    return;
+                }
+                
+                engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
+                console.log('✅ Engine created successfully!');
+                console.log('Fetching user profile...');
+                init();
+            } catch (error) {
+                console.error('ERROR creating engine:', error);
+                updateLoadingProgress(100, 'Error: ' + error.message);
+            }
+        }
+        
+        function init() {
+            try {
+                fetchUserProfile().then(() => {
+                    console.log('✅ Profile fetched, creating scene...');
+                    createScene();
+                    
+                    console.log('Starting render loop...');
+                    engine.runRenderLoop(function() {
+                        scene.render();
+                        drawMinimap();
+                    });
+                    
+                    window.addEventListener('resize', function() {
+                        engine.resize();
+                    });
+                    
+                    console.log('✅✅✅ Scene initialized successfully!');
+                }).catch(error => {
+                    console.error('Error fetching profile:', error);
+                    console.log('Creating scene without profile...');
+                    createScene();
+                    
+                    console.log('Starting render loop...');
+                    engine.runRenderLoop(function() {
+                        scene.render();
+                        drawMinimap();
+                    });
+                    
+                    window.addEventListener('resize', function() {
+                        engine.resize();
+                    });
+                    
+                    console.log('✅ Scene created without profile');
+                });
+            } catch (error) {
+                console.error('CRITICAL ERROR in init():', error);
+                updateLoadingProgress(100, 'Critical Error: ' + error.message);
+            }
+        }
+        
+        waitForBabylon();
+
+        async function fetchUserProfile() {
+            try {
+                const response = await fetch('/api/profile');
+                if (response.ok) {
+                    const data = await response.json();
+                    userRank = data.rank || 'Geek Squad';
+                    userLevel = data.level || 1;
+                }
+            } catch (error) {
+                console.warn('Could not fetch user profile:', error);
+            }
+        }
+
+        function updateLoadingProgress(progress, text) {
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('loadingText').textContent = text;
+        }
+
+        function createScene() {
+            scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color3(0, 0, 0);
+
+            camera = new BABYLON.UniversalCamera('camera', new BABYLON.Vector3(0, 5, -30), scene);
+            camera.attachControl(canvas, true);
+            camera.speed = 0.5;
+            camera.angularSensibility = 2000;
+            camera.keysUp = [87];
+            camera.keysDown = [83];
+            camera.keysLeft = [65];
+            camera.keysRight = [68];
+            camera.minZ = 0.1;
+            camera.maxZ = 1000;
+
+            updateLoadingProgress(20, 'Creating skybox...');
+            createSkybox();
+
+            updateLoadingProgress(30, 'Building ground plane...');
+            createGround();
+
+            updateLoadingProgress(40, 'Generating city buildings...');
+            createBuildings();
+
+            updateLoadingProgress(50, 'Installing lighting system...');
+            createLights();
+
+            updateLoadingProgress(60, 'Initializing particle systems...');
+            createParticles();
+
+            updateLoadingProgress(70, 'Hiding Easter eggs...');
+            createEasterEggs();
+
+            updateLoadingProgress(80, 'Building blockchain visualization...');
+            createBlockchainVisualization();
+
+            updateLoadingProgress(90, 'Constructing VIP lounge...');
+            createVIPLounge();
+
+            updateLoadingProgress(95, 'Finalizing scene...');
+            setupInteractions();
+
+            updateLoadingProgress(100, 'Ready!');
+            
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                startTutorial();
+            }, 500);
+
+            return scene;
+        }
+
+        function createSkybox() {
+            const skybox = BABYLON.MeshBuilder.CreateBox('skybox', { size: 1000 }, scene);
+            const skyboxMaterial = new BABYLON.StandardMaterial('skyboxMaterial', scene);
+            skyboxMaterial.backFaceCulling = false;
+            skyboxMaterial.disableLighting = true;
+            skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+            skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+            
+            const gradientTexture = new BABYLON.DynamicTexture('skyboxTexture', 512, scene, true);
+            const ctx = gradientTexture.getContext();
+            const grd = ctx.createLinearGradient(0, 0, 0, 512);
+            grd.addColorStop(0, '#1a0033');
+            grd.addColorStop(0.5, '#0a0a2e');
+            grd.addColorStop(1, '#000000');
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, 512, 512);
+            gradientTexture.update();
+            
+            skyboxMaterial.emissiveTexture = gradientTexture;
+            skybox.material = skyboxMaterial;
+            skybox.infiniteDistance = true;
+        }
+
+        function createGround() {
+            ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 200, height: 200 }, scene);
+            const groundMaterial = new BABYLON.StandardMaterial('groundMaterial', scene);
+            
+            const groundTexture = new BABYLON.DynamicTexture('groundTexture', 1024, scene, true);
+            const ctx = groundTexture.getContext();
+            ctx.fillStyle = '#0a0a2e';
+            ctx.fillRect(0, 0, 1024, 1024);
+            ctx.strokeStyle = '#00ffff';
+            ctx.lineWidth = 2;
+            const gridSize = 51.2;
+            for (let i = 0; i <= 20; i++) {
+                const pos = i * gridSize;
+                ctx.beginPath();
+                ctx.moveTo(pos, 0);
+                ctx.lineTo(pos, 1024);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, pos);
+                ctx.lineTo(1024, pos);
+                ctx.stroke();
+            }
+            groundTexture.update();
+            
+            groundMaterial.diffuseTexture = groundTexture;
+            groundMaterial.emissiveColor = new BABYLON.Color3(0, 0.1, 0.1);
+            ground.material = groundMaterial;
+        }
+
+        function createBuildings() {
+            const buildingCount = 15;
+            const cityRadius = 80;
+            
+            for (let i = 0; i < buildingCount; i++) {
+                const angle = (Math.PI * 2 * i) / buildingCount;
+                const distance = 20 + Math.random() * cityRadius;
+                const x = Math.cos(angle) * distance;
+                const z = Math.sin(angle) * distance;
+                const height = 10 + Math.random() * 30;
+                const width = 3 + Math.random() * 5;
+                const depth = 3 + Math.random() * 5;
+                
+                const building = BABYLON.MeshBuilder.CreateBox('building' + i, {
+                    width: width,
+                    height: height,
+                    depth: depth
+                }, scene);
+                
+                building.position.x = x;
+                building.position.y = height / 2;
+                building.position.z = z;
+                
+                const buildingMaterial = new BABYLON.StandardMaterial('buildingMat' + i, scene);
+                buildingMaterial.diffuseColor = new BABYLON.Color3(0.05, 0.05, 0.1);
+                
+                const colors = [
+                    new BABYLON.Color3(0, 1, 1),
+                    new BABYLON.Color3(1, 0, 1),
+                    new BABYLON.Color3(1, 0.5, 0)
+                ];
+                const emissiveColor = colors[Math.floor(Math.random() * colors.length)];
+                buildingMaterial.emissiveColor = emissiveColor.scale(0.3);
+                buildingMaterial.specularColor = emissiveColor;
+                building.material = buildingMaterial;
+                
+                const glow = new BABYLON.HighlightLayer('glow' + i, scene);
+                glow.addMesh(building, emissiveColor);
+            }
+        }
+
+        function createLights() {
+            const hemisphericLight = new BABYLON.HemisphericLight('hemiLight', new BABYLON.Vector3(0, 1, 0), scene);
+            hemisphericLight.intensity = 0.3;
+            hemisphericLight.diffuse = new BABYLON.Color3(0.1, 0.1, 0.2);
+
+            const lights = [
+                { pos: new BABYLON.Vector3(30, 15, 30), color: new BABYLON.Color3(0, 1, 1) },
+                { pos: new BABYLON.Vector3(-30, 15, -30), color: new BABYLON.Color3(1, 0, 1) },
+                { pos: new BABYLON.Vector3(30, 15, -30), color: new BABYLON.Color3(1, 0.5, 0) },
+                { pos: new BABYLON.Vector3(-30, 15, 30), color: new BABYLON.Color3(0, 1, 1) }
+            ];
+
+            lights.forEach((lightData, index) => {
+                const light = new BABYLON.PointLight('pointLight' + index, lightData.pos, scene);
+                light.diffuse = lightData.color;
+                light.intensity = 2;
+                light.range = 100;
+                
+                const lightSphere = BABYLON.MeshBuilder.CreateSphere('lightSphere' + index, { diameter: 2 }, scene);
+                lightSphere.position = lightData.pos;
+                const lightMaterial = new BABYLON.StandardMaterial('lightMat' + index, scene);
+                lightMaterial.emissiveColor = lightData.color;
+                lightSphere.material = lightMaterial;
+                
+                const glow = new BABYLON.HighlightLayer('lightGlow' + index, scene);
+                glow.addMesh(lightSphere, lightData.color);
+            });
+        }
+
+        function createParticles() {
+            const particleSystem = new BABYLON.ParticleSystem('particles', 2000, scene);
+            particleSystem.particleTexture = new BABYLON.Texture('https://www.babylonjs-playground.com/textures/flare.png', scene);
+            
+            particleSystem.emitter = new BABYLON.Vector3(0, 10, 0);
+            particleSystem.minEmitBox = new BABYLON.Vector3(-50, 0, -50);
+            particleSystem.maxEmitBox = new BABYLON.Vector3(50, 20, 50);
+            
+            particleSystem.color1 = new BABYLON.Color4(0, 1, 1, 0.8);
+            particleSystem.color2 = new BABYLON.Color4(1, 0, 1, 0.5);
+            particleSystem.colorDead = new BABYLON.Color4(0, 0, 0, 0);
+            
+            particleSystem.minSize = 0.1;
+            particleSystem.maxSize = 0.3;
+            
+            particleSystem.minLifeTime = 3;
+            particleSystem.maxLifeTime = 5;
+            
+            particleSystem.emitRate = 100;
+            
+            particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ADD;
+            
+            particleSystem.gravity = new BABYLON.Vector3(0, 2, 0);
+            
+            particleSystem.direction1 = new BABYLON.Vector3(-1, 1, -1);
+            particleSystem.direction2 = new BABYLON.Vector3(1, 3, 1);
+            
+            particleSystem.minEmitPower = 1;
+            particleSystem.maxEmitPower = 2;
+            particleSystem.updateSpeed = 0.01;
+            
+            particleSystem.start();
+        }
+
+        function createEasterEggs() {
+            const eggTypes = [
+                { name: 'Hidden BTC Logo 1', icon: '₿', color: '#F7931A' },
+                { name: 'Secret Code Alpha', icon: '🔐', color: '#00ff88' },
+                { name: 'Hidden BTC Logo 2', icon: '₿', color: '#F7931A' },
+                { name: 'Puzzle Piece', icon: '🧩', color: '#ff00ff' },
+                { name: 'Secret Code Omega', icon: '🔐', color: '#00ffff' }
+            ];
+
+            const positions = [
+                new BABYLON.Vector3(45, 1, 45),
+                new BABYLON.Vector3(-40, 1, 35),
+                new BABYLON.Vector3(25, 1, -50),
+                new BABYLON.Vector3(-50, 1, -25),
+                new BABYLON.Vector3(0, 1, 60)
+            ];
+
+            eggTypes.forEach((eggType, index) => {
+                const egg = BABYLON.MeshBuilder.CreateSphere('egg' + index, { diameter: 2 }, scene);
+                egg.position = positions[index];
+                
+                const eggMaterial = new BABYLON.StandardMaterial('eggMat' + index, scene);
+                eggMaterial.emissiveColor = BABYLON.Color3.FromHexString(eggType.color);
+                eggMaterial.alpha = 0.7;
+                egg.material = eggMaterial;
+                
+                const glow = new BABYLON.HighlightLayer('eggGlow' + index, scene);
+                glow.addMesh(egg, BABYLON.Color3.FromHexString(eggType.color));
+                
+                egg.actionManager = new BABYLON.ActionManager(scene);
+                egg.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction(
+                        {
+                            trigger: BABYLON.ActionManager.OnPickTrigger
+                        },
+                        function() {
+                            collectEasterEgg(eggType.name, eggType.icon);
+                            egg.dispose();
+                            glow.dispose();
+                        }
+                    )
+                );
+                
+                easterEggs.push({ mesh: egg, position: positions[index], type: eggType });
+            });
+        }
+
+        function collectEasterEgg(name, icon) {
+            easterEggsFound++;
+            document.getElementById('hudEggs').textContent = `${easterEggsFound} / 5`;
+            
+            const notification = document.getElementById('easterEggNotification');
+            document.getElementById('eggMessage').innerHTML = `${icon} Found: ${name}`;
+            notification.classList.add('show');
+            
+            if (window.EffectsController) {
+                const effectsController = new EffectsController();
+                effectsController.achievementEffect({
+                    name: `Easter Egg Found: ${name}`,
+                    badge: icon
+                });
+            }
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function createBlockchainVisualization() {
+            const blockCount = 10;
+            const spacing = 5;
+            const startX = -((blockCount - 1) * spacing) / 2;
+            
+            for (let i = 0; i < blockCount; i++) {
+                const block = BABYLON.MeshBuilder.CreateBox('block' + i, {
+                    width: 3,
+                    height: 3,
+                    depth: 3
+                }, scene);
+                
+                block.position.x = startX + (i * spacing);
+                block.position.y = 15;
+                block.position.z = 0;
+                
+                const blockMaterial = new BABYLON.StandardMaterial('blockMat' + i, scene);
+                blockMaterial.diffuseColor = new BABYLON.Color3(0.1, 0.1, 0.2);
+                blockMaterial.emissiveColor = new BABYLON.Color3(0, 0.5, 1);
+                block.material = blockMaterial;
+                
+                const glow = new BABYLON.HighlightLayer('blockGlow' + i, scene);
+                glow.addMesh(block, new BABYLON.Color3(0, 0.8, 1));
+                
+                scene.registerBeforeRender(function() {
+                    block.rotation.y += 0.01;
+                    block.rotation.x += 0.005;
+                });
+                
+                if (i > 0) {
+                    const line = BABYLON.MeshBuilder.CreateLines('line' + i, {
+                        points: [
+                            new BABYLON.Vector3(startX + ((i - 1) * spacing), 15, 0),
+                            new BABYLON.Vector3(startX + (i * spacing), 15, 0)
+                        ]
+                    }, scene);
+                    line.color = new BABYLON.Color3(0, 1, 1);
+                }
+                
+                const txCount = Math.floor(Math.random() * 2000) + 500;
+                block.metadata = { blockNumber: i + 1, transactions: txCount };
+                
+                block.actionManager = new BABYLON.ActionManager(scene);
+                block.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction(
+                        {
+                            trigger: BABYLON.ActionManager.OnPickTrigger
+                        },
+                        function() {
+                            showBlockInfo(block.metadata, event);
+                        }
+                    )
+                );
+                
+                blockchainBlocks.push(block);
+            }
+        }
+
+        function showBlockInfo(metadata, event) {
+            const blockInfo = document.getElementById('blockInfo');
+            document.getElementById('blockDetails').innerHTML = `
+                <div><strong>Block #${metadata.blockNumber}</strong></div>
+                <div>Transactions: ${metadata.transactions}</div>
+                <div>Status: Confirmed</div>
+            `;
+            blockInfo.style.display = 'block';
+            blockInfo.style.left = (event.clientX + 10) + 'px';
+            blockInfo.style.top = (event.clientY + 10) + 'px';
+            
+            setTimeout(() => {
+                blockInfo.style.display = 'none';
+            }, 3000);
+        }
+
+        function createVIPLounge() {
+            const vipGate = BABYLON.MeshBuilder.CreateBox('vipGate', {
+                width: 10,
+                height: 8,
+                depth: 1
+            }, scene);
+            
+            vipGate.position.x = 70;
+            vipGate.position.y = 4;
+            vipGate.position.z = 0;
+            
+            const gateMaterial = new BABYLON.StandardMaterial('gateMaterial', scene);
+            gateMaterial.diffuseColor = new BABYLON.Color3(0.1, 0.05, 0);
+            gateMaterial.emissiveColor = new BABYLON.Color3(1, 0.84, 0);
+            gateMaterial.alpha = 0.8;
+            vipGate.material = gateMaterial;
+            
+            const glow = new BABYLON.HighlightLayer('vipGlow', scene);
+            glow.addMesh(vipGate, new BABYLON.Color3(1, 0.84, 0));
+            
+            vipGate.actionManager = new BABYLON.ActionManager(scene);
+            vipGate.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction(
+                    {
+                        trigger: BABYLON.ActionManager.OnPickTrigger
+                    },
+                    function() {
+                        if (userLevel >= 61) {
+                            alert('🎉 Welcome to the VIP Lounge, Crypto Lord! 🎉\n\nExclusive features coming soon...');
+                        } else {
+                            document.getElementById('vipDeniedMessage').style.display = 'block';
+                        }
+                    }
+                )
+            );
+            
+            const vipZone = BABYLON.MeshBuilder.CreateBox('vipZone', {
+                width: 20,
+                height: 15,
+                depth: 20
+            }, scene);
+            vipZone.position.x = 80;
+            vipZone.position.y = 7.5;
+            vipZone.position.z = 0;
+            
+            const vipMaterial = new BABYLON.StandardMaterial('vipMaterial', scene);
+            vipMaterial.diffuseColor = new BABYLON.Color3(0.2, 0.15, 0);
+            vipMaterial.emissiveColor = new BABYLON.Color3(0.5, 0.42, 0);
+            vipMaterial.alpha = 0.3;
+            vipZone.material = vipMaterial;
+        }
+
+        function setupInteractions() {
+            window.addEventListener('keydown', (event) => {
+                if (event.key === 'e' || event.key === 'E') {
+                    const pickResult = scene.pick(scene.pointerX, scene.pointerY);
+                    if (pickResult.hit) {
+                        console.log('Interacting with:', pickResult.pickedMesh.name);
+                    }
+                }
+            });
+
+            scene.registerBeforeRender(function() {
+                const pos = camera.position;
+                document.getElementById('hudPosition').textContent = 
+                    `X: ${pos.x.toFixed(1)}, Z: ${pos.z.toFixed(1)}`;
+                
+                const fps = engine.getFps().toFixed(0);
+                document.getElementById('hudFPS').textContent = fps;
+            });
+        }
+
+        function startTutorial() {
+            const tutorialOverlay = document.getElementById('tutorialOverlay');
+            let countdown = 5;
+            
+            const timer = setInterval(() => {
+                countdown--;
+                document.getElementById('tutorialTimer').textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    tutorialOverlay.classList.add('hidden');
+                }
+            }, 1000);
+        }
+
+        function drawMinimap() {
+            const minimapCanvas = document.getElementById('minimap');
+            const ctx = minimapCanvas.getContext('2d');
+            const scale = 200 / 200;
+            
+            ctx.clearRect(0, 0, 200, 200);
+            
+            ctx.fillStyle = 'rgba(0, 20, 40, 0.8)';
+            ctx.fillRect(0, 0, 200, 200);
+            
+            ctx.strokeStyle = '#00ffff';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const pos = i * 50;
+                ctx.beginPath();
+                ctx.moveTo(pos, 0);
+                ctx.lineTo(pos, 200);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, pos);
+                ctx.lineTo(200, pos);
+                ctx.stroke();
+            }
+            
+            easterEggs.forEach(egg => {
+                if (egg.mesh && !egg.mesh.isDisposed()) {
+                    const x = 100 + (egg.position.x * scale);
+                    const z = 100 + (egg.position.z * scale);
+                    ctx.fillStyle = egg.type.color;
+                    ctx.beginPath();
+                    ctx.arc(x, z, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            
+            const camX = 100 + (camera.position.x * scale);
+            const camZ = 100 + (camera.position.z * scale);
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(camX, camZ, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (engine) {
+                engine.dispose();
+            }
+        });
+    </script>
+</body>
+</html>

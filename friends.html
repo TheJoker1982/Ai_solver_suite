@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends - CRYPTO HEIST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .friend-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(255, 0, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .friend-card:hover {
+            transform: translateY(-3px);
+            border-color: #00ffff;
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .online-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        
+        .online-indicator.online {
+            background: #00ff00;
+        }
+        
+        .online-indicator.offline {
+            background: #666;
+        }
+        
+        .search-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #fff;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            width: 100%;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="main-container">
+        <header class="hud-header">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="logo">CRYPTO HEIST</div>
+                    <nav class="flex items-center gap-6">
+                        <a href="/" class="nav-link">Dashboard</a>
+                        <a href="/progression" class="nav-link">Progression</a>
+                        <a href="/squad" class="nav-link">Squads</a>
+                        <a href="/friends" class="nav-link" style="color: #ff00ff;">Friends</a>
+                        <a href="/events" class="nav-link">Events</a>
+                        <a href="/notifications" class="nav-link">Notifications</a>
+                        <div id="user-section">
+                            <button onclick="login()" class="cyber-btn">Login</button>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <div class="container mx-auto px-6 py-8">
+            <div class="mb-8">
+                <h1 class="text-5xl font-bold mb-2 text-center" style="color: #00ff88;">👥 FRIENDS</h1>
+                <p class="text-center text-gray-400">Build your network of crypto hunters</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div class="panel">
+                    <h2 class="text-2xl font-bold mb-4" style="color: #00ffff;">Search Friends</h2>
+                    <input type="text" id="search-input" class="search-box mb-4" placeholder="Search by username or email..." oninput="searchUsers()">
+                    <div id="search-results" class="space-y-2 max-h-96 overflow-y-auto"></div>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <div class="panel mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-bold" style="color: #00ffff;">Friend Requests</h2>
+                            <span id="requests-count" class="text-sm text-gray-400">0 pending</span>
+                        </div>
+                        <div id="requests-list"></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-bold" style="color: #00ffff;">My Friends</h2>
+                            <span id="friends-count" class="text-sm text-gray-400">0 friends</span>
+                        </div>
+                        <div id="friends-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2 class="text-2xl font-bold mb-4" style="color: #00ffff;">Friend Activity</h2>
+                <div id="activity-feed" class="space-y-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let searchTimeout = null;
+        
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/user/profile');
+                if (response.ok) {
+                    currentUser = await response.json();
+                    document.getElementById('user-section').innerHTML = `
+                        <div class="flex items-center gap-4">
+                            <span class="text-gray-300">Welcome, ${currentUser.username}</span>
+                            <button onclick="logout()" class="cyber-btn-outline">Logout</button>
+                        </div>
+                    `;
+                    loadData();
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        }
+        
+        async function loadData() {
+            await Promise.all([
+                loadFriends(),
+                loadRequests(),
+                loadActivity()
+            ]);
+        }
+        
+        async function loadFriends() {
+            try {
+                const response = await fetch('/api/friends');
+                if (!response.ok) throw new Error('Failed to fetch friends');
+                
+                const data = await response.json();
+                const friends = data.friends;
+                
+                document.getElementById('friends-count').textContent = `${friends.length} friends`;
+                
+                if (friends.length === 0) {
+                    document.getElementById('friends-list').innerHTML = `
+                        <div class="col-span-2 text-center py-8 text-gray-400">
+                            <p>No friends yet. Search above to add friends!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                document.getElementById('friends-list').innerHTML = friends.map(friend => `
+                    <div class="friend-card">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <img src="${friend.profile_image_url || '/default-avatar.png'}" class="w-12 h-12 rounded-full" onerror="this.src='/default-avatar.png'">
+                                <div>
+                                    <h3 class="font-bold">${friend.username}</h3>
+                                    <p class="text-sm text-gray-400">Level ${friend.level || 1}</p>
+                                </div>
+                            </div>
+                            <span class="online-indicator offline" title="Offline"></span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="window.location.href='/progression?user=${friend.friend_id}'" class="cyber-btn-outline text-sm px-3 py-1 flex-1">View Profile</button>
+                            <button onclick="removeFriend('${friend.friend_id}')" class="text-red-400 hover:text-red-300 px-2">✕</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading friends:', error);
+            }
+        }
+        
+        async function loadRequests() {
+            try {
+                const response = await fetch('/api/friends/requests');
+                if (!response.ok) throw new Error('Failed to fetch requests');
+                
+                const data = await response.json();
+                const requests = data.requests;
+                
+                document.getElementById('requests-count').textContent = `${requests.length} pending`;
+                
+                if (requests.length === 0) {
+                    document.getElementById('requests-list').innerHTML = `
+                        <div class="text-center py-4 text-gray-400">
+                            <p>No pending requests</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                document.getElementById('requests-list').innerHTML = requests.map(req => `
+                    <div class="friend-card mb-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <img src="${req.profile_image_url || '/default-avatar.png'}" class="w-10 h-10 rounded-full" onerror="this.src='/default-avatar.png'">
+                                <div>
+                                    <h3 class="font-bold">${req.username}</h3>
+                                    <p class="text-xs text-gray-400">Level ${req.level || 1}</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="acceptRequest('${req.friendship_id}')" class="cyber-btn text-sm px-4 py-1">Accept</button>
+                                <button onclick="declineRequest('${req.friendship_id}')" class="cyber-btn-outline text-sm px-4 py-1">Decline</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading requests:', error);
+            }
+        }
+        
+        async function searchUsers() {
+            clearTimeout(searchTimeout);
+            const query = document.getElementById('search-input').value;
+            
+            if (query.length < 2) {
+                document.getElementById('search-results').innerHTML = '';
+                return;
+            }
+            
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/api/friends/search?q=${encodeURIComponent(query)}`);
+                    if (!response.ok) throw new Error('Search failed');
+                    
+                    const data = await response.json();
+                    displaySearchResults(data.users);
+                } catch (error) {
+                    console.error('Search error:', error);
+                }
+            }, 300);
+        }
+        
+        function displaySearchResults(users) {
+            const container = document.getElementById('search-results');
+            
+            if (users.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-4">No users found</p>';
+                return;
+            }
+            
+            container.innerHTML = users.map(user => {
+                const statusBadge = user.friendship_status === 'friends' ? '✓ Friends' :
+                                   user.friendship_status === 'pending_sent' ? '⏳ Pending' :
+                                   user.friendship_status === 'pending_received' ? '📬 Accept?' : '';
+                
+                const actionButton = user.friendship_status === 'none' ? 
+                    `<button onclick="sendRequest('${user.id}')" class="cyber-btn text-sm px-3 py-1">Add Friend</button>` :
+                    `<span class="text-sm text-gray-400">${statusBadge}</span>`;
+                
+                return `
+                    <div class="friend-card">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <img src="${user.profile_image_url || '/default-avatar.png'}" class="w-8 h-8 rounded-full" onerror="this.src='/default-avatar.png'">
+                                <div>
+                                    <p class="font-bold text-sm">${user.username}</p>
+                                    <p class="text-xs text-gray-400">Level ${user.level || 1} • ${user.rank || 'Geek Squad'}</p>
+                                </div>
+                            </div>
+                            ${actionButton}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        async function sendRequest(friendId) {
+            try {
+                const response = await fetch('/api/friends/request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ friendId })
+                });
+                
+                if (!response.ok) throw new Error('Failed to send request');
+                
+                alert('Friend request sent!');
+                searchUsers();
+            } catch (error) {
+                console.error('Error sending request:', error);
+                alert('Failed to send friend request');
+            }
+        }
+        
+        async function acceptRequest(friendshipId) {
+            try {
+                const response = await fetch(`/api/friends/accept/${friendshipId}`, {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) throw new Error('Failed to accept');
+                
+                loadData();
+            } catch (error) {
+                console.error('Error accepting request:', error);
+            }
+        }
+        
+        async function declineRequest(friendshipId) {
+            try {
+                const response = await fetch(`/api/friends/decline/${friendshipId}`, {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) throw new Error('Failed to decline');
+                
+                loadRequests();
+            } catch (error) {
+                console.error('Error declining request:', error);
+            }
+        }
+        
+        async function removeFriend(friendId) {
+            if (!confirm('Are you sure you want to remove this friend?')) return;
+            
+            try {
+                const response = await fetch(`/api/friends/${friendId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) throw new Error('Failed to remove friend');
+                
+                loadFriends();
+            } catch (error) {
+                console.error('Error removing friend:', error);
+            }
+        }
+        
+        async function loadActivity() {
+            try {
+                const response = await fetch('/api/friends/activity');
+                if (!response.ok) throw new Error('Failed to fetch activity');
+                
+                const data = await response.json();
+                const activity = data.activity;
+                
+                if (activity.length === 0) {
+                    document.getElementById('activity-feed').innerHTML = `
+                        <div class="text-center py-8 text-gray-400">
+                            <p>No friend activity yet</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                document.getElementById('activity-feed').innerHTML = activity.map(act => {
+                    const icon = act.activity_type === 'achievement' ? '🏆' :
+                                act.activity_type === 'puzzle_solve' ? '🧩' :
+                                act.activity_type === 'btc_earned' ? '💰' :
+                                act.activity_type === 'level_up' ? '⬆️' : '⭐';
+                    
+                    return `
+                        <div class="mission-card">
+                            <div class="flex items-center gap-3">
+                                <div class="text-2xl">${icon}</div>
+                                <div class="flex-1">
+                                    <p class="font-bold">${act.username} ${act.title}</p>
+                                    <p class="text-sm text-gray-400">${act.description}</p>
+                                    <p class="text-xs text-gray-500 mt-1">${new Date(act.created_at).toLocaleString()}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading activity:', error);
+            }
+        }
+        
+        function login() {
+            window.location.href = '/api/auth/login';
+        }
+        
+        function logout() {
+            window.location.href = '/api/auth/logout';
+        }
+        
+        checkAuth();
+    </script>
+</body>
+</html>

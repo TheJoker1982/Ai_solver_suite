@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Discoveries - CRYPTO HEIST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+        .neon-box {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+        .discovery-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%);
+            border: 2px solid gold;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+        }
+        .status-active {
+            color: #00ff00;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.5; }
+        }
+        .log-entry {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #00ffff;
+            padding: 8px 12px;
+            margin: 4px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-4xl font-bold" style="text-shadow: 0 0 20px #00ffff">
+                🤖 AI DISCOVERIES
+            </h1>
+            <a href="/" class="text-cyan-400 hover:text-cyan-300">← Back to Dashboard</a>
+        </div>
+
+        <!-- AI Status -->
+        <div class="neon-box p-6 mb-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl mb-2">AI Agent Status</h2>
+                    <div id="aiStatus" class="text-lg">
+                        <span class="status-active">● ACTIVE</span> - Continuous Learning Mode
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm text-gray-400">Learning Cycle</div>
+                    <div class="text-2xl font-bold text-green-400">Every 5 minutes</div>
+                </div>
+            </div>
+            <div class="grid grid-cols-4 gap-4 mt-6">
+                <div class="bg-black bg-opacity-30 p-4 rounded">
+                    <div class="text-gray-400 text-sm">Files Known Intimately</div>
+                    <div class="text-3xl font-bold text-green-400" id="totalFilesKnown">0</div>
+                </div>
+                <div class="bg-black bg-opacity-30 p-4 rounded">
+                    <div class="text-gray-400 text-sm">Solvers Mastered</div>
+                    <div class="text-3xl font-bold" id="solversCount">0</div>
+                </div>
+                <div class="bg-black bg-opacity-30 p-4 rounded">
+                    <div class="text-gray-400 text-sm">Keys Discovered</div>
+                    <div class="text-3xl font-bold text-yellow-400" id="keysCount">0</div>
+                </div>
+                <div class="bg-black bg-opacity-30 p-4 rounded">
+                    <div class="text-gray-400 text-sm">Expertise Level</div>
+                    <div class="text-2xl font-bold text-purple-400" id="expertiseLevel">Learning</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discovered Keys -->
+        <div class="neon-box p-6 mb-6">
+            <h2 class="text-2xl mb-4">🔑 Discovered Keys</h2>
+            <div id="discoveredKeys" class="space-y-4">
+                <div class="text-gray-400 text-center py-8">
+                    No keys discovered yet. AI is analyzing imported files...
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Insights -->
+        <div class="neon-box p-6 mb-6">
+            <h2 class="text-2xl mb-4">💡 AI Insights</h2>
+            <div id="insights" class="space-y-2">
+                <div class="text-gray-400">Loading insights...</div>
+            </div>
+        </div>
+
+        <!-- Solver Analysis -->
+        <div class="neon-box p-6 mb-6">
+            <h2 class="text-2xl mb-4">🔧 Analyzed Solvers</h2>
+            <div id="solvers" class="space-y-2">
+                <div class="text-gray-400">Loading solver analysis...</div>
+            </div>
+        </div>
+
+        <!-- AI Learning Log -->
+        <div class="neon-box p-6">
+            <h2 class="text-2xl mb-4">📜 AI Learning Log (Last 20 entries)</h2>
+            <div id="learningLog" class="space-y-1 max-h-96 overflow-y-auto">
+                <div class="text-gray-400">Loading logs...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadAIStatus() {
+            try {
+                const response = await fetch('/api/ai-agent/status');
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('totalFilesKnown').textContent = 
+                        data.status.totalFilesKnown || 0;
+                    document.getElementById('solversCount').textContent = 
+                        data.status.solversAnalyzed || 0;
+                    document.getElementById('keysCount').textContent = 
+                        data.status.keysDiscovered || 0;
+                    document.getElementById('expertiseLevel').textContent = 
+                        data.status.expertiseLevel || 'Learning';
+                }
+            } catch (error) {
+                console.error('Error loading AI status:', error);
+            }
+        }
+
+        async function loadDiscoveries() {
+            try {
+                const response = await fetch('/api/ai-agent/discoveries');
+                const data = await response.json();
+
+                if (data.success && data.discoveries.length > 0) {
+                    const html = data.discoveries.map(key => `
+                        <div class="discovery-card p-6 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <div class="text-2xl font-bold text-yellow-400 mb-2">
+                                        🎉 KEY DISCOVERED!
+                                    </div>
+                                    <div class="text-sm text-gray-300 mb-3">
+                                        Found in: <span class="text-cyan-400">${key.source_file}</span>
+                                    </div>
+                                    <div class="bg-black bg-opacity-50 p-4 rounded mb-3">
+                                        <div class="text-xs text-gray-400 mb-1">Private Key:</div>
+                                        <div class="font-mono text-green-400 break-all">${key.private_key || 'Hidden for security'}</div>
+                                    </div>
+                                    ${key.address ? `
+                                        <div class="bg-black bg-opacity-50 p-4 rounded mb-3">
+                                            <div class="text-xs text-gray-400 mb-1">Address:</div>
+                                            <div class="font-mono text-blue-400">${key.address}</div>
+                                        </div>
+                                    ` : ''}
+                                    ${key.puzzle_number ? `
+                                        <div class="text-lg text-orange-400">
+                                            🧩 Puzzle #${key.puzzle_number}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                <div class="text-sm text-gray-400">
+                                    ${new Date(key.discovered_at).toLocaleString()}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    document.getElementById('discoveredKeys').innerHTML = html;
+                    document.getElementById('keysCount').textContent = data.discoveries.length;
+                } else {
+                    document.getElementById('discoveredKeys').innerHTML = 
+                        '<div class="text-gray-400 text-center py-8">No keys discovered yet. AI is analyzing imported files...</div>';
+                }
+            } catch (error) {
+                console.error('Error loading discoveries:', error);
+            }
+        }
+
+        async function loadInsights() {
+            try {
+                const response = await fetch('/api/ai-agent/insights');
+                const data = await response.json();
+
+                if (data.success && data.insights.length > 0) {
+                    const html = data.insights.map(insight => `
+                        <div class="log-entry">
+                            <div class="flex justify-between">
+                                <div>
+                                    <span class="text-cyan-400">💡</span>
+                                    ${insight.insight}
+                                </div>
+                                <div class="text-gray-400 text-xs">
+                                    Confidence: ${(insight.confidence * 100).toFixed(0)}%
+                                </div>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">
+                                Source: ${insight.source_name || 'Unknown'} (${insight.source_type})
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    document.getElementById('insights').innerHTML = html;
+                    document.getElementById('insightsCount').textContent = data.insights.length;
+                } else {
+                    document.getElementById('insights').innerHTML = 
+                        '<div class="text-gray-400">No insights yet. AI is learning from imported files...</div>';
+                }
+            } catch (error) {
+                console.error('Error loading insights:', error);
+            }
+        }
+
+        async function loadSolvers() {
+            try {
+                const response = await fetch('/api/ai-agent/solvers');
+                const data = await response.json();
+
+                if (data.success && data.solvers.length > 0) {
+                    const html = data.solvers.map(solver => {
+                        const chars = JSON.parse(solver.characteristics);
+                        return `
+                            <div class="log-entry">
+                                <div class="font-bold">${solver.filename}</div>
+                                <div class="text-sm text-gray-400 mt-1">
+                                    Type: <span class="text-cyan-400">${chars.type}</span> |
+                                    Speed: <span class="text-green-400">${chars.estimatedSpeed}</span> |
+                                    Capabilities: ${chars.capabilities.join(', ')}
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1">
+                                    Analyzed: ${new Date(solver.analyzed_at).toLocaleString()}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    document.getElementById('solvers').innerHTML = html;
+                } else {
+                    document.getElementById('solvers').innerHTML = 
+                        '<div class="text-gray-400">No solvers analyzed yet. Import solver files first...</div>';
+                }
+            } catch (error) {
+                console.error('Error loading solvers:', error);
+            }
+        }
+
+        async function loadLogs() {
+            try {
+                const response = await fetch('/api/ai-agent/logs?limit=20');
+                const data = await response.json();
+
+                if (data.success && data.logs.length > 0) {
+                    const html = data.logs.map(log => {
+                        const typeColor = log.log_type === 'success' ? 'text-green-400' : 
+                                         log.log_type === 'error' ? 'text-red-400' : 
+                                         'text-gray-300';
+                        const icon = log.log_type === 'success' ? '✅' : 
+                                    log.log_type === 'error' ? '❌' : 
+                                    'ℹ️';
+                        
+                        return `
+                            <div class="text-xs ${typeColor} py-1">
+                                <span class="text-gray-500">[${new Date(log.timestamp).toLocaleTimeString()}]</span>
+                                ${icon} ${log.message}
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    document.getElementById('learningLog').innerHTML = html;
+                } else {
+                    document.getElementById('learningLog').innerHTML = 
+                        '<div class="text-gray-400">No logs yet...</div>';
+                }
+            } catch (error) {
+                console.error('Error loading logs:', error);
+            }
+        }
+
+        function loadAll() {
+            loadAIStatus();
+            loadDiscoveries();
+            loadInsights();
+            loadSolvers();
+            loadLogs();
+        }
+
+        // Initial load
+        loadAll();
+
+        // Auto-refresh every 10 seconds
+        setInterval(loadAll, 10000);
+    </script>
+</body>
+</html>

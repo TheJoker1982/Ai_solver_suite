@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missions & Challenges - Crypto Heist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @keyframes countdown {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes claimPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 255, 136, 0.8); }
+        }
+
+        @keyframes celebrationBurst {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.5) rotate(180deg); opacity: 0.8; }
+            100% { transform: scale(2) rotate(360deg); opacity: 0; }
+        }
+
+        .countdown-timer {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ff88;
+            animation: countdown 1s infinite;
+        }
+
+        .mission-card {
+            background: linear-gradient(135deg, rgba(20, 20, 40, 0.9), rgba(30, 30, 50, 0.9));
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mission-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .mission-card:hover::before {
+            left: 100%;
+        }
+
+        .mission-card.completed {
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .mission-card.claimed {
+            opacity: 0.6;
+            border-color: #666;
+        }
+
+        .progress-bar-mission {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            height: 24px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .progress-fill-mission {
+            background: linear-gradient(90deg, #00ff88, #00c8ff);
+            height: 100%;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill-mission::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .claim-btn {
+            animation: claimPulse 2s infinite;
+        }
+
+        .celebration-particle {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: celebrationBurst 1s ease-out forwards;
+            z-index: 9999;
+        }
+
+        .reward-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .xp-badge {
+            background: linear-gradient(135deg, #00ff88, #00c8ff);
+            color: #000;
+        }
+
+        .btc-badge {
+            background: linear-gradient(135deg, #F7931A, #FFD700);
+            color: #000;
+        }
+
+        .challenge-card {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 200, 255, 0.1));
+            border: 2px solid rgba(255, 0, 255, 0.3);
+        }
+
+        .challenge-card.completed {
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="main-container">
+        <div class="container mx-auto px-4 py-8">
+            <div class="mb-8">
+                <h1 class="text-5xl font-bold mb-2 text-center" style="color: #00ff88;">🎯 MISSIONS & CHALLENGES</h1>
+                <p class="text-center text-gray-400">Complete missions daily and earn epic rewards</p>
+            </div>
+
+            <div class="mb-8 text-center">
+                <button onclick="window.location.href='/'" class="cyber-btn cyber-btn-outline mr-2">← Back to Home</button>
+                <button onclick="window.location.href='/achievements'" class="cyber-btn">View Achievements</button>
+            </div>
+
+            <div id="auth-prompt" class="panel text-center py-20" style="display: none;">
+                <p class="text-2xl mb-4">Please login to view your missions</p>
+                <button onclick="login()" class="cyber-btn text-xl">Login</button>
+            </div>
+
+            <div id="missions-content" style="display: none;">
+                <div class="panel mb-8">
+                    <h2 class="text-3xl font-bold mb-4" style="color: #00ff88;">⏰ Daily Missions</h2>
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-gray-400">Complete all daily missions for bonus XP!</div>
+                        <div class="countdown-timer" id="daily-countdown">00:00:00</div>
+                    </div>
+                    
+                    <div id="daily-missions-grid" class="space-y-4">
+                        <div class="text-center text-gray-500 py-8">Loading daily missions...</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2 class="text-3xl font-bold mb-4" style="color: #ff00ff;">🏆 Weekly Challenges</h2>
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-gray-400">Tackle weekly challenges for bigger rewards!</div>
+                        <div class="countdown-timer" id="weekly-countdown" style="color: #ff00ff;">00:00:00</div>
+                    </div>
+                    
+                    <div id="weekly-challenges-grid" class="space-y-4">
+                        <div class="text-center text-gray-500 py-8">Loading weekly challenges...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let dailyMissions = [];
+        let weeklyChallenges = [];
+        let dailyResetTime = null;
+        let weeklyResetTime = null;
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/session');
+                const data = await response.json();
+                
+                if (data.authenticated && data.user) {
+                    currentUser = data.user;
+                    document.getElementById('auth-prompt').style.display = 'none';
+                    document.getElementById('missions-content').style.display = 'block';
+                    await loadMissions();
+                    startCountdowns();
+                } else {
+                    document.getElementById('auth-prompt').style.display = 'block';
+                    document.getElementById('missions-content').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error checking auth:', error);
+                document.getElementById('auth-prompt').style.display = 'block';
+            }
+        }
+
+        function login() {
+            window.location.href = '/api/auth/login';
+        }
+
+        async function loadMissions() {
+            await Promise.all([loadDailyMissions(), loadWeeklyChallenges()]);
+        }
+
+        async function loadDailyMissions() {
+            try {
+                const response = await fetch('/api/missions/daily');
+                const data = await response.json();
+                
+                if (data.success) {
+                    dailyMissions = data.missions;
+                    dailyResetTime = data.timeUntilReset;
+                    displayDailyMissions();
+                }
+            } catch (error) {
+                console.error('Error loading daily missions:', error);
+            }
+        }
+
+        async function loadWeeklyChallenges() {
+            try {
+                const response = await fetch('/api/missions/weekly');
+                const data = await response.json();
+                
+                if (data.success) {
+                    weeklyChallenges = data.challenges;
+                    weeklyResetTime = data.timeUntilReset;
+                    displayWeeklyChallenges();
+                }
+            } catch (error) {
+                console.error('Error loading weekly challenges:', error);
+            }
+        }
+
+        function displayDailyMissions() {
+            const grid = document.getElementById('daily-missions-grid');
+            
+            if (dailyMissions.length === 0) {
+                grid.innerHTML = '<div class="text-center text-gray-500 py-8">No daily missions available</div>';
+                return;
+            }
+
+            grid.innerHTML = dailyMissions.map(mission => {
+                const progress = Math.min(mission.progress || 0, mission.target_amount);
+                const percentage = (progress / mission.target_amount) * 100;
+                const isCompleted = mission.completed;
+                const isClaimed = mission.claimed;
+
+                return `
+                    <div class="mission-card ${isCompleted ? 'completed' : ''} ${isClaimed ? 'claimed' : ''}" data-mission-id="${mission.id}">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold mb-2" style="color: #00ff88;">${mission.description}</h3>
+                                <div class="flex gap-2 mb-3">
+                                    <span class="reward-badge xp-badge">+${mission.xp_reward} XP</span>
+                                    ${mission.btc_reward > 0 ? `<span class="reward-badge btc-badge">+${mission.btc_reward} BTC</span>` : ''}
+                                </div>
+                            </div>
+                            ${isCompleted && !isClaimed ? `
+                                <button onclick="claimReward(${mission.id}, 'daily')" class="cyber-btn claim-btn">
+                                    Claim Reward 🎁
+                                </button>
+                            ` : isClaimed ? `
+                                <div class="text-green-500 font-bold">✓ Claimed</div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="mb-2 flex justify-between text-sm text-gray-400">
+                            <span>Progress: ${progress} / ${mission.target_amount}</span>
+                            <span>${percentage.toFixed(0)}%</span>
+                        </div>
+                        <div class="progress-bar-mission">
+                            <div class="progress-fill-mission" style="width: ${percentage}%">
+                                <div class="text-center text-xs font-bold text-black pt-1">${percentage.toFixed(0)}%</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function displayWeeklyChallenges() {
+            const grid = document.getElementById('weekly-challenges-grid');
+            
+            if (weeklyChallenges.length === 0) {
+                grid.innerHTML = '<div class="text-center text-gray-500 py-8">No weekly challenges available</div>';
+                return;
+            }
+
+            grid.innerHTML = weeklyChallenges.map(challenge => {
+                const progress = Math.min(challenge.progress || 0, challenge.target_amount);
+                const percentage = (progress / challenge.target_amount) * 100;
+                const isCompleted = challenge.completed;
+                const isClaimed = challenge.claimed;
+
+                return `
+                    <div class="mission-card challenge-card ${isCompleted ? 'completed' : ''} ${isClaimed ? 'claimed' : ''}" data-challenge-id="${challenge.id}">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold mb-2" style="color: #ff00ff;">${challenge.description}</h3>
+                                <div class="flex gap-2 mb-3">
+                                    <span class="reward-badge xp-badge">+${challenge.xp_reward} XP</span>
+                                    ${challenge.btc_reward > 0 ? `<span class="reward-badge btc-badge">+${challenge.btc_reward} BTC</span>` : ''}
+                                </div>
+                            </div>
+                            ${isCompleted && !isClaimed ? `
+                                <button onclick="claimReward(${challenge.id}, 'weekly')" class="cyber-btn cyber-btn-secondary claim-btn">
+                                    Claim Reward 🏆
+                                </button>
+                            ` : isClaimed ? `
+                                <div class="text-purple-500 font-bold">✓ Claimed</div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="mb-2 flex justify-between text-sm text-gray-400">
+                            <span>Progress: ${progress} / ${challenge.target_amount}</span>
+                            <span>${percentage.toFixed(0)}%</span>
+                        </div>
+                        <div class="progress-bar-mission">
+                            <div class="progress-fill-mission" style="width: ${percentage}%; background: linear-gradient(90deg, #ff00ff, #aa00ff);">
+                                <div class="text-center text-xs font-bold text-black pt-1">${percentage.toFixed(0)}%</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function claimReward(missionId, type) {
+            try {
+                const response = await fetch(`/api/missions/${missionId}/claim`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showCelebration(data.rewards);
+                    await loadMissions();
+                } else {
+                    alert(data.error || 'Failed to claim reward');
+                }
+            } catch (error) {
+                console.error('Error claiming reward:', error);
+                alert('Error claiming reward');
+            }
+        }
+
+        function showCelebration(rewards) {
+            const container = document.body;
+            const colors = ['#00ff88', '#00c8ff', '#ff00ff', '#ffd700', '#F7931A'];
+
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'celebration-particle';
+                particle.style.left = Math.random() * window.innerWidth + 'px';
+                particle.style.top = Math.random() * window.innerHeight + 'px';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDelay = Math.random() * 0.3 + 's';
+
+                container.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+
+            playSuccessSound();
+
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(20,20,40,0.95));
+                border: 3px solid #00ff88;
+                border-radius: 20px;
+                padding: 40px;
+                z-index: 10000;
+                text-align: center;
+                box-shadow: 0 0 50px rgba(0, 255, 136, 0.8);
+            `;
+            notification.innerHTML = `
+                <div class="text-6xl mb-4">🎉</div>
+                <div class="text-3xl font-bold mb-4" style="color: #00ff88;">REWARD CLAIMED!</div>
+                <div class="text-xl" style="color: #00c8ff;">+${rewards.xpAwarded} XP</div>
+                ${rewards.btcAwarded > 0 ? `<div class="text-xl" style="color: #F7931A;">+${rewards.btcAwarded} BTC</div>` : ''}
+            `;
+
+            container.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function playSuccessSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            [0, 0.1, 0.2].forEach((time, i) => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.frequency.value = 600 + (i * 200);
+                gainNode.gain.value = 0.1;
+
+                oscillator.start(audioContext.currentTime + time);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + time + 0.2);
+                oscillator.stop(audioContext.currentTime + time + 0.2);
+            });
+        }
+
+        function startCountdowns() {
+            updateCountdown('daily-countdown', () => dailyResetTime);
+            updateCountdown('weekly-countdown', () => weeklyResetTime);
+
+            setInterval(() => {
+                updateCountdown('daily-countdown', () => dailyResetTime);
+                dailyResetTime = Math.max(0, dailyResetTime - 1000);
+            }, 1000);
+
+            setInterval(() => {
+                updateCountdown('weekly-countdown', () => weeklyResetTime);
+                weeklyResetTime = Math.max(0, weeklyResetTime - 1000);
+            }, 1000);
+        }
+
+        function updateCountdown(elementId, getTime) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            const time = getTime();
+            if (!time) return;
+
+            const hours = Math.floor(time / (1000 * 60 * 60));
+            const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((time % (1000 * 60)) / 1000);
+
+            element.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (time <= 0) {
+                element.textContent = 'RESETTING...';
+                setTimeout(() => loadMissions(), 1000);
+            }
+        }
+
+        window.addEventListener('load', checkAuth);
+
+        console.log('🎯 Missions System Loaded');
+        console.log('✨ Complete missions to earn rewards!');
+    </script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - CRYPTO HEIST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .toast-notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,200,255,0.2));
+            border: 2px solid #00ff88;
+            border-radius: 12px;
+            padding: 16px 24px;
+            color: white;
+            z-index: 10000;
+            animation: slideInRight 0.5s ease-out;
+            box-shadow: 0 0 20px rgba(0,255,136,0.5);
+            max-width: 400px;
+            cursor: pointer;
+        }
+        
+        .toast-notification:hover {
+            transform: translateX(-5px);
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+        
+        .notification-item {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid #00ff88;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .notification-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .notification-item.unread {
+            background: rgba(0, 255, 136, 0.05);
+            border-left-color: #00ffff;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff0066;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="main-container">
+        <header class="hud-header">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="logo">CRYPTO HEIST</div>
+                    <nav class="flex items-center gap-6">
+                        <a href="/" class="nav-link">Dashboard</a>
+                        <a href="/progression" class="nav-link">Progression</a>
+                        <a href="/squad" class="nav-link">Squads</a>
+                        <a href="/friends" class="nav-link">Friends</a>
+                        <a href="/events" class="nav-link">Events</a>
+                        <a href="/notifications" class="nav-link" style="color: #ff00ff;">Notifications</a>
+                        <div id="user-section">
+                            <button onclick="login()" class="cyber-btn">Login</button>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <div class="container mx-auto px-6 py-8">
+            <div class="mb-8">
+                <h1 class="text-5xl font-bold mb-2 text-center" style="color: #00ff88;">🔔 NOTIFICATIONS</h1>
+                <p class="text-center text-gray-400">Stay updated with real-time alerts</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="panel mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold" style="color: #00ffff;">All Notifications</h2>
+                        <div class="flex gap-2">
+                            <button onclick="markAllRead()" class="cyber-btn-outline px-4 py-2">
+                                Mark All Read
+                            </button>
+                            <button onclick="toggleSounds()" class="cyber-btn-outline px-4 py-2" id="sound-toggle">
+                                🔊 Sounds ON
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 flex gap-2">
+                        <button onclick="filterNotifications('all')" class="cyber-btn-outline px-4 py-2" id="filter-all">All</button>
+                        <button onclick="filterNotifications('unread')" class="cyber-btn-outline px-4 py-2" id="filter-unread">Unread</button>
+                        <button onclick="filterNotifications('friend_request')" class="cyber-btn-outline px-4 py-2" id="filter-friend">Friends</button>
+                        <button onclick="filterNotifications('achievement_unlock')" class="cyber-btn-outline px-4 py-2" id="filter-achievement">Achievements</button>
+                    </div>
+                    
+                    <div id="notifications-list">
+                        <div class="text-center py-12 text-gray-400">
+                            <p class="text-xl">Loading notifications...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="notification-sound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSlz" type="audio/wav">
+    </audio>
+
+    <script>
+        let currentUser = null;
+        let notificationsSocket = null;
+        let soundEnabled = localStorage.getItem('notificationSounds') !== 'false';
+        let currentFilter = 'all';
+        
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/user/profile');
+                if (response.ok) {
+                    currentUser = await response.json();
+                    document.getElementById('user-section').innerHTML = `
+                        <div class="flex items-center gap-4">
+                            <span class="text-gray-300">Welcome, ${currentUser.username}</span>
+                            <button onclick="logout()" class="cyber-btn-outline">Logout</button>
+                        </div>
+                    `;
+                    connectSocket();
+                    loadNotifications();
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        }
+        
+        function connectSocket() {
+            if (!currentUser) return;
+            
+            notificationsSocket = io('/notifications');
+            
+            notificationsSocket.on('connect', () => {
+                console.log('🔔 Connected to notifications');
+                notificationsSocket.emit('join', {
+                    userId: currentUser.id,
+                    username: currentUser.username
+                });
+            });
+            
+            notificationsSocket.on('notification', (notification) => {
+                console.log('📬 New notification:', notification);
+                showToast(notification);
+                loadNotifications();
+            });
+        }
+        
+        async function loadNotifications() {
+            try {
+                const response = await fetch('/api/notifications?limit=50');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch notifications');
+                }
+                
+                const data = await response.json();
+                displayNotifications(data.notifications);
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+                document.getElementById('notifications-list').innerHTML = `
+                    <div class="text-center py-12 text-red-400">
+                        <p class="text-xl">Please login to view notifications</p>
+                        <button onclick="login()" class="cyber-btn mt-4">Login</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayNotifications(notifications) {
+            const container = document.getElementById('notifications-list');
+            
+            if (notifications.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-gray-400">
+                        <p class="text-xl">📭 No notifications yet</p>
+                        <p class="text-sm mt-2">Check back later for updates!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const filtered = currentFilter === 'all' ? notifications : 
+                currentFilter === 'unread' ? notifications.filter(n => !n.read) :
+                notifications.filter(n => n.type === currentFilter);
+            
+            container.innerHTML = filtered.map(notif => {
+                const icon = getNotificationIcon(notif.type);
+                const time = new Date(notif.created_at).toLocaleString();
+                const unreadClass = notif.read ? '' : 'unread';
+                
+                return `
+                    <div class="notification-item ${unreadClass}" onclick="handleNotificationClick('${notif.id}', '${notif.link || '#'}')">
+                        <div class="flex items-start gap-3">
+                            <div class="text-2xl">${icon}</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg" style="color: #00ffff;">${notif.title}</h3>
+                                <p class="text-gray-300 mt-1">${notif.message}</p>
+                                <p class="text-xs text-gray-500 mt-2">${time}</p>
+                            </div>
+                            ${!notif.read ? '<div class="text-sm" style="color: #ff00ff;">●</div>' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function getNotificationIcon(type) {
+            const icons = {
+                friend_request: '👥',
+                squad_invite: '⚔️',
+                achievement_unlock: '🏆',
+                earnings: '💰',
+                challenge_complete: '✅',
+                rank_up: '⬆️',
+                event_complete: '🎉'
+            };
+            return icons[type] || '🔔';
+        }
+        
+        async function handleNotificationClick(notifId, link) {
+            try {
+                await fetch(`/api/notifications/${notifId}/read`, {
+                    method: 'POST'
+                });
+                
+                if (link && link !== '#') {
+                    window.location.href = link;
+                } else {
+                    loadNotifications();
+                }
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+            }
+        }
+        
+        async function markAllRead() {
+            try {
+                await fetch('/api/notifications/read-all', {
+                    method: 'POST'
+                });
+                loadNotifications();
+            } catch (error) {
+                console.error('Error marking all as read:', error);
+            }
+        }
+        
+        function filterNotifications(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('[id^="filter-"]').forEach(btn => {
+                btn.classList.remove('cyber-btn');
+                btn.classList.add('cyber-btn-outline');
+            });
+            document.getElementById(`filter-${filter}`).classList.remove('cyber-btn-outline');
+            document.getElementById(`filter-${filter}`).classList.add('cyber-btn');
+            loadNotifications();
+        }
+        
+        function toggleSounds() {
+            soundEnabled = !soundEnabled;
+            localStorage.setItem('notificationSounds', soundEnabled);
+            document.getElementById('sound-toggle').textContent = soundEnabled ? '🔊 Sounds ON' : '🔇 Sounds OFF';
+        }
+        
+        function showToast(notification) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="text-2xl">${getNotificationIcon(notification.type)}</div>
+                    <div>
+                        <h3 class="font-bold">${notification.title}</h3>
+                        <p class="text-sm text-gray-300 mt-1">${notification.message}</p>
+                    </div>
+                </div>
+            `;
+            
+            toast.onclick = () => {
+                if (notification.link) {
+                    window.location.href = notification.link;
+                }
+                toast.remove();
+            };
+            
+            document.body.appendChild(toast);
+            
+            if (soundEnabled) {
+                document.getElementById('notification-sound').play().catch(e => console.log('Sound play failed:', e));
+            }
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.5s ease-out';
+                setTimeout(() => toast.remove(), 500);
+            }, 5000);
+        }
+        
+        function login() {
+            window.location.href = '/api/auth/login';
+        }
+        
+        function logout() {
+            window.location.href = '/api/auth/logout';
+        }
+        
+        checkAuth();
+    </script>
+</body>
+</html>

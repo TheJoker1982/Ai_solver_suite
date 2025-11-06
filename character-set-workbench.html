@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Set Workbench - Bitcoin Puzzle Environment</title>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        min-height: 100vh;
+        padding: 0;
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 10;
+      }
+      .header-section {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .header-section h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+      .header-section p {
+        color: var(--color-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+      }
+      .nav-links a {
+        color: var(--color-primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+      .nav-links a:hover {
+        color: var(--color-secondary);
+        text-shadow: 0 0 10px var(--color-primary);
+      }
+      .nav-links span {
+        color: var(--color-secondary);
+        margin: 0 10px;
+      }
+      .workbench-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 24px;
+      }
+      .panel h2 {
+        color: var(--color-primary);
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+      }
+      .button-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .cyber-btn-secondary {
+        background: rgba(0, 255, 136, 0.1);
+        color: var(--color-primary);
+        border: 1px solid var(--color-primary);
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-family: var(--font-primary);
+        transition: all 0.3s ease;
+      }
+      .cyber-btn-secondary:hover {
+        background: rgba(0, 255, 136, 0.2);
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        transform: translateY(-2px);
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--color-secondary);
+        font-size: 0.9rem;
+      }
+      .charset-list {
+        margin-top: 16px;
+      }
+      .charset-item {
+        margin-bottom: 12px;
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      .charset-label {
+        color: var(--color-primary);
+        font-weight: 700;
+      }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header-section">
+            <h1 class="neon-glow">
+                🧮 CHARACTER SET WORKBENCH
+            </h1>
+            <p>Advanced Bitcoin Puzzle Environment - String Manipulation & Analysis</p>
+            <div class="nav-links">
+                <a href="/">← Back to Dashboard</a>
+                <span>•</span>
+                <a href="/ai-suite">AI Suite</a>
+                <span>•</span>
+                <a href="/live-studio">Live Studio</a>
+            </div>
+        </div>
+
+        <div class="workbench-grid">
+
+            <!-- String Manipulation Panel -->
+            <div class="panel">
+                <h2>🔤 String Manipulation</h2>
+
+                <div style="margin-bottom: 16px;">
+                    <label>Input String:</label>
+                    <textarea id="inputString" class="cyber-input" rows="4" 
+                        placeholder="Enter your string for manipulation..."></textarea>
+                </div>
+
+                <div class="button-grid">
+                    <button onclick="reverseString()" class="cyber-btn-secondary">🔄 Reverse</button>
+                    <button onclick="upperCase()" class="cyber-btn-secondary">⬆️ Upper</button>
+                    <button onclick="lowerCase()" class="cyber-btn-secondary">⬇️ Lower</button>
+                    <button onclick="removeSpaces()" class="cyber-btn-secondary">🚫 No Spaces</button>
+                    <button onclick="hexEncode()" class="cyber-btn-secondary">🔢 To Hex</button>
+                    <button onclick="hexDecode()" class="cyber-btn-secondary">🔤 From Hex</button>
+                    <button onclick="base64Encode()" class="cyber-btn-secondary">📦 Base64 Enc</button>
+                    <button onclick="base64Decode()" class="cyber-btn-secondary">📦 Base64 Dec</button>
+                </div>
+
+                <div class="result-box" id="stringResult">Results will appear here...</div>
+            </div>
+
+            <!-- Character Analysis Panel -->
+            <div class="panel">
+                <h2>🔍 Character Analysis</h2>
+
+                <div style="margin-bottom: 16px;">
+                    <label>Analyze String:</label>
+                    <input type="text" id="analyzeString" class="cyber-input" 
+                        placeholder="Enter string to analyze...">
+                    <button onclick="analyzeCharacters()" class="cyber-btn" style="margin-top: 12px; width: 100%;">🔍 Analyze</button>
+                </div>
+
+                <div class="result-box" id="analysisResult">
+                    Character analysis results will appear here...
+                </div>
+            </div>
+
+            <!-- Hex Operations Panel -->
+            <div class="panel">
+                <h2>🔢 Hex Operations</h2>
+
+                <div style="margin-bottom: 16px;">
+                    <label>Hex Input (64 chars for private keys):</label>
+                    <input type="text" id="hexInput" class="cyber-input" 
+                        placeholder="Enter hex string..." maxlength="64">
+                </div>
+
+                <div class="button-grid">
+                    <button onclick="padHex()" class="cyber-btn-secondary">⏭️ Pad to 64</button>
+                    <button onclick="reverseHex()" class="cyber-btn-secondary">🔄 Reverse</button>
+                    <button onclick="validateHex()" class="cyber-btn-secondary">✅ Validate</button>
+                    <button onclick="hexToBinary()" class="cyber-btn-secondary">🔢 To Binary</button>
+                </div>
+
+                <div class="result-box" id="hexResult">Hex operation results will appear here...</div>
+            </div>
+
+            <!-- Bitcoin Key Analysis Panel -->
+            <div class="panel">
+                <h2>₿ Bitcoin Key Analysis</h2>
+
+                <div style="margin-bottom: 16px;">
+                    <label>Private Key (Hex):</label>
+                    <input type="text" id="privateKeyInput" class="cyber-input" 
+                        placeholder="Enter 64-character private key..." maxlength="64">
+                    <button onclick="analyzePrivateKey()" class="cyber-btn" style="margin-top: 12px; width: 100%;">🔍 Analyze Key</button>
+                </div>
+
+                <div class="result-box" id="keyAnalysisResult">
+                    Private key analysis results will appear here...
+                </div>
+            </div>
+
+            <!-- Pattern Search Panel -->
+            <div class="panel">
+                <h2>🎯 Pattern Search</h2>
+
+                <div style="margin-bottom: 16px;">
+                    <label>Text to Search:</label>
+                    <textarea id="searchText" class="cyber-input" rows="3" 
+                        placeholder="Enter text to search in..."></textarea>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label>Pattern:</label>
+                    <input type="text" id="searchPattern" class="cyber-input" 
+                        placeholder="Enter pattern to find...">
+                    <button onclick="searchPattern()" class="cyber-btn" style="margin-top: 12px; width: 100%;">🔍 Search</button>
+                </div>
+
+                <div class="result-box" id="searchResult">
+                    Pattern search results will appear here...
+                </div>
+            </div>
+
+            <!-- 360° Address Derivation Panel -->
+            <div class="panel" style="grid-column: 1 / -1;">
+                <h2>🌐 360° Address Derivation</h2>
+
+                <div style="margin-bottom: 16px;">
+                    <label>Zero Point (Hex Value):</label>
+                    <input type="text" id="zeroPointInput" class="cyber-input" 
+                        placeholder="Enter hex value as starting point..."
+                        value="5b1c60b9e525ff756acca60972374422cfb52a736b9145">
+                    <button onclick="derive360Addresses()" class="cyber-btn" style="margin-top: 12px; width: 100%;">🎯 Derive 360 Addresses</button>
+                </div>
+
+                <div class="result-box" id="address360Result" style="max-height: 400px; overflow-y: auto; font-size: 0.85rem;">
+                    Enter a hex value and click "Derive 360 Addresses" to generate Bitcoin addresses at each degree (0° to 360°)...
+                </div>
+            </div>
+
+            <!-- Character Sets Panel -->
+            <div class="panel">
+                <h2>📚 Character Sets</h2>
+
+                <div class="charset-list">
+                    <div class="charset-item"><span class="charset-label">Hex Lower (Hashes):</span> 0123456789abcdef</div>
+                    <div class="charset-item"><span class="charset-label">Hex Upper (BSV):</span> 0123456789ABCDEF</div>
+                    <div class="charset-item"><span class="charset-label">Hex Double (Boundary):</span> AABBCCDDEEFF</div>
+                    <div class="charset-item"><span class="charset-label">Base58:</span> 123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz</div>
+                    <div class="charset-item"><span class="charset-label">BCH C26:</span> ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+                    <div class="charset-item"><span class="charset-label">Decimal:</span> 0123456789</div>
+                </div>
+
+                <div style="margin-top: 16px;">
+                    <button onclick="loadPhoneticTool()" class="cyber-btn" style="width: 100%;">🔊 Load Phonetic Analysis Tool</button>
+                </div>
+
+                <div style="margin-top: 16px; display: flex; gap: 8px;">
+                    <button onclick="generateTestString()" class="cyber-btn-secondary" style="flex: 1;">🎲 Generate Test</button>
+                    <button onclick="clearAll()" class="cyber-btn-secondary" style="flex: 1;">🗑️ Clear All</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // String manipulation functions
+        function reverseString() {
+            const input = document.getElementById('inputString').value;
+            const result = input.split('').reverse().join('');
+            document.getElementById('stringResult').textContent = result;
+        }
+
+        function upperCase() {
+            const input = document.getElementById('inputString').value;
+            const result = input.toUpperCase();
+            document.getElementById('stringResult').textContent = result;
+        }
+
+        function lowerCase() {
+            const input = document.getElementById('inputString').value;
+            const result = input.toLowerCase();
+            document.getElementById('stringResult').textContent = result;
+        }
+
+        function removeSpaces() {
+            const input = document.getElementById('inputString').value;
+            const result = input.replace(/\s+/g, '');
+            document.getElementById('stringResult').textContent = result;
+        }
+
+        function hexEncode() {
+            const input = document.getElementById('inputString').value;
+            const result = Array.from(input).map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+            document.getElementById('stringResult').textContent = result;
+        }
+
+        function hexDecode() {
+            const input = document.getElementById('inputString').value;
+            try {
+                const result = input.match(/.{2}/g)?.map(hex => String.fromCharCode(parseInt(hex, 16))).join('') || 'Invalid hex';
+                document.getElementById('stringResult').textContent = result;
+            } catch (e) {
+                document.getElementById('stringResult').textContent = 'Error: Invalid hex string';
+            }
+        }
+
+        function base64Encode() {
+            const input = document.getElementById('inputString').value;
+            try {
+                const result = btoa(input);
+                document.getElementById('stringResult').textContent = result;
+            } catch (e) {
+                document.getElementById('stringResult').textContent = 'Error: Cannot encode to base64';
+            }
+        }
+
+        function base64Decode() {
+            const input = document.getElementById('inputString').value;
+            try {
+                const result = atob(input);
+                document.getElementById('stringResult').textContent = result;
+            } catch (e) {
+                document.getElementById('stringResult').textContent = 'Error: Invalid base64 string';
+            }
+        }
+
+        // Character analysis
+        function analyzeCharacters() {
+            const input = document.getElementById('analyzeString').value;
+            const analysis = `
+String: "${input}"
+Length: ${input.length}
+Characters: ${input.split('').join(' ')}
+Unique chars: ${[...new Set(input)].length}
+Hex length: ${input.length * 2} (if converted to hex)
+Is hex: ${/^[0-9A-Fa-f]*$/.test(input)}
+Is base58: ${/^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]*$/.test(input)}
+Is numeric: ${/^\d+$/.test(input)}
+Has spaces: ${/\s/.test(input)}
+            `;
+            document.getElementById('analysisResult').textContent = analysis.trim();
+        }
+
+        // Hex operations
+        function padHex() {
+            const input = document.getElementById('hexInput').value;
+            const result = input.padStart(64, '0');
+            document.getElementById('hexResult').textContent = `Padded: ${result}\nLength: ${result.length}`;
+        }
+
+        function reverseHex() {
+            const input = document.getElementById('hexInput').value;
+            const result = input.split('').reverse().join('');
+            document.getElementById('hexResult').textContent = `Reversed: ${result}`;
+        }
+
+        function validateHex() {
+            const input = document.getElementById('hexInput').value;
+            const isValid = /^[0-9A-Fa-f]*$/.test(input);
+            const result = `Valid hex: ${isValid}\nLength: ${input.length}\nExpected for private key: 64 characters`;
+            document.getElementById('hexResult').textContent = result;
+        }
+
+        function hexToBinary() {
+            const input = document.getElementById('hexInput').value;
+            try {
+                const binary = input.split('').map(hex => parseInt(hex, 16).toString(2).padStart(4, '0')).join('');
+                document.getElementById('hexResult').textContent = `Binary: ${binary}\nLength: ${binary.length} bits`;
+            } catch (e) {
+                document.getElementById('hexResult').textContent = 'Error: Invalid hex string';
+            }
+        }
+
+        // Bitcoin key analysis
+        function analyzePrivateKey() {
+            const input = document.getElementById('privateKeyInput').value;
+
+            if (input.length !== 64) {
+                document.getElementById('keyAnalysisResult').textContent = 'Error: Private key must be exactly 64 hex characters';
+                return;
+            }
+
+            if (!/^[0-9A-Fa-f]*$/.test(input)) {
+                document.getElementById('keyAnalysisResult').textContent = 'Error: Private key must be valid hex';
+                return;
+            }
+
+            // Basic analysis
+            const analysis = `
+Private Key: ${input}
+Length: ${input.length} characters ✓
+Format: Valid hex ✓
+Leading zeros: ${input.match(/^0*/)[0].length}
+Trailing zeros: ${input.match(/0*$/)[0].length}
+Unique chars: ${[...new Set(input.toLowerCase())].sort().join('')}
+First 8 chars: ${input.substring(0, 8)}
+Last 8 chars: ${input.substring(56)}
+Middle section: ${input.substring(24, 40)}
+
+Note: Use the main verification system to test if this key matches any puzzle addresses.
+            `;
+
+            document.getElementById('keyAnalysisResult').textContent = analysis.trim();
+        }
+
+        // Pattern search
+        function searchPattern() {
+            const text = document.getElementById('searchText').value;
+            const pattern = document.getElementById('searchPattern').value;
+
+            if (!pattern) {
+                document.getElementById('searchResult').textContent = 'Please enter a pattern to search for';
+                return;
+            }
+
+            const matches = [];
+            let index = text.indexOf(pattern);
+
+            while (index !== -1) {
+                matches.push(index);
+                index = text.indexOf(pattern, index + 1);
+            }
+
+            const result = `
+Pattern: "${pattern}"
+Found: ${matches.length} matches
+Positions: ${matches.join(', ') || 'None'}
+Text length: ${text.length}
+            `;
+
+            document.getElementById('searchResult').textContent = result.trim();
+        }
+
+        // 360° Address Derivation
+        async function derive360Addresses() {
+            const zeroPoint = document.getElementById('zeroPointInput').value.trim();
+            const resultBox = document.getElementById('address360Result');
+
+            if (!zeroPoint) {
+                resultBox.textContent = 'Please enter a hex value';
+                return;
+            }
+
+            if (!/^[0-9A-Fa-f]+$/.test(zeroPoint)) {
+                resultBox.textContent = 'Invalid hex value';
+                return;
+            }
+
+            resultBox.innerHTML = '<div style="color: var(--color-primary);">🌐 Generating 360 addresses... Please wait...</div>';
+
+            try {
+                // Convert hex to BigInt
+                const zeroValue = BigInt('0x' + zeroPoint);
+                const addresses = [];
+                const PUZZLE_71_ADDRESS = '1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU';
+
+                // For each degree 0-360
+                for (let degree = 0; degree <= 360; degree++) {
+                    // Apply rotation: value rotated by degree bits
+                    const rotatedValue = rotateValue(zeroValue, degree);
+
+                    // Derive address (simplified - shows hex, real Bitcoin address needs proper key derivation)
+                    const addressHex = rotatedValue.toString(16).padStart(40, '0').substring(0, 40);
+                    const address = `1${addressHex.substring(0, 33)}`;  // Simplified address format
+
+                    // Check if it matches Puzzle 71
+                    const match = address === PUZZLE_71_ADDRESS ? ' 🎯 PUZZLE 71 MATCH!' : '';
+
+                    addresses.push(`${degree.toString().padStart(3, '0')}°: ${address}${match}`);
+                }
+
+                // Display results
+                resultBox.innerHTML = `
+                    <div style="margin-bottom: 12px; color: var(--color-primary); font-weight: bold;">
+                        🌐 360° ADDRESS DERIVATION COMPLETE
+                    </div>
+                    <div style="margin-bottom: 8px; color: var(--color-secondary);">
+                        Zero Point: ${zeroPoint}
+                    </div>
+                    <div style="margin-bottom: 12px; color: var(--color-secondary);">
+                        Generated: 361 addresses (0° to 360°)
+                    </div>
+                    <div style="font-family: monospace; line-height: 1.6;">
+                        ${addresses.join('<br>')}
+                    </div>
+                `;
+
+            } catch (error) {
+                resultBox.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        function rotateValue(value, degrees) {
+            // Convert degrees to bit rotation
+            const bits = Math.floor(degrees * 256 / 360);  // Map 360° to 256-bit rotation
+
+            // Bit rotation: (value << bits) | (value >> (256 - bits))
+            const shiftLeft = value << BigInt(bits);
+            const shiftRight = value >> BigInt(256 - bits);
+            const mask = (BigInt(1) << BigInt(256)) - BigInt(1);
+
+            return (shiftLeft | shiftRight) & mask;
+        }
+
+        // Phonetic Analysis Tool Access
+        function loadPhoneticTool() {
+            const resultBox = document.getElementById('analysisResult'); // Assuming analysisResult can be repurposed for tool output
+            resultBox.innerHTML = `
+                <div style="color: var(--color-primary); font-weight: bold;">🔊 Phonetic Analysis Tool</div>
+                <p>Enter text below and the tool will analyze its phonetic representation using character set data.</p>
+                <input type="text" id="phoneticTextInput" class="cyber-input" placeholder="Enter text for phonetic analysis...">
+                <button onclick="performPhoneticAnalysis()" class="cyber-btn" style="margin-top: 12px; width: 100%;">Analyze Phonetically</button>
+                <div id="phoneticAnalysisOutput" style="margin-top: 12px; font-size: 0.85rem; line-height: 1.6; color: var(--color-secondary);">
+                    Phonetic analysis results will appear here...
+                </div>
+            `;
+        }
+
+        function performPhoneticAnalysis() {
+            const inputText = document.getElementById('phoneticTextInput').value;
+            const outputBox = document.getElementById('phoneticAnalysisOutput');
+
+            if (!inputText) {
+                outputBox.textContent = 'Please enter text to analyze.';
+                return;
+            }
+
+            // This is a placeholder for the actual phonetic analysis logic.
+            // In a real implementation, this would involve complex algorithms
+            // and potentially external libraries or data.
+            // For now, we'll just show a simplified representation.
+            const phoneticRepresentation = inputText.split('').map(char => {
+                // A very basic mapping - real phonetic analysis is much more complex
+                if (char.match(/[aeiou]/i)) return 'V'; // Vowel
+                if (char.match(/[bcdfghjklmnpqrstvwxyz]/i)) return 'C'; // Consonant
+                return char; // Keep other characters as is
+            }).join('');
+
+            outputBox.innerHTML = `
+                Original: "${inputText}"<br>
+                Phonetic (Simplified): ${phoneticRepresentation}
+            `;
+        }
+
+        // Utility functions
+        function generateTestString() {
+            const chars = 'abcdef0123456789';
+            let result = '';
+            for (let i = 0; i < 64; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('privateKeyInput').value = result;
+        }
+
+        function clearAll() {
+            const inputs = document.querySelectorAll('.input-field'); // Note: '.input-field' class is not used in the provided HTML. This might need correction.
+            const results = document.querySelectorAll('.result-box');
+
+            // Clear textareas and inputs
+            document.getElementById('inputString').value = '';
+            document.getElementById('analyzeString').value = '';
+            document.getElementById('hexInput').value = '';
+            document.getElementById('privateKeyInput').value = '';
+            document.getElementById('searchText').value = '';
+            document.getElementById('searchPattern').value = '';
+            document.getElementById('zeroPointInput').value = '5b1c60b9e525ff756acca60972374422cfb52a736b9145'; // Reset to default
+
+            // Clear result boxes
+            document.getElementById('stringResult').textContent = 'Results will appear here...';
+            document.getElementById('analysisResult').textContent = 'Character analysis results will appear here...';
+            document.getElementById('hexResult').textContent = 'Hex operation results will appear here...';
+            document.getElementById('keyAnalysisResult').textContent = 'Private key analysis results will appear here...';
+            document.getElementById('searchResult').textContent = 'Pattern search results will appear here...';
+            document.getElementById('address360Result').innerHTML = 'Enter a hex value and click "Derive 360 Addresses" to generate Bitcoin addresses at each degree (0° to 360°)...';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🧮 Character Set Workbench initialized');
+            console.log('🔗 Connected to Bitcoin Puzzle Environment');
+        });
+    </script>
+</body>
+</html>

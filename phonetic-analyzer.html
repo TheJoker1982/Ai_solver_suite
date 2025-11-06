@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Phonetic Analysis Tool</title>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .tool-container {
+            background: var(--bg-panel);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            font-family: monospace;
+        }
+        .result-box {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid var(--color-primary);
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .charset-display {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <div style="position: relative; z-index: 10;">
+        <h1 style="color: var(--color-primary);">🔤 Bitcoin Phonetic Analysis Tool</h1>
+        <p style="color: #888; margin-bottom: 30px;">
+            <a href="/" style="color: var(--color-primary);">← Back to Dashboard</a> | 
+            <a href="/live-studio" style="color: var(--color-primary);">Live Studio</a>
+        </p>
+
+        <div class="tool-container">
+            <h2>Character Set Library</h2>
+            
+            <div class="charset-display">
+                <strong>Hex (lowercase):</strong> 0123456789abcdef<br>
+                <strong>Hex (uppercase):</strong> 0123456789ABCDEF<br>
+                <strong>Base58:</strong> 123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz<br>
+                <strong>Decimal:</strong> 0123456789<br>
+                <strong>Boundary Markers:</strong> AABBCCDDEEFF<br>
+                <strong>BCH C26 Alphabet:</strong> ABCDEFGHIJKLMNOPQRSTUVWXYZ
+            </div>
+
+            <div class="input-group">
+                <label>Select Character Set:</label>
+                <select id="charsetSelect" onchange="updateCharsetDisplay()">
+                    <option value="hex_lower">Hex (lowercase) - Hashes</option>
+                    <option value="hex_upper">Hex (uppercase) - BSV Addresses</option>
+                    <option value="base58">Base58 - Bitcoin Addresses</option>
+                    <option value="decimal">Decimal (0-9)</option>
+                    <option value="boundary">Boundary Markers (AA-FF)</option>
+                    <option value="bch_c26">BCH C26 Alphabet</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Input String (hex, address, or text):</label>
+                <textarea id="inputString" rows="4" placeholder="Enter your string here..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin: 20px 0;">
+                <button class="cyber-btn" onclick="analyzePhonetic()">🔍 Analyze Phonetic Patterns</button>
+                <button class="cyber-btn-outline" onclick="convertCharset()">🔄 Convert Character Set</button>
+                <button class="cyber-btn-outline" onclick="rotateEndpoint()">↻ Apply Endpoint Rotation (-1)</button>
+            </div>
+
+            <div id="results" class="result-box" style="display: none;"></div>
+        </div>
+
+        <div class="tool-container">
+            <h2>Bitcoin Operations Mapping</h2>
+            <p style="color: #888; margin-bottom: 15px;">
+                Each Bitcoin operation maps to specific character sets for phonetic analysis:
+            </p>
+            <div class="charset-display">
+                <strong>Hash Operations (SHA256, RIPEMD160):</strong> Output is ALWAYS lowercase a-f<br>
+                <strong>BSV Addresses:</strong> Use UPPERCASE A-F<br>
+                <strong>Endpoint Rotation:</strong> -1 inverse offset at boundaries<br>
+                <strong>Concatenation:</strong> Quiet concat with recursive matching<br>
+                <strong>Boundary Detection:</strong> AA-FF markers process lowercase hash outputs
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CHARSETS = {
+            hex_lower: '0123456789abcdef',
+            hex_upper: '0123456789ABCDEF',
+            base58: '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz',
+            decimal: '0123456789',
+            boundary: 'AABBCCDDEEFF',
+            bch_c26: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        };
+
+        function updateCharsetDisplay() {
+            const select = document.getElementById('charsetSelect');
+            const charset = CHARSETS[select.value];
+            console.log('Selected charset:', charset);
+        }
+
+        function analyzePhonetic() {
+            const input = document.getElementById('inputString').value.trim();
+            const charsetType = document.getElementById('charsetSelect').value;
+            const charset = CHARSETS[charsetType];
+
+            if (!input) {
+                alert('Please enter a string to analyze');
+                return;
+            }
+
+            let results = `PHONETIC ANALYSIS RESULTS\n`;
+            results += `${'='.repeat(60)}\n\n`;
+            results += `Input: ${input}\n`;
+            results += `Length: ${input.length} characters\n`;
+            results += `Selected Charset: ${charsetType}\n`;
+            results += `Charset: ${charset}\n\n`;
+
+            // Character frequency analysis
+            results += `CHARACTER FREQUENCY:\n`;
+            const freq = {};
+            for (const char of input) {
+                freq[char] = (freq[char] || 0) + 1;
+            }
+            for (const [char, count] of Object.entries(freq).sort((a, b) => b[1] - a[1])) {
+                const inCharset = charset.includes(char) ? '✓' : '✗';
+                results += `  ${char}: ${count} times ${inCharset}\n`;
+            }
+
+            // Pattern detection
+            results += `\nPATTERN DETECTION:\n`;
+            results += `  Starts with: ${input[0]}\n`;
+            results += `  Ends with: ${input[input.length - 1]}\n`;
+            results += `  Contains lowercase hex (a-f): ${/[a-f]/.test(input) ? 'YES' : 'NO'}\n`;
+            results += `  Contains uppercase hex (A-F): ${/[A-F]/.test(input) ? 'YES' : 'NO'}\n`;
+            results += `  Contains boundary markers (AA-FF): ${/AA|BB|CC|DD|EE|FF/.test(input) ? 'YES' : 'NO'}\n`;
+            results += `  Is valid hex: ${/^[0-9A-Fa-f]+$/.test(input) ? 'YES' : 'NO'}\n`;
+            results += `  Is valid Base58: ${/^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$/.test(input) ? 'YES' : 'NO'}\n`;
+
+            // Phonetic rotation analysis
+            results += `\nPHONETIC ROTATION:\n`;
+            results += `  0-9 count: ${(input.match(/[0-9]/g) || []).length}\n`;
+            results += `  a-f count: ${(input.match(/[a-f]/g) || []).length}\n`;
+            results += `  A-F count: ${(input.match(/[A-F]/g) || []).length}\n`;
+
+            displayResults(results);
+        }
+
+        function convertCharset() {
+            const input = document.getElementById('inputString').value.trim();
+            const charsetType = document.getElementById('charsetSelect').value;
+
+            if (!input) {
+                alert('Please enter a string to convert');
+                return;
+            }
+
+            let results = `CHARACTER SET CONVERSION\n`;
+            results += `${'='.repeat(60)}\n\n`;
+            results += `Original: ${input}\n\n`;
+
+            // Convert to hex
+            results += `To Hex (each char):\n`;
+            const hexChars = Array.from(input).map(c => c.charCodeAt(0).toString(16).padStart(2, '0'));
+            results += `  ${hexChars.join(' ')}\n\n`;
+
+            // Convert to decimal
+            results += `To Decimal (each char):\n`;
+            const decChars = Array.from(input).map(c => c.charCodeAt(0));
+            results += `  ${decChars.join(' ')}\n\n`;
+
+            // Reverse string
+            results += `Reversed: ${input.split('').reverse().join('')}\n\n`;
+
+            // Uppercase/lowercase
+            results += `Uppercase: ${input.toUpperCase()}\n`;
+            results += `Lowercase: ${input.toLowerCase()}\n`;
+
+            displayResults(results);
+        }
+
+        function rotateEndpoint() {
+            const input = document.getElementById('inputString').value.trim();
+
+            if (!input) {
+                alert('Please enter a string to rotate');
+                return;
+            }
+
+            let results = `ENDPOINT ROTATION (Inverse -1 Offset)\n`;
+            results += `${'='.repeat(60)}\n\n`;
+            results += `Original: ${input}\n\n`;
+
+            // Apply -1 rotation to each character
+            results += `Character-by-Character Rotation:\n`;
+            const rotated = Array.from(input).map(char => {
+                const code = char.charCodeAt(0);
+                const newCode = code - 1;
+                const newChar = String.fromCharCode(newCode);
+                return `  ${char} (${code}) → ${newChar} (${newCode})`;
+            }).join('\n');
+            results += rotated + '\n\n';
+
+            const rotatedString = Array.from(input).map(c => String.fromCharCode(c.charCodeAt(0) - 1)).join('');
+            results += `Result: ${rotatedString}\n`;
+
+            displayResults(results);
+        }
+
+        function displayResults(text) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.textContent = text;
+            resultsDiv.style.display = 'block';
+        }
+
+        // Initialize
+        updateCharsetDisplay();
+    </script>
+</body>
+</html>

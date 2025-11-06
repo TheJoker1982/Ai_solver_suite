@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Dashboard - CRYPTO HEIST Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+        .neon-box {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 200, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #00ffff, #00ff00);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00ffff, #00ff00);
+            color: #000;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+        .log-entry {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            margin: 4px 0;
+            border-left: 3px solid #00ffff;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-4xl font-bold" style="text-shadow: 0 0 20px #00ffff">
+                📁 CRYPTO HEIST Import Dashboard
+            </h1>
+            <a href="/" class="text-cyan-400 hover:text-cyan-300">← Back to Platform</a>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="neon-box p-6 mb-8">
+            <h2 class="text-2xl mb-4">🎮 Control Panel</h2>
+            <div class="flex gap-4">
+                <button id="startImport" class="btn-primary">
+                    🚀 Start Full Import
+                </button>
+                <button id="refreshStats" class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600">
+                    🔄 Refresh Stats
+                </button>
+                <button id="viewDuplicates" class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600">
+                    📊 View Duplicates
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card">
+                <div class="text-gray-400 text-sm mb-2">Total Files</div>
+                <div class="text-3xl font-bold" id="totalFiles">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-gray-400 text-sm mb-2">Total Size</div>
+                <div class="text-3xl font-bold" id="totalSize">0 GB</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-gray-400 text-sm mb-2">Duplicates Skipped</div>
+                <div class="text-3xl font-bold" id="duplicates">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-gray-400 text-sm mb-2">Categories</div>
+                <div class="text-3xl font-bold" id="categories">0</div>
+            </div>
+        </div>
+
+        <!-- Current Import Status -->
+        <div class="neon-box p-6 mb-8">
+            <h2 class="text-2xl mb-4">📊 Current Import Status</h2>
+            <div id="importStatus" class="space-y-4">
+                <div class="text-gray-400">No active imports</div>
+            </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="neon-box p-6 mb-8">
+            <h2 class="text-2xl mb-4">📁 Files by Category</h2>
+            <div id="categoryBreakdown" class="space-y-3">
+                <div class="text-gray-400">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Recent Import Runs -->
+        <div class="neon-box p-6">
+            <h2 class="text-2xl mb-4">📜 Recent Import Runs</h2>
+            <div id="importRuns" class="space-y-2">
+                <div class="text-gray-400">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Duplicates Modal -->
+        <div id="duplicatesModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-50">
+            <div class="neon-box p-8 max-w-4xl max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl">📊 Duplicate Files Report</h2>
+                    <button id="closeModal" class="text-red-400 text-2xl hover:text-red-300">&times;</button>
+                </div>
+                <div id="duplicatesContent" class="space-y-4">
+                    <div class="text-gray-400">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let refreshInterval;
+
+        async function fetchStats() {
+            try {
+                const response = await fetch('/api/admin/import-stats');
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('totalFiles').textContent = 
+                        data.stats?.total_assets || 0;
+                    
+                    const totalGB = ((data.stats?.total_bytes || 0) / (1024 * 1024 * 1024)).toFixed(2);
+                    document.getElementById('totalSize').textContent = totalGB + ' GB';
+                    
+                    document.getElementById('duplicates').textContent = 
+                        data.stats?.duplicates || 0;
+                    
+                    document.getElementById('categories').textContent = 
+                        data.by_category?.length || 0;
+
+                    const categoryHTML = data.by_category.map(cat => {
+                        const sizeGB = (cat.total_size / (1024 * 1024 * 1024)).toFixed(2);
+                        return `
+                            <div class="flex justify-between items-center p-3 bg-black bg-opacity-30 rounded">
+                                <div>
+                                    <span class="text-cyan-400 font-bold">${cat.category}</span>
+                                    <span class="text-gray-400 ml-2">(${cat.count} files)</span>
+                                </div>
+                                <span class="text-green-400">${sizeGB} GB</span>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    document.getElementById('categoryBreakdown').innerHTML = 
+                        categoryHTML || '<div class="text-gray-400">No files imported yet</div>';
+                }
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            }
+        }
+
+        async function fetchImportRuns() {
+            try {
+                const response = await fetch('/api/admin/import-status');
+                const data = await response.json();
+
+                if (data.success && data.runs.length > 0) {
+                    const runsHTML = data.runs.map(run => {
+                        const statusColor = run.status === 'completed' ? 'text-green-400' : 
+                                          run.status === 'running' ? 'text-yellow-400' : 
+                                          'text-red-400';
+                        
+                        const startTime = new Date(run.started_at).toLocaleString();
+                        const duration = run.completed_at ? 
+                            Math.round((new Date(run.completed_at) - new Date(run.started_at)) / 1000) + 's' : 
+                            'In progress';
+
+                        return `
+                            <div class="log-entry">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="font-bold">${run.run_name || 'Import Run #' + run.id}</span>
+                                        <span class="${statusColor} ml-3">${run.status}</span>
+                                    </div>
+                                    <span class="text-gray-400">${startTime}</span>
+                                </div>
+                                <div class="text-sm text-gray-400 mt-2">
+                                    Discovered: ${run.total_files_discovered || 0} | 
+                                    Downloaded: ${run.total_files_downloaded || 0} | 
+                                    Duplicates: ${run.total_duplicates_skipped || 0} | 
+                                    Duration: ${duration}
+                                </div>
+                                ${run.status === 'running' ? `
+                                    <div class="progress-bar mt-3">
+                                        <div class="progress-fill" style="width: ${Math.round((run.total_files_downloaded / run.total_files_discovered) * 100) || 0}%"></div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    document.getElementById('importRuns').innerHTML = runsHTML;
+
+                    const runningImport = data.runs.find(r => r.status === 'running');
+                    if (runningImport) {
+                        document.getElementById('importStatus').innerHTML = `
+                            <div class="log-entry border-yellow-400">
+                                <div class="text-yellow-400 font-bold mb-2">⚡ Import in Progress</div>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>Files Discovered: ${runningImport.total_files_discovered || 0}</div>
+                                    <div>Files Downloaded: ${runningImport.total_files_downloaded || 0}</div>
+                                    <div>Duplicates Skipped: ${runningImport.total_duplicates_skipped || 0}</div>
+                                    <div>Current Folder: ${runningImport.current_folder || 'root'}</div>
+                                </div>
+                                <div class="progress-bar mt-3">
+                                    <div class="progress-fill" style="width: ${Math.round((runningImport.total_files_downloaded / runningImport.total_files_discovered) * 100) || 5}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        document.getElementById('importStatus').innerHTML = 
+                            '<div class="text-gray-400">No active imports</div>';
+                    }
+                } else {
+                    document.getElementById('importRuns').innerHTML = 
+                        '<div class="text-gray-400">No import runs yet</div>';
+                }
+            } catch (error) {
+                console.error('Error fetching import runs:', error);
+            }
+        }
+
+        async function startImport() {
+            if (!confirm('Start full Drive import? This will scan all 15GB of data and may take several minutes.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/start-full-import', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ runName: 'Full Crypto Import - ' + new Date().toLocaleString() })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Import started! Refresh the page to see progress.');
+                    fetchImportRuns();
+                    startAutoRefresh();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error starting import: ' + error.message);
+            }
+        }
+
+        async function viewDuplicates() {
+            document.getElementById('duplicatesModal').classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/admin/duplicates-report');
+                const data = await response.json();
+
+                if (data.success && data.duplicates.length > 0) {
+                    const html = data.duplicates.map(dup => `
+                        <div class="log-entry">
+                            <div class="font-bold">${dup.filename}</div>
+                            <div class="text-sm text-gray-400">
+                                Category: ${dup.category} | 
+                                Size: ${(dup.file_size / (1024 * 1024)).toFixed(2)} MB | 
+                                Duplicates: ${dup.duplicate_count}
+                            </div>
+                            <div class="text-xs text-gray-500 mt-2">
+                                ${dup.duplicates.map(d => d.path).join('<br>')}
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    document.getElementById('duplicatesContent').innerHTML = 
+                        `<div class="text-green-400 mb-4">Total duplicate files: ${data.total_duplicate_files}</div>` + html;
+                } else {
+                    document.getElementById('duplicatesContent').innerHTML = 
+                        '<div class="text-gray-400">No duplicates found</div>';
+                }
+            } catch (error) {
+                document.getElementById('duplicatesContent').innerHTML = 
+                    '<div class="text-red-400">Error loading duplicates</div>';
+            }
+        }
+
+        function startAutoRefresh() {
+            if (refreshInterval) clearInterval(refreshInterval);
+            refreshInterval = setInterval(() => {
+                fetchStats();
+                fetchImportRuns();
+            }, 5000);
+        }
+
+        document.getElementById('startImport').addEventListener('click', startImport);
+        document.getElementById('refreshStats').addEventListener('click', () => {
+            fetchStats();
+            fetchImportRuns();
+        });
+        document.getElementById('viewDuplicates').addEventListener('click', viewDuplicates);
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('duplicatesModal').classList.add('hidden');
+        });
+
+        fetchStats();
+        fetchImportRuns();
+        startAutoRefresh();
+    </script>
+</body>
+</html>

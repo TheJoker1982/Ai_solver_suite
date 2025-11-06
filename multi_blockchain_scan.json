@@ -1,0 +1,22 @@
+{
+  "timestamp": 1759000788.7035663,
+  "blockchains_scanned": [
+    "BTC",
+    "BCH",
+    "BSV",
+    "ETH"
+  ],
+  "total_addresses_generated": 288,
+  "utxos_found": {
+    "BTC": [],
+    "BCH": [],
+    "BSV": [],
+    "ETH": []
+  },
+  "total_value": {
+    "BTC": 0,
+    "BCH": 0.0,
+    "BSV": 0.0,
+    "ETH": 0
+  }
+}

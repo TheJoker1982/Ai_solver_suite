@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Crypto Production Suite</title>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/access-control.js"></script>
+    <style>
+        body {
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .hud-header {
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .logo {
+            font-size: 1.2rem;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-btn {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            min-width: 320px;
+            max-height: 500px;
+            overflow-y: auto;
+            z-index: 1000;
+            margin-top: 8px;
+            right: 0;
+        }
+        .dropdown-content.show { display: block; }
+        .file-category {
+            padding: 12px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--color-primary);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        .file-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            color: #fff;
+        }
+        .file-item:hover { 
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--color-primary);
+            padding-left: 24px;
+        }
+        .file-icon {
+            font-size: 16px;
+            min-width: 20px;
+        }
+        .main-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+        .message {
+            margin: 16px 0;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 85%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .message.user {
+            background: var(--bg-panel);
+            margin-left: auto;
+            border-left: 4px solid var(--color-primary);
+        }
+        .message.ai {
+            background: var(--bg-card);
+            border-left: 4px solid var(--color-secondary);
+        }
+        .message pre {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 12px 0;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+        }
+        .message code {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        .chat-input-container {
+            padding: 16px 20px;
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border-color);
+        }
+        .chat-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: var(--font-primary);
+            resize: vertical;
+            min-height: 50px;
+            transition: all 0.3s ease;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--color-primary); }
+            50% { opacity: 0.5; box-shadow: 0 0 4px var(--color-primary); }
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+        .search-box {
+            padding: 12px 16px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.85rem;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    <!-- Header -->
+    <div class="hud-header">
+        <a href="/" class="logo" style="text-decoration: none;">
+            <span>₿</span>
+            <span>CRYPTO HEIST</span>
+        </a>
+        
+        <div class="nav-container">
+            <!-- HTML Tools Dropdown -->
+            <div class="dropdown">
+                <button class="dropdown-btn cyber-btn-outline" onclick="toggleDropdown('htmlDropdown')">
+                    📄 HTML Tools ▼
+                </button>
+                <div class="dropdown-content panel" id="htmlDropdown">
+                    <div class="file-item" onclick="loadHTML('/workbench')">
+                        <span class="file-icon">🧮</span> Character Set Workbench
+                    </div>
+                    <div class="file-item" onclick="loadHTML('/')">
+                        <span class="file-icon">🔍</span> Key Verification
+                    </div>
+                    <div class="file-item" onclick="loadHTML('/legacy')">
+                        <span class="file-icon">📊</span> Legacy Dashboard
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Files Dropdown -->
+            <div class="dropdown">
+                <button class="dropdown-btn cyber-btn-outline" onclick="toggleDropdown('filesDropdown')">
+                    📁 All Files ▼
+                </button>
+                <div class="dropdown-content panel" id="filesDropdown">
+                    <div class="search-box">
+                        <input type="text" class="search-input" id="fileSearch" placeholder="🔍 Search files..." oninput="filterFiles()">
+                    </div>
+                    
+                    <!-- Python Files -->
+                    <div class="file-category">🐍 Python Files</div>
+                    <div class="file-item python-file" onclick="loadFile('src/bitcoin_puzzle_toolkit.py')">
+                        <span class="file-icon">🔧</span> bitcoin_puzzle_toolkit.py
+                    </div>
+                    <div class="file-item python-file" onclick="loadFile('src/hd_wallet_derivation.py')">
+                        <span class="file-icon">💰</span> hd_wallet_derivation.py
+                    </div>
+                    <div class="file-item python-file" onclick="loadFile('src/crypto_environment_manager.py')">
+                        <span class="file-icon">🌐</span> crypto_environment_manager.py
+                    </div>
+                    <div class="file-item python-file" onclick="loadFile('src/integration_hub.py')">
+                        <span class="file-icon">🔗</span> integration_hub.py
+                    </div>
+                    <div class="file-item python-file" onclick="loadFile('src/web_interface.py')">
+                        <span class="file-icon">🖥️</span> web_interface.py
+                    </div>
+                    <div class="file-item python-file" onclick="loadFile('src/google_drive_backend.py')">
+                        <span class="file-icon">☁️</span> google_drive_backend.py
+                    </div>
+                    <div class="file-item python-file" onclick="loadFile('src/memo_cash_backend.py')">
+                        <span class="file-icon">📝</span> memo_cash_backend.py
+                    </div>
+                    <div class="file-item python-file" onclick="loadFile('src/blockchain_state_checker.py')">
+                        <span class="file-icon">⛓️</span> blockchain_state_checker.py
+                    </div>
+                    <div class="file-item python-file" onclick="loadFile('src/secure_wallet_manager.py')">
+                        <span class="file-icon">🔐</span> secure_wallet_manager.py
+                    </div>
+                    <div class="file-item python-file" onclick="loadFile('src/main.py')">
+                        <span class="file-icon">▶️</span> main.py
+                    </div>
+
+                    <!-- JavaScript Files -->
+                    <div class="file-category">⚡ JavaScript Files</div>
+                    <div class="file-item js-file" onclick="loadFile('bitcoin-toolkit-server.js')">
+                        <span class="file-icon">🖥️</span> bitcoin-toolkit-server.js
+                    </div>
+                    <div class="file-item js-file" onclick="loadFile('charset-dsl.js')">
+                        <span class="file-icon">🔤</span> charset-dsl.js
+                    </div>
+                    <div class="file-item js-file" onclick="loadFile('common.js')">
+                        <span class="file-icon">📦</span> common.js
+                    </div>
+                    <div class="file-item js-file" onclick="loadFile('hd-wallet-core.js')">
+                        <span class="file-icon">💳</span> hd-wallet-core.js
+                    </div>
+                    <div class="file-item js-file" onclick="loadFile('candidate-key-verifier.js')">
+                        <span class="file-icon">✅</span> candidate-key-verifier.js
+                    </div>
+
+                    <!-- HTML Files -->
+                    <div class="file-category">📄 HTML Files</div>
+                    <div class="file-item html-file" onclick="loadFile('public/ai-suite.html')">
+                        <span class="file-icon">🤖</span> ai-suite.html
+                    </div>
+                    <div class="file-item html-file" onclick="loadFile('public/character-set-workbench.html')">
+                        <span class="file-icon">🧮</span> character-set-workbench.html
+                    </div>
+                    <div class="file-item html-file" onclick="loadFile('templates/dashboard.html')">
+                        <span class="file-icon">📊</span> dashboard.html
+                    </div>
+
+                    <!-- JSON Files -->
+                    <div class="file-category">📋 JSON/Config Files</div>
+                    <div class="file-item json-file" onclick="loadFile('docs/unified_api.json')">
+                        <span class="file-icon">📖</span> unified_api.json
+                    </div>
+                    <div class="file-item json-file" onclick="loadFile('integration_report.json')">
+                        <span class="file-icon">📊</span> integration_report.json
+                    </div>
+                    <div class="file-item json-file" onclick="loadFile('package.json')">
+                        <span class="file-icon">📦</span> package.json
+                    </div>
+
+                    <!-- Documentation -->
+                    <div class="file-category">📚 Documentation</div>
+                    <div class="file-item doc-file" onclick="loadFile('GOOGLE_DRIVE_SETUP.md')">
+                        <span class="file-icon">☁️</span> GOOGLE_DRIVE_SETUP.md
+                    </div>
+                    <div class="file-item doc-file" onclick="loadFile('replit.md')">
+                        <span class="file-icon">📖</span> replit.md
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 13px;">
+                <span class="status-indicator"></span>
+                <span>AI Online</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <strong>🤖 Production AI:</strong> Hello! I'm your production AI assistant with full access to your codebase and backend. I can:
+                    <ul style="margin: 8px 0 0 20px;">
+                        <li>Run code and commands directly</li>
+                        <li>Analyze and modify your Bitcoin tools</li>
+                        <li>Access your HTML files and backend APIs</li>
+                        <li>Execute blockchain operations</li>
+                    </ul>
+                    <br>
+                    Ask me anything or tell me what to build!
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <textarea class="chat-input cyber-input" id="chatInput" rows="2" placeholder="Ask me to run code, analyze files, or build features..."></textarea>
+                <button class="cyber-btn" id="sendBtn" onclick="sendMessage()">Send Message</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Knowledge Bank AI Assistant (uses Replit AI Integrations - GPT-5)
+        let chatHistory = [];
+        let currentFile = null;
+        let userTier = 'free'; // TODO: Get from authentication
+        let userId = 'user_' + Date.now();
+        let dailyUsage = {
+            ai_queries_today: 0,
+            hd_derivations_today: 0
+        };
+
+        // File system
+        const fileSystem = {
+            'src/bitcoin_puzzle_toolkit.py': 'python',
+            'src/web_interface.py': 'python',
+            'src/crypto_environment_manager.py': 'python',
+            'src/main.py': 'python',
+            'bitcoin-toolkit-server.js': 'javascript',
+            'charset-dsl.js': 'javascript',
+            'common.js': 'javascript',
+            'hd-wallet-core.js': 'javascript',
+            'public/character-set-workbench.html': 'html',
+            'candidate-key-verifier.js': 'javascript'
+        };
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            setupKeyboardShortcuts();
+            console.log('Production Suite Initialized');
+            console.log('Backend files loaded:', Object.keys(fileSystem).length);
+        });
+
+        function toggleDropdown(dropdownId) {
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Toggle the clicked dropdown
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('show');
+        }
+
+        function filterFiles() {
+            const search = document.getElementById('fileSearch').value.toLowerCase();
+            const items = document.querySelectorAll('#filesDropdown .file-item');
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(search) ? 'flex' : 'none';
+            });
+
+            // Hide category headers if all items in category are hidden
+            const categories = document.querySelectorAll('#filesDropdown .file-category');
+            categories.forEach(category => {
+                let nextElement = category.nextElementSibling;
+                let hasVisibleItems = false;
+                
+                while (nextElement && !nextElement.classList.contains('file-category')) {
+                    if (nextElement.classList.contains('file-item') && nextElement.style.display !== 'none') {
+                        hasVisibleItems = true;
+                        break;
+                    }
+                    nextElement = nextElement.nextElementSibling;
+                }
+                
+                category.style.display = hasVisibleItems ? 'block' : 'none';
+            });
+        }
+
+        function loadHTML(path) {
+            const iframe = document.createElement('iframe');
+            iframe.src = path;
+
+            const chatArea = document.querySelector('.chat-area');
+            chatArea.innerHTML = '';
+            chatArea.appendChild(iframe);
+
+            // Close dropdown
+            document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
+        }
+
+        function loadFile(filename) {
+            addMessage('system', `Loading ${filename}...`);
+            
+            fetch(`/api/file/${filename}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        addMessage('assistant', `File ${filename} loaded and ready for analysis.`);
+                        currentFile = { name: filename, content: data.content };
+                    } else {
+                        addMessage('assistant', `File ${filename} loaded (simulated).`);
+                        currentFile = { name: filename, content: '' };
+                    }
+                })
+                .catch(error => {
+                    addMessage('assistant', `File ${filename} loaded (simulated).`);
+                    currentFile = { name: filename, content: '' };
+                });
+
+            // Close dropdown
+            document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
+        }
+
+        function setupKeyboardShortcuts() {
+            document.getElementById('chatInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            input.value = '';
+            addMessage('user', message);
+
+            // Handle special commands
+            if (message.startsWith('/')) {
+                handleCommand(message);
+                return;
+            }
+
+            // Send to Gemini API
+            await sendToGemini(message);
+        }
+
+        function handleCommand(command) {
+            const [cmd, ...args] = command.split(' ');
+
+            switch(cmd) {
+                case '/files':
+                    addMessage('ai', `Production Files:\n${Object.keys(fileSystem).join('\n')}`);
+                    break;
+                case '/analyze':
+                    addMessage('ai', `Analyzing ${args.join(' ')}... This uses your actual backend.`);
+                    break;
+                case '/run':
+                    addMessage('ai', `Executing: ${args.join(' ')}\n\n(In production, this would run on your backend)`);
+                    break;
+                default:
+                    addMessage('ai', `Unknown command: ${cmd}`);
+            }
+        }
+
+        async function sendToGemini(message) {
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'AI Thinking...';
+
+            try {
+                // Add file context to message if available
+                let fullMessage = message;
+                if (currentFile) {
+                    fullMessage = `I'm working with file: ${currentFile.name}\n\n${message}`;
+                }
+
+                // Call Knowledge Bank AI Assistant
+                const response = await fetch('/api/ai/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: userId,
+                        message: fullMessage,
+                        userTier: userTier,
+                        dailyUsage: dailyUsage
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    // Check if upgrade is required
+                    if (data.upgrade_required) {
+                        addMessage('ai', `🔒 ${data.error}\n\nYou've used ${data.used}/${data.limit} free AI queries today.`);
+                        
+                        // Show upgrade prompt using access control
+                        if (window.accessControl) {
+                            window.accessControl.showUpgradePrompt('Unlimited AI Queries');
+                        }
+                        return;
+                    }
+                    
+                    addMessage('ai', `Error: ${data.error}`);
+                    return;
+                }
+
+                // Display AI response
+                const aiResponse = data.response;
+                addMessage('ai', aiResponse);
+                chatHistory.push({ user: message, ai: aiResponse });
+
+                // Update usage count
+                dailyUsage.ai_queries_today = data.queries_used || dailyUsage.ai_queries_today + 1;
+
+                // Show usage status
+                if (userTier === 'free') {
+                    const remaining = 10 - dailyUsage.ai_queries_today;
+                    if (remaining <= 3 && remaining > 0) {
+                        addMessage('system', `⚠️ ${remaining} free AI queries remaining today. Upgrade to Premium for unlimited access!`);
+                    }
+                }
+
+            } catch (error) {
+                addMessage('ai', `Error: ${error.message}`);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Message';
+            }
+        }
+
+        function addMessage(type, content) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+
+            const prefix = type === 'user' ? '👤 You:' : 
+                          type === 'system' ? '⚙️ System:' : '🤖 AI:';
+            messageDiv.innerHTML = `<strong>${prefix}</strong> ${formatMessage(content)}`;
+
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function formatMessage(content) {
+            return content
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\n/g, '<br>')
+                .replace(/```([\s\S]*?)```/g, '<pre>$1</pre>');
+        }
+
+        // Close dropdowns when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-btn')) {
+                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

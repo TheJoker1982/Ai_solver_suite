@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Puzzle Challenge | CRYPTO HEIST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0a0a0a 100%);
+            background-attachment: fixed;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .puzzle-row {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .puzzle-row:hover {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: #00ffff;
+            transform: translateX(5px);
+        }
+        
+        .puzzle-solved {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: rgba(0, 255, 0, 0.3);
+        }
+        
+        .puzzle-current {
+            background: linear-gradient(90deg, rgba(255, 0, 255, 0.2), rgba(255, 255, 0, 0.2));
+            border: 2px solid #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 0, 255, 0.8); }
+        }
+        
+        .puzzle-locked {
+            opacity: 0.5;
+        }
+        
+        .cyber-btn {
+            background: linear-gradient(135deg, #00ffff, #0080ff);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #00ffff;
+        }
+        
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid #00ffff;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .stat-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #ff00ff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="header p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-3xl font-bold" style="font-family: 'Orbitron', monospace;">
+                <span class="text-[#00ffff]">CRYPTO</span> <span class="text-[#ff00ff]">HEIST</span>
+            </a>
+            <div class="flex gap-6 items-center text-sm">
+                <a href="/" class="hover:text-[#00ffff] transition">DASHBOARD</a>
+                <a href="/ai-suite" class="hover:text-[#00ffff] transition">AI SUITE</a>
+                <a href="/workbench" class="hover:text-[#00ffff] transition">WORKBENCH</a>
+                <a href="/live-studio" class="hover:text-[#00ffff] transition">LIVE STUDIO</a>
+                <a href="/puzzles" class="text-[#ff00ff] font-bold">PUZZLES</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Stats Overview -->
+    <section class="container mx-auto px-6 py-12">
+        <h1 class="text-5xl font-bold text-center mb-8" style="font-family: 'Orbitron', monospace;">
+            <span class="text-[#ffff00]">BITCOIN PUZZLE</span> <span class="text-[#ff0000]">CHALLENGE</span>
+        </h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="stat-card text-center">
+                <div class="text-4xl mb-2">✅</div>
+                <div class="text-3xl font-bold text-green-400" id="solved-count">70</div>
+                <div class="text-gray-400">Puzzles Solved</div>
+            </div>
+            <div class="stat-card text-center">
+                <div class="text-4xl mb-2">🎯</div>
+                <div class="text-3xl font-bold text-[#ff00ff]">Puzzle #71</div>
+                <div class="text-gray-400">Current Target</div>
+            </div>
+            <div class="stat-card text-center">
+                <div class="text-4xl mb-2">🔒</div>
+                <div class="text-3xl font-bold text-yellow-400" id="unsolved-count">90</div>
+                <div class="text-gray-400">Remaining</div>
+            </div>
+            <div class="stat-card text-center">
+                <div class="text-4xl mb-2">💰</div>
+                <div class="text-3xl font-bold text-[#F7931A]" id="total-btc">900</div>
+                <div class="text-gray-400">BTC Available</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex gap-4 mb-8 justify-center">
+            <button onclick="filterPuzzles('all')" class="cyber-btn">All Puzzles</button>
+            <button onclick="filterPuzzles('solved')" class="bg-green-600 text-white px-6 py-2 rounded font-bold hover:bg-green-500">Solved</button>
+            <button onclick="filterPuzzles('unsolved')" class="bg-red-600 text-white px-6 py-2 rounded font-bold hover:bg-red-500">Unsolved</button>
+            <button onclick="filterPuzzles('71')" class="bg-purple-600 text-white px-6 py-2 rounded font-bold hover:bg-purple-500">Puzzle #71</button>
+        </div>
+
+        <!-- Puzzle Table -->
+        <div class="bg-black bg-opacity-60 rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-black bg-opacity-80">
+                        <tr class="border-b border-cyan-500">
+                            <th class="p-4">Puzzle</th>
+                            <th class="p-4">Bits</th>
+                            <th class="p-4">Range</th>
+                            <th class="p-4">Address</th>
+                            <th class="p-4">Reward (BTC)</th>
+                            <th class="p-4">Status</th>
+                            <th class="p-4">Solved Date</th>
+                            <th class="p-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="puzzle-table-body">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let allPuzzles = [];
+        
+        async function loadPuzzles() {
+            try {
+                const response = await fetch('/public/data/puzzles.csv');
+                const text = await response.text();
+                const lines = text.trim().split('\n');
+                
+                // Skip header
+                for (let i = 1; i < lines.length; i++) {
+                    const parts = lines[i].split(',');
+                    if (parts.length >= 8) {
+                        allPuzzles.push({
+                            bits: parts[0],
+                            rangeMin: parts[1],
+                            rangeMax: parts[2],
+                            address: parts[3],
+                            btcValue: parts[4],
+                            hash160: parts[5],
+                            publicKey: parts[6],
+                            privateKey: parts[7],
+                            solveDate: parts[8] || ''
+                        });
+                    }
+                }
+                
+                renderPuzzles(allPuzzles);
+                updateStats();
+            } catch (error) {
+                console.error('Error loading puzzles:', error);
+            }
+        }
+        
+        function renderPuzzles(puzzles) {
+            const tbody = document.getElementById('puzzle-table-body');
+            tbody.innerHTML = '';
+            
+            puzzles.forEach((puzzle, index) => {
+                const isSolved = puzzle.privateKey && puzzle.privateKey.trim() !== '';
+                const isCurrent = parseInt(puzzle.bits) === 71;
+                const puzzleNum = parseInt(puzzle.bits);
+                
+                let rowClass = 'puzzle-row';
+                let statusBadge = '';
+                let actionBtn = '';
+                
+                if (isSolved) {
+                    rowClass += ' puzzle-solved';
+                    statusBadge = '<span class="px-3 py-1 bg-green-600 rounded text-sm">✅ SOLVED</span>';
+                    actionBtn = '<button class="text-cyan-400 hover:text-cyan-300 text-sm" onclick="viewSolution(' + index + ')">View Solution</button>';
+                } else if (isCurrent) {
+                    rowClass += ' puzzle-current';
+                    statusBadge = '<span class="px-3 py-1 bg-purple-600 rounded text-sm animate-pulse">🎯 CURRENT TARGET</span>';
+                    actionBtn = '<button class="cyber-btn text-sm" onclick="hackPuzzle(71)">Hack Now</button>';
+                } else {
+                    rowClass += ' puzzle-locked';
+                    statusBadge = '<span class="px-3 py-1 bg-gray-600 rounded text-sm">🔒 LOCKED</span>';
+                    actionBtn = '<button class="text-gray-500 text-sm cursor-not-allowed">Locked</button>';
+                }
+                
+                const row = `
+                    <tr class="${rowClass}">
+                        <td class="p-4 font-bold text-xl">#${puzzleNum}</td>
+                        <td class="p-4">${puzzle.bits} bits</td>
+                        <td class="p-4 text-xs font-mono">${puzzle.rangeMin} - ${puzzle.rangeMax}</td>
+                        <td class="p-4 font-mono text-sm">${puzzle.address}</td>
+                        <td class="p-4 text-[#F7931A] font-bold">${puzzle.btcValue}</td>
+                        <td class="p-4">${statusBadge}</td>
+                        <td class="p-4 text-sm">${puzzle.solveDate || '-'}</td>
+                        <td class="p-4">${actionBtn}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+        
+        function updateStats() {
+            const solved = allPuzzles.filter(p => p.privateKey && p.privateKey.trim() !== '').length;
+            const unsolved = allPuzzles.length - solved;
+            const totalBTC = allPuzzles
+                .filter(p => !p.privateKey || p.privateKey.trim() === '')
+                .reduce((sum, p) => sum + parseFloat(p.btcValue), 0);
+            
+            document.getElementById('solved-count').textContent = solved;
+            document.getElementById('unsolved-count').textContent = unsolved;
+            document.getElementById('total-btc').textContent = totalBTC.toFixed(2);
+        }
+        
+        function filterPuzzles(filter) {
+            let filtered = [];
+            
+            if (filter === 'all') {
+                filtered = allPuzzles;
+            } else if (filter === 'solved') {
+                filtered = allPuzzles.filter(p => p.privateKey && p.privateKey.trim() !== '');
+            } else if (filter === 'unsolved') {
+                filtered = allPuzzles.filter(p => !p.privateKey || p.privateKey.trim() === '');
+            } else if (filter === '71') {
+                filtered = allPuzzles.filter(p => parseInt(p.bits) === 71);
+            }
+            
+            renderPuzzles(filtered);
+        }
+        
+        function viewSolution(index) {
+            const puzzle = allPuzzles[index];
+            alert(`Puzzle #${puzzle.bits} Solution:\n\nPrivate Key: ${puzzle.privateKey}\nPublic Key: ${puzzle.publicKey}\nSolved: ${puzzle.solveDate}`);
+        }
+        
+        function hackPuzzle(puzzleNum) {
+            if (confirm(`Launch brute force attack on Puzzle #${puzzleNum}?\n\nThis will use BitCrack, Kangaroo, and KeyHunt scanners.\nEstimated cost: $0.15/hour (3 scanners)`)) {
+                window.location.href = '/?puzzle=' + puzzleNum;
+            }
+        }
+        
+        // Load puzzles on page load
+        loadPuzzles();
+    </script>
+</body>
+</html>

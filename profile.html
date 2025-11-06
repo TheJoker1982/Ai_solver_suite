@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - CRYPTO HEIST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at top, #0a0a2e 0%, #000 60%),
+                linear-gradient(135deg, #1a0033 0%, #000 50%, #001a33 100%);
+            z-index: 0;
+        }
+        
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+        
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+        }
+        
+        .hud-header {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        
+        .profile-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(255, 0, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+        }
+        
+        .stat-box {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            padding: 1.5rem;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .stat-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: scanline 2s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .cyber-btn {
+            background: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 0.75rem 2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .cyber-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+        }
+        
+        .cyber-btn-outline {
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+        }
+        
+        .nav-link {
+            color: #00ffff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .nav-link:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            animation: progressPulse 2s ease-in-out infinite;
+            transition: width 0.3s ease;
+        }
+        
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .achievement-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            border-radius: 20px;
+            font-weight: 700;
+            margin: 0.25rem;
+            font-size: 1.2rem;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.5rem;
+            color: #00ffff;
+        }
+        
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0000;
+            padding: 1rem;
+            border-radius: 8px;
+            color: #ff6b6b;
+        }
+        
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            object-fit: cover;
+        }
+        
+        .rank-badge {
+            background: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            color: #000;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="main-container">
+        <header class="hud-header">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <a href="/" class="logo">CRYPTO HEIST</a>
+                    
+                    <nav class="hidden md:flex gap-6">
+                        <a href="/" class="nav-link">Dashboard</a>
+                        <a href="/ai-suite" class="nav-link">AI Suite</a>
+                        <a href="/workbench" class="nav-link">Workbench</a>
+                        <a href="/puzzles" class="nav-link">Puzzles</a>
+                        <a href="/profile" class="nav-link">Profile</a>
+                    </nav>
+                    
+                    <div class="flex items-center gap-4">
+                        <button id="logoutBtn" class="cyber-btn-outline cyber-btn" style="display: none;">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div id="loadingState" class="loading">
+            <div class="text-3xl mb-4">⚡</div>
+            Loading Profile...
+        </div>
+        
+        <div id="notAuthenticatedState" style="display: none;" class="container mx-auto px-6 py-12">
+            <div class="profile-card text-center">
+                <h1 class="text-4xl font-bold mb-4 text-[#00ffff]">Access Denied</h1>
+                <p class="text-xl mb-6">You need to login to view your profile</p>
+                <a href="/api/auth/login" class="cyber-btn">Login with Replit</a>
+            </div>
+        </div>
+        
+        <div id="profileContent" style="display: none;" class="container mx-auto px-6 py-8">
+            <div class="profile-card">
+                <div class="flex flex-col md:flex-row items-center gap-8 mb-8">
+                    <img id="profileAvatar" class="avatar" src="" alt="Profile Avatar">
+                    <div class="flex-1 text-center md:text-left">
+                        <h1 id="profileName" class="text-4xl font-bold mb-2" style="font-family: 'Orbitron', monospace;"></h1>
+                        <p id="profileEmail" class="text-xl text-gray-400 mb-2"></p>
+                        <div id="profileRank" class="rank-badge"></div>
+                        <p class="text-sm text-gray-500 mt-4">Member since: <span id="memberSince"></span></p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                    <div class="stat-box">
+                        <div class="text-gray-400 text-sm">Level</div>
+                        <div id="profileLevel" class="text-3xl font-bold text-[#00ffff]">1</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="text-gray-400 text-sm">XP</div>
+                        <div id="profileXP" class="text-3xl font-bold text-[#ff00ff]">0</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="text-gray-400 text-sm">Puzzles Solved</div>
+                        <div id="profilePuzzles" class="text-3xl font-bold text-[#ffff00]">0</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="text-gray-400 text-sm">BTC Earned</div>
+                        <div id="profileBTC" class="text-3xl font-bold text-[#F7931A]">0</div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="text-sm text-gray-400 mb-2">Progress to Level <span id="nextLevel">2</span></div>
+                    <div class="progress-bar">
+                        <div id="xpProgress" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1"><span id="currentXP">0</span> / <span id="requiredXP">100</span> XP</div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div class="profile-card">
+                    <h2 class="text-2xl font-bold mb-4 text-[#00ffff]">🏆 Achievements</h2>
+                    <div id="achievementsList">
+                        <p class="text-gray-400">No achievements unlocked yet. Complete puzzles to earn badges!</p>
+                    </div>
+                </div>
+                
+                <div class="profile-card">
+                    <h2 class="text-2xl font-bold mb-4 text-[#00ffff]">🔓 Unlocked Tools</h2>
+                    <div id="toolsList">
+                        <p class="text-gray-400">No tools unlocked yet. Progress through levels to unlock advanced features!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-card mt-6">
+                <h2 class="text-2xl font-bold mb-4 text-[#00ffff]">📊 Recent Activity</h2>
+                <div id="activityList">
+                    <p class="text-gray-400">No recent activity</p>
+                </div>
+            </div>
+            
+            <div class="profile-card mt-6">
+                <h2 class="text-2xl font-bold mb-4 text-[#00ffff]">⚙️ Account Settings</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="stat-box">
+                        <div class="text-gray-400 text-sm mb-2">Tier</div>
+                        <div id="profileTier" class="text-xl font-bold text-[#00ffff]">FREE</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="text-gray-400 text-sm mb-2">Subscription Status</div>
+                        <div id="profileSubscription" class="text-xl font-bold text-gray-400">N/A</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentUser = null;
+        
+        async function loadSession() {
+            try {
+                const response = await fetch('/api/auth/session');
+                const data = await response.json();
+                
+                document.getElementById('loadingState').style.display = 'none';
+                
+                if (data.authenticated && data.user) {
+                    currentUser = data.user;
+                    document.getElementById('profileContent').style.display = 'block';
+                    document.getElementById('logoutBtn').style.display = 'block';
+                    loadProfile();
+                } else {
+                    document.getElementById('notAuthenticatedState').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading session:', error);
+                document.getElementById('loadingState').innerHTML = 
+                    '<div class="error">Error loading session. Please refresh the page.</div>';
+            }
+        }
+        
+        async function loadProfile() {
+            if (!currentUser) return;
+            
+            try {
+                const response = await fetch(`/api/profile/${currentUser.id}`);
+                const data = await response.json();
+                
+                if (data.success && data.profile) {
+                    const profile = data.profile;
+                    
+                    // Set profile info
+                    document.getElementById('profileName').textContent = 
+                        profile.username || profile.firstName || 'Agent';
+                    document.getElementById('profileEmail').textContent = profile.email || '';
+                    document.getElementById('profileAvatar').src = 
+                        profile.profileImageUrl || 'https://replit.com/public/images/default-avatar.png';
+                    document.getElementById('profileRank').textContent = profile.rank || 'Geek Squad';
+                    
+                    // Set stats
+                    document.getElementById('profileLevel').textContent = profile.level || 1;
+                    document.getElementById('profileXP').textContent = profile.xp || 0;
+                    document.getElementById('profilePuzzles').textContent = profile.puzzlesSolved || 0;
+                    document.getElementById('profileBTC').textContent = 
+                        (parseFloat(profile.totalBtcEarned) || 0).toFixed(8);
+                    
+                    // Calculate XP progress
+                    const level = profile.level || 1;
+                    const xp = profile.xp || 0;
+                    const requiredXP = level * 100; // Simple formula
+                    const progress = Math.min((xp / requiredXP) * 100, 100);
+                    
+                    document.getElementById('nextLevel').textContent = level + 1;
+                    document.getElementById('currentXP').textContent = xp;
+                    document.getElementById('requiredXP').textContent = requiredXP;
+                    document.getElementById('xpProgress').style.width = progress + '%';
+                    
+                    // Set member since
+                    if (profile.createdAt) {
+                        const date = new Date(profile.createdAt);
+                        document.getElementById('memberSince').textContent = 
+                            date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    }
+                    
+                    // Set tier
+                    document.getElementById('profileTier').textContent = 
+                        (profile.tier || 'free').toUpperCase();
+                    document.getElementById('profileSubscription').textContent = 
+                        profile.subscriptionStatus || 'N/A';
+                    
+                    // Load achievements
+                    if (profile.achievements && profile.achievements.length > 0) {
+                        const achievementsHTML = profile.achievements.map(ach => `
+                            <div class="mb-3">
+                                <span class="achievement-badge">${ach.badge || '🏆'}</span>
+                                <strong>${ach.name}</strong>
+                                <p class="text-sm text-gray-400">${ach.description || ''}</p>
+                                <p class="text-xs text-gray-500">Unlocked: ${new Date(ach.unlocked_at).toLocaleDateString()}</p>
+                            </div>
+                        `).join('');
+                        document.getElementById('achievementsList').innerHTML = achievementsHTML;
+                    }
+                    
+                    // Load unlocked tools
+                    if (profile.unlockedTools && profile.unlockedTools.length > 0) {
+                        const toolsHTML = profile.unlockedTools.map(tool => `
+                            <div class="mb-2">
+                                <span class="text-[#00ffff]">🔓</span> ${tool.tool_name}
+                                <span class="text-xs text-gray-500 ml-2">${new Date(tool.unlocked_at).toLocaleDateString()}</span>
+                            </div>
+                        `).join('');
+                        document.getElementById('toolsList').innerHTML = toolsHTML;
+                    }
+                    
+                    // Load recent activity
+                    if (profile.recentActivity && profile.recentActivity.length > 0) {
+                        const activityHTML = profile.recentActivity.map(activity => `
+                            <div class="mb-2 pb-2 border-b border-gray-700">
+                                <div class="flex justify-between">
+                                    <span><strong>${activity.transaction_type}</strong> on ${activity.blockchain}</span>
+                                    <span class="text-xs text-gray-500">${new Date(activity.created_at).toLocaleString()}</span>
+                                </div>
+                            </div>
+                        `).join('');
+                        document.getElementById('activityList').innerHTML = activityHTML;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+        
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/auth/logout', { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Error logging out:', error);
+            }
+        });
+        
+        // Load session on page load
+        loadSession();
+    </script>
+</body>
+</html>

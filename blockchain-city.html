@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain City - CRYPTO HEIST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/access-control.js"></script>
+    <style>
+        body {
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* City Map */
+        .city-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* City Buildings (background) */
+        .building {
+            position: absolute;
+            background: linear-gradient(180deg, rgba(26, 0, 51, 0.8) 0%, rgba(13, 0, 26, 0.9) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        /* Blockchain Terminals */
+        .blockchain-terminal {
+            position: absolute;
+            width: 250px;
+        }
+
+        .btc-terminal {
+            border-color: #F7931A;
+            box-shadow: 0 0 40px rgba(247, 147, 26, 0.5);
+            top: 15%;
+            left: 15%;
+        }
+
+        .eth-terminal {
+            border-color: #627EEA;
+            box-shadow: 0 0 40px rgba(98, 126, 234, 0.5);
+            top: 60%;
+            right: 20%;
+        }
+
+        .bch-terminal {
+            border-color: #8DC351;
+            box-shadow: 0 0 40px rgba(141, 195, 81, 0.5);
+            bottom: 15%;
+            left: 40%;
+        }
+
+        .terminal-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .terminal-name {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .terminal-status {
+            font-size: 12px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .terminal-action {
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid currentColor;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Terminal Modal */
+        .terminal-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .terminal-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            background: #000;
+            border: 3px solid;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 2px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: rgba(255, 0, 0, 0.3);
+            border: 1px solid #ff0000;
+            color: #ff0000;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 0, 0, 0.5);
+        }
+
+        .terminal-screen {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .terminal-input-area {
+            padding: 15px;
+            border-top: 2px solid;
+            display: flex;
+            gap: 10px;
+        }
+
+        .output-line {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 2px solid;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="main-container">
+        <!-- Navigation -->
+        <div class="nav-bar hud-header">
+            <div class="logo">CRYPTO HEIST - Blockchain City</div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">← Dashboard</a>
+                <a href="/puzzles" class="nav-link">Puzzles</a>
+                <a href="/ai-suite" class="nav-link">AI Suite</a>
+            </div>
+        </div>
+
+        <!-- City Map -->
+        <div class="city-container">
+        <!-- Background Buildings -->
+        <div class="building" style="width: 150px; height: 300px; left: 5%; top: 30%;"></div>
+        <div class="building" style="width: 100px; height: 400px; right: 5%; top: 15%;"></div>
+        <div class="building" style="width: 200px; height: 250px; left: 30%; bottom: 5%;"></div>
+        <div class="building" style="width: 120px; height: 350px; right: 30%; bottom: 20%;"></div>
+
+        <!-- BTC Terminal - Downtown Financial District -->
+        <div class="mission-card blockchain-terminal btc-terminal" onclick="openTerminal('btc')">
+            <div class="terminal-icon" style="color: #F7931A;">₿</div>
+            <div class="terminal-name" style="color: #F7931A;">BITCOIN CORE</div>
+            <div class="terminal-status" style="color: #F7931A;">Downtown Financial District</div>
+            <div class="terminal-action" style="color: #F7931A; border-color: #F7931A;">
+                🔓 ENTER TERMINAL
+            </div>
+            <div style="text-align: center; margin-top: 10px; font-size: 11px;">
+                Network: Mainnet<br>
+                Status: 🟢 LIVE
+            </div>
+        </div>
+
+        <!-- ETH Terminal - Tech District -->
+        <div class="mission-card blockchain-terminal eth-terminal" onclick="openTerminal('eth')">
+            <div class="terminal-icon" style="color: #627EEA;">◆</div>
+            <div class="terminal-name" style="color: #627EEA;">ETHEREUM NODE</div>
+            <div class="terminal-status" style="color: #627EEA;">East Tech District</div>
+            <div class="terminal-action" style="color: #627EEA; border-color: #627EEA;">
+                🔓 ENTER TERMINAL
+            </div>
+            <div style="text-align: center; margin-top: 10px; font-size: 11px;">
+                Network: Mainnet<br>
+                Status: 🟢 LIVE
+            </div>
+        </div>
+
+        <!-- BCH Terminal - South Exchange -->
+        <div class="mission-card blockchain-terminal bch-terminal" onclick="openTerminal('bch')">
+            <div class="terminal-icon" style="color: #8DC351;">฿</div>
+            <div class="terminal-name" style="color: #8DC351;">BITCOIN CASH</div>
+            <div class="terminal-status" style="color: #8DC351;">South Exchange Hub</div>
+            <div class="terminal-action" style="color: #8DC351; border-color: #8DC351;">
+                🔓 ENTER TERMINAL
+            </div>
+            <div style="text-align: center; margin-top: 10px; font-size: 11px;">
+                Network: Mainnet<br>
+                Status: 🟢 LIVE
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Terminal Modal -->
+    <div class="terminal-modal" id="terminalModal">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header" id="modalHeader">
+                <div>
+                    <h2 id="terminalTitle"></h2>
+                    <p id="terminalSubtitle" style="opacity: 0.7; font-size: 14px;"></p>
+                </div>
+                <button class="close-btn" onclick="closeTerminal()">✕ EXIT</button>
+            </div>
+            
+            <div class="terminal-screen" id="terminalScreen">
+                <div class="panel" id="infoPanel"></div>
+                <div class="result-box" id="output"></div>
+            </div>
+            
+            <div class="terminal-input-area" id="inputArea">
+                <input type="text" class="input-field" id="commandInput" placeholder="Enter blockchain command...">
+                <button class="cyber-btn" id="executeBtn" onclick="executeCommand()">EXECUTE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentChain = null;
+        const chainColors = {
+            btc: '#F7931A',
+            eth: '#627EEA',
+            bch: '#8DC351'
+        };
+
+        const chainInfo = {
+            btc: {
+                name: 'Bitcoin Core Terminal',
+                subtitle: 'Downtown Financial District',
+                network: 'Bitcoin Mainnet',
+                rpc: 'https://blockstream.info/api',
+                commands: [
+                    'getblockcount - Get current block height',
+                    'getblock <hash> - Get block by hash',
+                    'getrawtransaction <txid> - Get transaction hex',
+                    'getaddress <address> - Get address info',
+                    'sendtransaction <hex> - Broadcast transaction'
+                ]
+            },
+            eth: {
+                name: 'Ethereum Node Terminal',
+                subtitle: 'East Tech District',
+                network: 'Ethereum Mainnet',
+                rpc: 'https://eth.llamarpc.com',
+                commands: [
+                    'eth_blockNumber - Get current block',
+                    'eth_getBalance <address> - Get ETH balance',
+                    'eth_call <data> - Call smart contract',
+                    'eth_getCode <address> - Get contract code',
+                    'eth_sendRawTransaction <hex> - Send transaction'
+                ]
+            },
+            bch: {
+                name: 'Bitcoin Cash Terminal',
+                subtitle: 'South Exchange Hub',
+                network: 'Bitcoin Cash Mainnet',
+                rpc: 'https://bch.api.blockchair.com',
+                commands: [
+                    'getblockcount - Get current block height',
+                    'getblock <hash> - Get block data',
+                    'getrawtransaction <txid> - Get transaction',
+                    'getaddress <address> - Get address balance',
+                    'broadcast <hex> - Broadcast transaction'
+                ]
+            }
+        };
+
+        function openTerminal(chain) {
+            currentChain = chain;
+            const modal = document.getElementById('terminalModal');
+            const modalContent = document.getElementById('modalContent');
+            const color = chainColors[chain];
+            
+            // Set colors
+            modalContent.style.borderColor = color;
+            document.getElementById('modalHeader').style.borderColor = color;
+            document.getElementById('inputArea').style.borderColor = color;
+            document.getElementById('terminalInput').style.borderColor = color;
+            document.getElementById('executeBtn').style.borderColor = color;
+            document.getElementById('executeBtn').style.color = color;
+            
+            // Set content
+            document.getElementById('terminalTitle').textContent = chainInfo[chain].name;
+            document.getElementById('terminalTitle').style.color = color;
+            document.getElementById('terminalSubtitle').textContent = chainInfo[chain].subtitle;
+            
+            // Set info panel
+            const infoPanel = document.getElementById('infoPanel');
+            infoPanel.style.borderColor = color;
+            infoPanel.innerHTML = `
+                <div style="color: ${color}; font-weight: bold; margin-bottom: 10px;">📡 LIVE BLOCKCHAIN CONNECTION</div>
+                <div>Network: ${chainInfo[chain].network}</div>
+                <div>RPC: ${chainInfo[chain].rpc}</div>
+                <div style="margin-top: 10px; font-weight: bold;">Available Commands:</div>
+                ${chainInfo[chain].commands.map(cmd => `<div style="margin-left: 20px; opacity: 0.8;">• ${cmd}</div>`).join('')}
+                <div style="margin-top: 10px; padding: 10px; background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 5px;">
+                    ⚠️ WARNING: This is a LIVE blockchain connection. Real transactions will be broadcast!
+                </div>
+            `;
+            
+            // Clear output
+            document.getElementById('output').innerHTML = '';
+            addOutput('System', `Connected to ${chainInfo[chain].name}`, color);
+            addOutput('System', 'Type a command or use the examples above', color);
+            
+            modal.classList.add('active');
+            document.getElementById('commandInput').focus();
+        }
+
+        function closeTerminal() {
+            document.getElementById('terminalModal').classList.remove('active');
+            currentChain = null;
+        }
+
+        async function executeCommand() {
+            const input = document.getElementById('commandInput');
+            const command = input.value.trim();
+            
+            if (!command) return;
+            
+            const color = chainColors[currentChain];
+            addOutput('You', command, color);
+            input.value = '';
+            
+            // Execute the command
+            try {
+                if (currentChain === 'btc') {
+                    await executeBTCCommand(command);
+                } else if (currentChain === 'eth') {
+                    await executeETHCommand(command);
+                } else if (currentChain === 'bch') {
+                    await executeBCHCommand(command);
+                }
+            } catch (error) {
+                addOutput('Error', error.message, '#ff0000');
+            }
+        }
+
+        async function executeBTCCommand(command) {
+            const color = chainColors.btc;
+            const [cmd, ...args] = command.split(' ');
+            
+            if (cmd === 'getblockcount') {
+                const response = await fetch('https://blockstream.info/api/blocks/tip/height');
+                const height = await response.text();
+                addOutput('Bitcoin', `Current block height: ${height}`, color);
+            } else if (cmd === 'getblock' && args[0]) {
+                const response = await fetch(`https://blockstream.info/api/block/${args[0]}`);
+                const block = await response.json();
+                addOutput('Bitcoin', `Block ${block.height}\nHash: ${block.id}\nTime: ${new Date(block.timestamp * 1000).toLocaleString()}\nTx Count: ${block.tx_count}`, color);
+            } else if (cmd === 'getaddress' && args[0]) {
+                const response = await fetch(`https://blockstream.info/api/address/${args[0]}`);
+                const data = await response.json();
+                const balance = (data.chain_stats.funded_txo_sum - data.chain_stats.spent_txo_sum) / 100000000;
+                addOutput('Bitcoin', `Address: ${args[0]}\nBalance: ${balance} BTC\nTx Count: ${data.chain_stats.tx_count}`, color);
+            } else {
+                addOutput('Bitcoin', 'Unknown command. Use: getblockcount, getblock <hash>, getaddress <address>', color);
+            }
+        }
+
+        async function executeETHCommand(command) {
+            const color = chainColors.eth;
+            const [cmd, ...args] = command.split(' ');
+            
+            if (cmd === 'eth_blockNumber') {
+                const response = await fetch('https://eth.llamarpc.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'eth_blockNumber',
+                        params: [],
+                        id: 1
+                    })
+                });
+                const data = await response.json();
+                const blockNum = parseInt(data.result, 16);
+                addOutput('Ethereum', `Current block: ${blockNum} (${data.result})`, color);
+            } else if (cmd === 'eth_getBalance' && args[0]) {
+                const response = await fetch('https://eth.llamarpc.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'eth_getBalance',
+                        params: [args[0], 'latest'],
+                        id: 1
+                    })
+                });
+                const data = await response.json();
+                const balanceWei = parseInt(data.result, 16);
+                const balanceEth = balanceWei / 1e18;
+                addOutput('Ethereum', `Address: ${args[0]}\nBalance: ${balanceEth} ETH (${balanceWei} wei)`, color);
+            } else {
+                addOutput('Ethereum', 'Unknown command. Use: eth_blockNumber, eth_getBalance <address>', color);
+            }
+        }
+
+        async function executeBCHCommand(command) {
+            const color = chainColors.bch;
+            const [cmd, ...args] = command.split(' ');
+            
+            if (cmd === 'getblockcount') {
+                const response = await fetch('https://api.blockchair.com/bitcoin-cash/stats');
+                const data = await response.json();
+                addOutput('Bitcoin Cash', `Current block height: ${data.data.blocks}`, color);
+            } else if (cmd === 'getaddress' && args[0]) {
+                const response = await fetch(`https://api.blockchair.com/bitcoin-cash/dashboards/address/${args[0]}`);
+                const data = await response.json();
+                const addressData = data.data[args[0]];
+                const balance = addressData.address.balance / 100000000;
+                addOutput('Bitcoin Cash', `Address: ${args[0]}\nBalance: ${balance} BCH\nTx Count: ${addressData.address.transaction_count}`, color);
+            } else {
+                addOutput('Bitcoin Cash', 'Unknown command. Use: getblockcount, getaddress <address>', color);
+            }
+        }
+
+        function addOutput(source, message, color) {
+            const output = document.getElementById('output');
+            const line = document.createElement('div');
+            line.className = 'output-line';
+            line.style.borderColor = color;
+            line.style.color = color;
+            line.innerHTML = `<strong>${source}:</strong> ${message.replace(/\n/g, '<br>')}`;
+            output.appendChild(line);
+            
+            // Scroll to bottom
+            document.getElementById('terminalScreen').scrollTop = document.getElementById('terminalScreen').scrollHeight;
+        }
+
+        // Enter key to execute
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('commandInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    executeCommand();
+                }
+            });
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeTerminal();
+            }
+        });
+
+        console.log('🏙️ Blockchain City Loaded');
+        console.log('📍 3 Live Terminals: BTC (Downtown), ETH (Tech District), BCH (South Exchange)');
+    </script>
+</body>
+</html>

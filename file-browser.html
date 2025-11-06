@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Browser - CRYPTO HEIST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+        .neon-box {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+        .category-btn {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .category-btn:hover, .category-btn.active {
+            background: rgba(0, 255, 255, 0.3);
+            border-color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        .file-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #00ffff;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-item:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        .search-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #fff;
+            padding: 12px;
+            border-radius: 5px;
+            width: 100%;
+        }
+        .file-icon {
+            display: inline-block;
+            width: 24px;
+            text-align: center;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-4xl font-bold" style="text-shadow: 0 0 20px #00ffff">
+                🗂️ FILE BROWSER
+            </h1>
+            <a href="/" class="text-cyan-400 hover:text-cyan-300">← Back to Dashboard</a>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="neon-box p-6 mb-6">
+            <div class="flex gap-4">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-box flex-1" 
+                    placeholder="🔍 Search files by name, type, or category..."
+                />
+                <button id="searchBtn" class="category-btn">Search</button>
+                <button id="clearBtn" class="category-btn">Clear</button>
+            </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="neon-box p-6 mb-6">
+            <h2 class="text-xl mb-4">📁 Filter by Category</h2>
+            <div class="mb-4 p-4 bg-green-900 bg-opacity-20 border border-green-500 rounded">
+                <h3 class="text-green-400 font-bold mb-2">✅ PUBLIC DATA (Blockchain - Available 10+ years)</h3>
+                <div class="flex flex-wrap gap-2">
+                    <button class="category-btn active" data-category="puzzles">🧩 Puzzles</button>
+                    <button class="category-btn" data-category="addresses">📍 Addresses</button>
+                    <button class="category-btn" data-category="hashes">#️⃣ Hashes</button>
+                    <button class="category-btn" data-category="blockchain_data">⛓️ Blockchain Data</button>
+                    <button class="category-btn" data-category="docs">📚 Docs</button>
+                    <button class="category-btn" data-category="research">🔬 Research</button>
+                </div>
+            </div>
+            <div class="p-4 bg-red-900 bg-opacity-20 border border-red-500 rounded">
+                <h3 class="text-red-400 font-bold mb-2">🔒 PROTECTED (Proprietary - Owner Permission Required)</h3>
+                <div class="flex flex-wrap gap-2">
+                    <button class="category-btn opacity-50 cursor-not-allowed" disabled>🔧 Solvers 🔒</button>
+                    <button class="category-btn opacity-50 cursor-not-allowed" disabled>🛠️ Tools 🔒</button>
+                    <button class="category-btn opacity-50 cursor-not-allowed" disabled>🔑 Keys 🔒</button>
+                    <button class="category-btn opacity-50 cursor-not-allowed" disabled>💼 Wallets 🔒</button>
+                    <button class="category-btn opacity-50 cursor-not-allowed" disabled>📜 Scripts 🔒</button>
+                    <button class="category-btn opacity-50 cursor-not-allowed" disabled>📚 Wordlists 🔒</button>
+                    <button class="category-btn opacity-50 cursor-not-allowed" disabled>🌺 Bloom Filters 🔒</button>
+                    <button class="category-btn opacity-50 cursor-not-allowed" disabled>📸 Screenshots 🔒</button>
+                    <button class="category-btn opacity-50 cursor-not-allowed" disabled>📦 ZIP Archives 🔒</button>
+                    <button class="category-btn opacity-50 cursor-not-allowed" disabled>⚙️ Config Files 🔒</button>
+                </div>
+                <p class="text-xs text-gray-400 mt-3">
+                    ℹ️ ALL files require owner permission to download (no exceptions). Want access? Join as a contributor (pending owner approval) or contact owner directly.
+                </p>
+                <p class="text-xs text-yellow-400 mt-2">
+                    💡 The AI agent CAN use all this data to help solve puzzles - you just can't download it. Be crafty!
+                </p>
+                <p class="text-xs text-orange-400 mt-2">
+                    📦 ZIP files are CRITICAL - loaded with important data (auto-copied and protected)
+                </p>
+            </div>
+        </div>
+
+        <!-- File Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="neon-box p-4">
+                <div class="text-gray-400 text-sm">Total Files</div>
+                <div class="text-2xl font-bold" id="totalFiles">0</div>
+            </div>
+            <div class="neon-box p-4">
+                <div class="text-gray-400 text-sm">Total Size</div>
+                <div class="text-2xl font-bold" id="totalSize">0 MB</div>
+            </div>
+            <div class="neon-box p-4">
+                <div class="text-gray-400 text-sm">Categories</div>
+                <div class="text-2xl font-bold" id="categoryCount">0</div>
+            </div>
+            <div class="neon-box p-4">
+                <div class="text-gray-400 text-sm">Showing</div>
+                <div class="text-2xl font-bold" id="showingCount">0</div>
+            </div>
+        </div>
+
+        <!-- File List -->
+        <div class="neon-box p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl">📂 Files</h2>
+                <div class="text-sm text-gray-400">
+                    Sort by: 
+                    <select id="sortBy" class="bg-gray-800 border border-cyan-500 rounded px-2 py-1 ml-2">
+                        <option value="name">Name</option>
+                        <option value="size">Size</option>
+                        <option value="date">Date</option>
+                        <option value="category">Category</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="fileList" class="space-y-2">
+                <div class="text-gray-400 text-center py-8">
+                    Loading files...
+                </div>
+            </div>
+
+            <div id="pagination" class="flex justify-center gap-2 mt-6">
+                <!-- Pagination buttons will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCategory = 'all';
+        let currentPage = 1;
+        let currentSort = 'name';
+        const pageSize = 50;
+
+        const fileIcons = {
+            images: '🖼️',
+            executables: '⚙️',
+            scripts: '📜',
+            documents: '📄',
+            spreadsheets: '📊',
+            archives: '📦',
+            databases: '🗄️',
+            config: '⚙️',
+            other: '📄'
+        };
+
+        async function loadFiles(category = 'all', page = 1, searchQuery = '') {
+            try {
+                const offset = (page - 1) * pageSize;
+                let url = `/api/assets/${category}?limit=${pageSize}&offset=${offset}`;
+                
+                if (searchQuery) {
+                    url = `/api/assets/search?q=${encodeURIComponent(searchQuery)}&category=${category !== 'all' ? category : ''}`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayFiles(data.assets || data.results || []);
+                    updateStats(data);
+                } else {
+                    document.getElementById('fileList').innerHTML = 
+                        '<div class="text-red-400 text-center py-8">Error loading files</div>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('fileList').innerHTML = 
+                    '<div class="text-red-400 text-center py-8">Error: ' + error.message + '</div>';
+            }
+        }
+
+        function displayFiles(files) {
+            if (files.length === 0) {
+                document.getElementById('fileList').innerHTML = 
+                    '<div class="text-gray-400 text-center py-8">No files found</div>';
+                return;
+            }
+
+            // Sort files
+            files.sort((a, b) => {
+                switch (currentSort) {
+                    case 'name':
+                        return a.filename.localeCompare(b.filename);
+                    case 'size':
+                        return (b.file_size || 0) - (a.file_size || 0);
+                    case 'date':
+                        return new Date(b.imported_at) - new Date(a.imported_at);
+                    case 'category':
+                        return a.category.localeCompare(b.category);
+                    default:
+                        return 0;
+                }
+            });
+
+            const html = files.map(file => {
+                const sizeMB = ((file.file_size || 0) / (1024 * 1024)).toFixed(2);
+                const metadata = file.metadata ? JSON.parse(file.metadata) : {};
+                const icon = fileIcons[metadata.fileType] || fileIcons.other;
+                const date = new Date(file.imported_at).toLocaleDateString();
+                
+                return `
+                    <div class="file-item" onclick="downloadFile(${file.id})">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="font-bold">
+                                    <span class="file-icon">${icon}</span>
+                                    ${file.filename}
+                                </div>
+                                <div class="text-sm text-gray-400 mt-1">
+                                    Category: <span class="text-cyan-400">${file.category}</span> |
+                                    Size: <span class="text-green-400">${sizeMB} MB</span> |
+                                    Date: ${date}
+                                </div>
+                                ${file.drive_path ? `
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        📁 ${file.drive_path}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <button class="text-cyan-400 hover:text-cyan-300 px-4 py-2 rounded border border-cyan-500 hover:bg-cyan-500 hover:bg-opacity-20">
+                                ⬇️ Download
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('fileList').innerHTML = html;
+            document.getElementById('showingCount').textContent = files.length;
+        }
+
+        function updateStats(data) {
+            const total = data.count || data.results?.length || 0;
+            document.getElementById('totalFiles').textContent = total;
+            
+            if (data.assets || data.results) {
+                const totalSize = (data.assets || data.results).reduce((sum, file) => {
+                    return sum + (file.file_size || 0);
+                }, 0);
+                document.getElementById('totalSize').textContent = 
+                    (totalSize / (1024 * 1024)).toFixed(2) + ' MB';
+            }
+        }
+
+        async function downloadFile(fileId) {
+            window.location.href = `/api/asset/${fileId}/download`;
+        }
+
+        function setActiveCategory(button) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+        }
+
+        // Event Listeners
+        document.getElementById('categoryFilters').addEventListener('click', (e) => {
+            if (e.target.classList.contains('category-btn')) {
+                const category = e.target.dataset.category;
+                currentCategory = category;
+                currentPage = 1;
+                setActiveCategory(e.target);
+                loadFiles(category, currentPage);
+            }
+        });
+
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                loadFiles(currentCategory, 1, query);
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('searchBtn').click();
+            }
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            document.getElementById('searchInput').value = '';
+            loadFiles(currentCategory, currentPage);
+        });
+
+        document.getElementById('sortBy').addEventListener('change', (e) => {
+            currentSort = e.target.value;
+            loadFiles(currentCategory, currentPage);
+        });
+
+        // Load stats on page load
+        async function loadInitialStats() {
+            try {
+                const response = await fetch('/api/admin/import-stats');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('totalFiles').textContent = data.stats?.total_assets || 0;
+                    const totalGB = ((data.stats?.total_bytes || 0) / (1024 * 1024 * 1024)).toFixed(2);
+                    document.getElementById('totalSize').textContent = totalGB + ' GB';
+                    document.getElementById('categoryCount').textContent = data.by_category?.length || 0;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Initial load
+        loadInitialStats();
+        loadFiles('general', 1);
+    </script>
+</body>
+</html>

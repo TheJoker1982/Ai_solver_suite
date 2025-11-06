@@ -1,28 +1,1116 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Bitcoin Puzzle Assistant</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRYPTO HEIST - GTA Style Crypto Gaming Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  <script type="importmap">
-{
-  "imports": {
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.27.0",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "marked": "https://aistudiocdn.com/marked@^16.4.1",
-    "jszip": "https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm",
-    "bitcoinjs-lib": "https://esm.sh/bitcoinjs-lib@6.1.5",
-    "ecpair": "https://esm.sh/ecpair@2.1.0",
-    "tiny-secp256k1": "https://esm.sh/tiny-secp256k1@2.2.3",
-    "buffer": "https://esm.sh/buffer@6.0.3"
-  }
-}
-</script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at top, #0a0a2e 0%, #000 60%),
+                linear-gradient(135deg, #1a0033 0%, #000 50%, #001a33 100%);
+            z-index: 0;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        /* Particle effects */
+        .particle {
+            position: fixed;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0) translateX(0); 
+                opacity: 0.3;
+            }
+            25% { 
+                transform: translateY(-100px) translateX(50px); 
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translateY(-50px) translateX(100px); 
+                opacity: 0.4;
+            }
+            75% { 
+                transform: translateY(-150px) translateX(-50px); 
+                opacity: 0.5;
+            }
+        }
+
+        /* Main content */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+        }
+
+        /* Header HUD */
+        .hud-header {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.9)); }
+        }
+
+        /* Mission cards */
+        .mission-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(255, 0, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mission-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(0, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .mission-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffff;
+            box-shadow: 0 10px 40px rgba(0, 255, 255, 0.4);
+        }
+
+        /* Stats HUD */
+        .stat-box {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            padding: 1rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .stat-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: scanline 2s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Buttons */
+        .cyber-btn {
+            background: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 0.75rem 2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cyber-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.3s ease;
+        }
+
+        .cyber-btn:hover::before {
+            left: 100%;
+        }
+
+        .cyber-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+        }
+
+        .cyber-btn-outline {
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+        }
+
+        /* Navigation */
+        .nav-link {
+            color: #00ffff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Hero section */
+        .hero-section {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: heroGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            from { filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(255, 0, 255, 0.8)); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #00ffff;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        /* Dashboard grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        /* Glitch effect */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .glitch:hover {
+            animation: glitch 0.3s infinite;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            animation: progressPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .hero-subtitle { font-size: 1.2rem; }
+            .logo { font-size: 1.5rem; }
+        }
+
+        /* Visual Effects Animations */
+        @keyframes neonGlow {
+            0%, 100% { 
+                box-shadow: 0 0 10px rgba(0, 255, 136, 0.5), 
+                            0 0 20px rgba(0, 255, 136, 0.3),
+                            0 0 30px rgba(0, 255, 136, 0.2);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.8), 
+                            0 0 40px rgba(0, 255, 136, 0.5),
+                            0 0 60px rgba(0, 255, 136, 0.3);
+            }
+        }
+
+        @keyframes neonPulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .effect-particle {
+            transition: all 0.3s ease-out;
+        }
+
+        /* Tool Card Styling */
+        .tool-card {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1) 0%, rgba(0, 255, 255, 0.1) 100%);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff00ff;
+            box-shadow: 0 10px 40px rgba(255, 0, 255, 0.4);
+        }
+
+        .tool-card .tool-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .tool-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tool-card p {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .tool-card .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+        }
+
+        .tool-card .status-badge.NEW {
+            background: rgba(255, 0, 255, 0.2);
+            border-color: #ff00ff;
+            color: #ff00ff;
+        }
+    </style>
 </head>
-  <body class="bg-gray-900">
-    <div id="root"></div>
-  </body>
-</html>
+<body>
+    <!-- Animated Background -->
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Floating Particles -->
+    <div class="particle" style="width: 4px; height: 4px; top: 20%; left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="width: 6px; height: 6px; top: 60%; left: 80%; animation-delay: 2s;"></div>
+    <div class="particle" style="width: 3px; height: 3px; top: 40%; left: 30%; animation-delay: 4s;"></div>
+    <div class="particle" style="width: 5px; height: 5px; top: 80%; left: 60%; animation-delay: 1s;"></div>
+    <div class="particle" style="width: 4px; height: 4px; top: 30%; left: 70%; animation-delay: 3s;"></div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+
+        <!-- HUD Header -->
+        <header class="hud-header">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="logo glitch">CRYPTO HEIST</div>
+
+                    <nav class="hidden md:flex gap-6">
+                        <a href="/" class="nav-link">Dashboard</a>
+                        <a href="/files" class="nav-link">🗂️ Files</a>
+                        <a href="/ai-discoveries" class="nav-link">🤖 AI</a>
+                        <a href="/achievements" class="nav-link">🏆 Achievements</a>
+                        <a href="/missions" class="nav-link">🎯 Missions</a>
+                        <a href="/leaderboards" class="nav-link">📊 Leaderboards</a>
+                        <a href="/progression" class="nav-link">⚡ Progress</a>
+                        <a href="/ai-suite" class="nav-link">AI Suite</a>
+                        <a href="/workbench" class="nav-link">Workbench</a>
+                        <a href="/puzzles" class="nav-link">Puzzles</a>
+                        <a href="/city" class="nav-link">🏙️ City</a>
+                        <a href="/squad" class="nav-link">Squad</a>
+                    </nav>
+
+                    <div class="flex items-center gap-4">
+                        <div class="stat-box text-sm">
+                            <div class="text-gray-400">BTC Available</div>
+                            <div class="text-xl font-bold text-[#F7931A]">916.50</div>
+                        </div>
+                        <a href="/profile" class="nav-link">Profile</a>
+                        <a href="/api/auth/login" class="cyber-btn">Login</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container mx-auto px-6">
+                <h1 class="hero-title">WELCOME TO THE HEIST</h1>
+                <p class="hero-subtitle">The World's Largest Public Puzzle-Solving Toolkit</p>
+                <p class="text-[#00ffff] max-w-2xl mx-auto mb-4 font-bold">
+                    71 Professional Tools • 4 Proprietary Breakthroughs • 24/7 Scanner Access
+                </p>
+                <p class="text-gray-400 max-w-2xl mx-auto mb-8">
+                    From skeptics to experts - solve puzzles that once took years in just months. 
+                    With our comprehensive toolkit, AI assistant, and proprietary algorithms never before made public, 
+                    you have everything needed to tackle the most challenging Bitcoin puzzles. Join elite squads, 
+                    stream your discoveries, and claim your share of 900 BTC.
+                </p>
+                <div class="flex gap-4 justify-center">
+                    <button class="cyber-btn">Start Mission</button>
+                    <button class="cyber-btn cyber-btn-outline">Join Squad</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats HUD -->
+        <section class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="stat-box">
+                    <div class="text-sm text-gray-400 mb-2">Your Rank</div>
+                    <div class="text-3xl font-bold text-[#00ffff]">Geek Squad</div>
+                    <div class="progress-bar mt-3">
+                        <div class="progress-fill" style="width: 15%"></div>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">Level 1 → Junior Hacker</div>
+                </div>
+
+                <div class="stat-box cursor-pointer hover:scale-105 transition-transform" onclick="window.location.href='/payouts'">
+                    <div class="text-sm text-gray-400 mb-2">💰 Total Earnings</div>
+                    <div class="text-3xl font-bold text-[#F7931A]" id="dashboard-btc-earnings">0.00000000 BTC</div>
+                    <div class="text-sm text-[#FFD700] mt-1" id="dashboard-usd-earnings">$0.00</div>
+                    <div class="text-xs text-gray-500 mt-2">Click to view payouts →</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="text-sm text-gray-400 mb-2">Active Squads</div>
+                    <div class="text-3xl font-bold text-[#ff00ff]">0</div>
+                    <div class="text-xs text-gray-500 mt-3">Join a squad to pool resources</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="text-sm text-gray-400 mb-2">Puzzles Solved</div>
+                    <div class="text-3xl font-bold text-[#ffff00]">0 / 66</div>
+                    <div class="text-xs text-gray-500 mt-3">Unsolved puzzles remaining</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gameplay Features -->
+        <section class="container mx-auto px-6 py-12">
+            <h2 class="text-4xl font-bold mb-3 text-center" style="font-family: 'Orbitron', monospace;">
+                <span class="text-[#00ff88]">🎮 IMMERSIVE</span> <span class="text-[#ff00ff]">GAMEPLAY</span> <span class="text-[#00c8ff]">FEATURES</span>
+            </h2>
+            <p class="text-center text-gray-400 mb-8">Achievements • Daily Missions • Global Leaderboards • Streak System</p>
+
+            <div class="dashboard-grid">
+                <!-- Achievements -->
+                <div class="mission-card p-6 rounded-lg cursor-pointer hover:scale-105 transition-transform" onclick="window.location.href='/achievements'">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#00ff88] mb-1">SHOWCASE</div>
+                            <h3 class="text-2xl font-bold">🏆 Achievements</h3>
+                        </div>
+                        <div class="text-4xl">🎖️</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Unlock 25+ achievements with different rarities. Earn XP, unlock rewards, and showcase your mastery!
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Features</div>
+                            <div class="text-[#00ff88] font-bold">Rarity System • Notifications • Particle Effects</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">View All →</button>
+                    </div>
+                </div>
+
+                <!-- Daily Missions -->
+                <div class="mission-card p-6 rounded-lg cursor-pointer hover:scale-105 transition-transform" onclick="window.location.href='/missions'">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#00c8ff] mb-1">DAILY & WEEKLY</div>
+                            <h3 class="text-2xl font-bold">🎯 Missions</h3>
+                        </div>
+                        <div class="text-4xl">📋</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Complete daily missions and weekly challenges. Earn massive rewards with countdown timers!
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Rewards</div>
+                            <div class="text-[#00c8ff] font-bold">XP • BTC • Special Items</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Start →</button>
+                    </div>
+                </div>
+
+                <!-- Leaderboards -->
+                <div class="mission-card p-6 rounded-lg cursor-pointer hover:scale-105 transition-transform" onclick="window.location.href='/leaderboards'">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#ff00ff] mb-1">REAL-TIME</div>
+                            <h3 class="text-2xl font-bold">📊 Leaderboards</h3>
+                        </div>
+                        <div class="text-4xl">🏅</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Compete globally in 5 categories. Real-time updates via Socket.IO with rank badges!
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Categories</div>
+                            <div class="text-[#ff00ff] font-bold">Top Earners • Scans • Speed • Streaks</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Compete →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission Cards -->
+        <section class="container mx-auto px-6 py-12">
+            <h2 class="text-3xl font-bold mb-8 text-center" style="font-family: 'Orbitron', monospace;">
+                <span class="text-[#00ffff]">AVAILABLE</span> <span class="text-[#ff00ff]">MISSIONS</span>
+            </h2>
+
+            <div class="dashboard-grid">
+
+                <!-- Mission 1 -->
+                <div class="mission-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#00ffff] mb-1">TUTORIAL</div>
+                            <h3 class="text-xl font-bold">Fix Customer's PC</h3>
+                        </div>
+                        <div class="text-2xl">💻</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Your first day at Geek Squad. A customer needs help with a virus. 
+                        Learn the basics of system diagnostics.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Reward</div>
+                            <div class="text-[#ffff00] font-bold">+100 XP</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Start</button>
+                    </div>
+                </div>
+
+                <!-- Mission 2 -->
+                <div class="mission-card p-6 rounded-lg opacity-50">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#ff00ff] mb-1">LOCKED</div>
+                            <h3 class="text-xl font-bold">Hack School Database</h3>
+                        </div>
+                        <div class="text-2xl">🎓</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Change your grades. Learn SQL injection and database manipulation.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Requires</div>
+                            <div class="text-gray-400">Level 3</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4" disabled>Locked</button>
+                    </div>
+                </div>
+
+                <!-- Mission 3 -->
+                <div class="mission-card p-6 rounded-lg opacity-50">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#F7931A] mb-1">CRYPTO</div>
+                            <h3 class="text-xl font-bold">Solve Puzzle #66</h3>
+                        </div>
+                        <div class="text-2xl">₿</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Crack Bitcoin Puzzle #66. Prize: 6.6 BTC (~$660,000)
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Requires</div>
+                            <div class="text-gray-400">Level 5 + Squad</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4" disabled>Locked</button>
+                    </div>
+                </div>
+
+                <!-- Mission 4 -->
+                <div class="mission-card p-6 rounded-lg opacity-50">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-red-500 mb-1">ELITE</div>
+                            <h3 class="text-xl font-bold">Billion Dollar Heist</h3>
+                        </div>
+                        <div class="text-2xl">💰</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Dubai bank breach. High risk, massive reward. Requires elite squad.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Requires</div>
+                            <div class="text-gray-400">Level 50 + Elite Squad</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4" disabled>Locked</button>
+                    </div>
+                </div>
+
+                <!-- AI Suite -->
+                <div class="mission-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#00ffff] mb-1">PRODUCTION SUITE</div>
+                            <h3 class="text-xl font-bold">AI-Powered Crypto Suite</h3>
+                        </div>
+                        <div class="text-2xl">🤖</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Full production environment with AI chat, code editor, and comprehensive Bitcoin tools.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Status</div>
+                            <div class="text-green-400 font-bold">Available</div>
+                        </div>
+                        <a href="/ai-suite" class="cyber-btn text-sm py-2 px-4">Open</a>
+                    </div>
+                </div>
+
+                <!-- Workbench -->
+                <div class="mission-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#00ffff] mb-1">TOOLS</div>
+                            <h3 class="text-xl font-bold">Character Workbench</h3>
+                        </div>
+                        <div class="text-2xl">🧮</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Advanced string manipulation, hex operations, and Bitcoin key analysis tools.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Status</div>
+                            <div class="text-green-400 font-bold">Available</div>
+                        </div>
+                        <a href="/workbench" class="cyber-btn text-sm py-2 px-4">Open</a>
+                    </div>
+                </div>
+
+                <!-- Live Studio -->
+                <div class="mission-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#ff00ff] mb-1">BROADCASTING</div>
+                            <h3 class="text-xl font-bold">Live Coding Studio</h3>
+                        </div>
+                        <div class="text-2xl">📡</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Stream your puzzle solving sessions live. Monetize your skills.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Status</div>
+                            <div class="text-green-400 font-bold">Available</div>
+                        </div>
+                        <a href="/live-studio" class="cyber-btn text-sm py-2 px-4">Go Live</a>
+                    </div>
+                </div>
+
+                <!-- Squad -->
+                <div class="mission-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#ff00ff] mb-1">MULTIPLAYER</div>
+                            <h3 class="text-xl font-bold">Join a Squad</h3>
+                        </div>
+                        <div class="text-2xl">👥</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Pool resources with other hackers. Share profits and tackle bigger puzzles together.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Active Squads</div>
+                            <div class="text-white font-bold">247</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Browse</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Tool Cards Section -->
+        <section class="container mx-auto px-6 py-12">
+            <h2 class="text-3xl font-bold mb-8 text-center" style="font-family: 'Orbitron', monospace;">
+                <span class="text-[#00ffff]">POWERFUL</span> <span class="text-[#ff00ff]">TOOLS</span>
+            </h2>
+            <div class="dashboard-grid">
+                <div class="tool-card" onclick="window.location.href='/puzzles'">
+                    <div class="tool-icon">🎯</div>
+                    <h3>Puzzle Tracker</h3>
+                    <p>Track 161 unsolved Bitcoin puzzles worth 900+ BTC</p>
+                    <span class="status-badge">ACTIVE</span>
+                </div>
+
+                <div class="tool-card" onclick="window.location.href='/phonetic-analyzer'">
+                    <div class="tool-icon">🔤</div>
+                    <h3>Phonetic Analyzer</h3>
+                    <p>Bitcoin character set analysis & phonetic pattern detection</p>
+                    <span class="status-badge NEW">NEW</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proprietary Tools Showcase -->
+        <section class="container mx-auto px-6 py-12">
+            <h2 class="text-3xl font-bold mb-4 text-center" style="font-family: 'Orbitron', monospace;">
+                <span class="text-[#ff00ff]">PROPRIETARY</span> <span class="text-[#00ffff]">BREAKTHROUGH</span> <span class="text-[#ffff00]">TOOLS</span>
+            </h2>
+            <p class="text-center text-[#00ffff] text-xl mb-2">🏆 Never Before Released to the Public 🏆</p>
+            <p class="text-center text-gray-400 mb-8">4 Revolutionary Tools • Secret Mathematical Logic • Ahead of the Competition</p>
+
+            <div class="dashboard-grid">
+                <div class="mission-card p-6 rounded-lg" style="border: 2px solid #ff00ff;">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#ff00ff] mb-1">PROPRIETARY</div>
+                            <h3 class="text-xl font-bold">Wind Tunnel Analysis</h3>
+                        </div>
+                        <div class="text-2xl">🌪️</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        5-Blade Asymmetric Spiral with Divine by 3 methodology. Never-before-published cryptographic approach.
+                    </p>
+                    <div class="mb-3">
+                        <div class="text-xs text-gray-500">Innovation</div>
+                        <div class="text-[#ff00ff] font-bold">Aerodynamic Cryptanalysis</div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Access</div>
+                            <div class="text-yellow-400 font-bold">Premium Only</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Unlock</button>
+                    </div>
+                </div>
+
+                <div class="mission-card p-6 rounded-lg" style="border: 2px solid #00ffff;">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#00ffff] mb-1">PROPRIETARY</div>
+                            <h3 class="text-xl font-bold">Hash160 Inverse Analyzer</h3>
+                        </div>
+                        <div class="text-2xl">🔬</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Secret Hash160 inverse analysis. Unpublished mathematical relationships for pattern detection.
+                    </p>
+                    <div class="mb-3">
+                        <div class="text-xs text-gray-500">Innovation</div>
+                        <div class="text-[#00ffff] font-bold">Inverse Cryptography</div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Access</div>
+                            <div class="text-yellow-400 font-bold">Premium Only</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Unlock</button>
+                    </div>
+                </div>
+
+                <div class="mission-card p-6 rounded-lg" style="border: 2px solid #ffff00;">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#ffff00] mb-1">PROPRIETARY</div>
+                            <h3 class="text-xl font-bold">Coordinate Transformer</h3>
+                        </div>
+                        <div class="text-2xl">📐</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Advanced X,Y coordinate transformations. Secret mathematical operations for key discovery.
+                    </p>
+                    <div class="mb-3">
+                        <div class="text-xs text-gray-500">Innovation</div>
+                        <div class="text-[#ffff00] font-bold">Coordinate Cryptanalysis</div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Access</div>
+                            <div class="text-yellow-400 font-bold">Premium Only</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Unlock</button>
+                    </div>
+                </div>
+
+                <div class="mission-card p-6 rounded-lg" style="border: 2px solid #ff0000;">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-[#ff0000] mb-1">PROPRIETARY</div>
+                            <h3 class="text-xl font-bold">Inverse Addition Engine</h3>
+                        </div>
+                        <div class="text-2xl">🧮</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Proprietary Hash160 inverse addition. First-ever public release of this methodology.
+                    </p>
+                    <div class="mb-3">
+                        <div class="text-xs text-gray-500">Innovation</div>
+                        <div class="text-[#ff0000] font-bold">Inverse Mathematics</div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Access</div>
+                            <div class="text-yellow-400 font-bold">Premium Only</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Unlock</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <div class="stat-box inline-block">
+                    <div class="text-lg font-bold text-[#ff00ff] mb-2">🚀 Ahead of the Competition</div>
+                    <p class="text-sm text-gray-400">These tools implement cryptographic logic never before published anywhere in the world.</p>
+                    <p class="text-sm text-[#00ffff] mt-2">Making expert-level puzzle solving accessible to everyone.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Brute Force Scanners -->
+        <section class="container mx-auto px-6 py-12">
+            <h2 class="text-3xl font-bold mb-8 text-center" style="font-family: 'Orbitron', monospace;">
+                <span class="text-[#ff0000]">BRUTE FORCE</span> <span class="text-[#ffff00]">SCANNERS</span>
+            </h2>
+            <p class="text-center text-gray-400 mb-8">Industrial-grade scanning tools • $0.05/hour usage fee</p>
+
+            <div class="dashboard-grid">
+
+                <!-- BitCrack -->
+                <div class="mission-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-red-500 mb-1">GPU ACCELERATED</div>
+                            <h3 class="text-xl font-bold">BitCrack Scanner</h3>
+                        </div>
+                        <div class="text-2xl">⚡</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        CUDA/OpenCL GPU-accelerated brute force tool. Massive parallelization for puzzle solving.
+                    </p>
+                    <div class="mb-3">
+                        <div class="text-xs text-gray-500">Performance</div>
+                        <div class="text-green-400 font-bold">~1 billion keys/sec</div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Cost</div>
+                            <div class="text-[#F7931A] font-bold">$0.05/hour</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Launch</button>
+                    </div>
+                </div>
+
+                <!-- Kangaroo -->
+                <div class="mission-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-yellow-500 mb-1">COLLISION ATTACK</div>
+                            <h3 class="text-xl font-bold">Kangaroo Scanner</h3>
+                        </div>
+                        <div class="text-2xl">🦘</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Pollard's Kangaroo algorithm. Optimized for finding keys in known ranges (ECDLP solver).
+                    </p>
+                    <div class="mb-3">
+                        <div class="text-xs text-gray-500">Best For</div>
+                        <div class="text-yellow-400 font-bold">Known Range Puzzles</div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Cost</div>
+                            <div class="text-[#F7931A] font-bold">$0.05/hour</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Launch</button>
+                    </div>
+                </div>
+
+                <!-- KeyHunt -->
+                <div class="mission-card p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-xs text-purple-500 mb-1">MULTI-MODE</div>
+                            <h3 class="text-xl font-bold">KeyHunt Scanner</h3>
+                        </div>
+                        <div class="text-2xl">🔎</div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Advanced key hunting with multiple modes: random, sequential, bloom filter. CPU optimized.
+                    </p>
+                    <div class="mb-3">
+                        <div class="text-xs text-gray-500">Modes</div>
+                        <div class="text-purple-400 font-bold">Random • Sequential • Bloom</div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-500">Cost</div>
+                            <div class="text-[#F7931A] font-bold">$0.05/hour</div>
+                        </div>
+                        <button class="cyber-btn text-sm py-2 px-4">Launch</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="container mx-auto px-6 py-12 text-center">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div class="stat-box">
+                    <div class="text-lg font-bold text-[#F7931A] mb-2">Subscription</div>
+                    <div class="text-3xl font-bold">$0.99/mo</div>
+                    <div class="text-sm text-gray-400 mt-2">+ $0.05/hour for brute force</div>
+                </div>
+                <div class="stat-box">
+                    <div class="text-lg font-bold text-[#00ffff] mb-2">Donate BTC</div>
+                    <div class="text-sm font-mono">1794B4ynTe3WA6Vd...</div>
+                    <button class="cyber-btn-outline mt-2 text-xs py-1 px-3">Copy Address</button>
+                </div>
+                <div class="stat-box">
+                    <div class="text-lg font-bold text-[#ff00ff] mb-2">Seeking Sponsors</div>
+                    <div class="text-sm text-gray-400 mb-2">Invest in the future of crypto gaming</div>
+                    <button class="cyber-btn text-sm py-2 px-4">Contact Us</button>
+                </div>
+            </div>
+            <div class="text-gray-500 text-sm">
+                © 2025 CRYPTO HEIST - Real Cryptocurrency Platform • 900 BTC in Prizes
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Visual Effects & AI Learning Integration -->
+    <script src="/effects-controller.js"></script>
+    <script src="/ai-learning-engine.js"></script>
+    <script src="/ai-debugger.js"></script>
+    <script>
+        console.log('🎮 CRYPTO HEIST Platform Loaded');
+        console.log('💰 900 BTC Available in Unsolved Puzzles');
+        console.log('✨ Visual Effects System: ACTIVE');
+        console.log('🤖 AI Learning Engine: ACTIVE');
+
+        async function loadDashboardEarnings() {
+            try {
+                const authResponse = await fetch('/api/auth/session');
+                const authData = await authResponse.json();
+
+                if (authData.authenticated && authData.user) {
+                    const response = await fetch(`/api/contributions/${authData.user.id}`);
+                    const data = await response.json();
+
+                    if (data.success && data.totalEarned) {
+                        const btcElem = document.getElementById('dashboard-btc-earnings');
+                        const usdElem = document.getElementById('dashboard-usd-earnings');
+
+                        btcElem.textContent = parseFloat(data.totalEarned).toFixed(8) + ' BTC';
+                        usdElem.textContent = '$' + (data.totalEarned * 45000).toFixed(2);
+                    }
+                }
+            } catch (error) {
+                console.log('Not logged in or no earnings yet');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardEarnings();
+
+            setTimeout(() => {
+                if (window.aiLearning) {
+                    const greeting = aiLearning.getPersonalizedGreeting();
+                    console.log('AI Greeting:', greeting);
+                }
+            }, 1000);
+
+            const launchButtons = document.querySelectorAll('.cyber-btn');
+            launchButtons.forEach((btn) => {
+                btn.addEventListener('click', (e) => {
+                    const toolName = btn.closest('.mission-card')?.querySelector('h3')?.textContent || 'Tool';
+
+                    if (window.effectsController) {
+                        effectsController.triggerToolEffect(toolName, btn);
+                    }
+
+                    if (window.aiLearning) {
+                        document.dispatchEvent(new CustomEvent('tool-used', {
+                            detail: {
+                                toolName,
+                                timestamp: Date.now(),
+                                parameters: {},
+                                result: { success: true }
+                            }
+                        }));
+                    }
+
+                    console.log(`🚀 Launched: ${toolName}`);
+                });
+            });
+
+            setTimeout(() => {
+                if (window.effectsController) {
+                    effectsController.triggerAchievement('Platform Explorer', '🎯');
+                }
+            }, 3000);
+        });
+    </script>
+</body

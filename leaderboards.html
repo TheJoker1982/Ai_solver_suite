@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboards - Crypto Heist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        @keyframes rankUpglow {
+            0%, 100% { box-shadow: 0 0 10px #00ff88; }
+            50% { box-shadow: 0 0 30px #00ff88, 0 0 50px #00ff88; }
+        }
+
+        @keyframes rankDownGlow {
+            0%, 100% { box-shadow: 0 0 10px #ff0088; }
+            50% { box-shadow: 0 0 30px #ff0088, 0 0 50px #ff0088; }
+        }
+
+        @keyframes newEntry {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .leaderboard-row {
+            background: linear-gradient(135deg, rgba(20, 20, 40, 0.9), rgba(30, 30, 50, 0.9));
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .leaderboard-row:hover {
+            background: linear-gradient(135deg, rgba(30, 30, 50, 1), rgba(40, 40, 60, 1));
+            border-color: rgba(0, 255, 136, 0.5);
+            transform: translateX(10px);
+        }
+
+        .leaderboard-row.user-row {
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 200, 255, 0.1));
+        }
+
+        .leaderboard-row.rank-up {
+            animation: rankUpglow 1s;
+        }
+
+        .leaderboard-row.rank-down {
+            animation: rankDownGlow 1s;
+        }
+
+        .leaderboard-row.new-entry {
+            animation: newEntry 0.5s ease-out;
+        }
+
+        .rank-badge {
+            min-width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #C0C0C0, #E8E8E8);
+            color: #000;
+            box-shadow: 0 0 20px rgba(192, 192, 192, 0.6);
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #CD7F32, #E08D55);
+            color: #000;
+            box-shadow: 0 0 20px rgba(205, 127, 50, 0.6);
+        }
+
+        .rank-other {
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid rgba(0, 255, 136, 0.4);
+            color: #00ff88;
+        }
+
+        .rank-indicator {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .rank-up-indicator {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .rank-down-indicator {
+            background: #ff0088;
+            color: #fff;
+        }
+
+        .category-tab {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .category-tab.active {
+            background: linear-gradient(135deg, #00ff88, #00c8ff);
+            color: #000;
+            border-color: transparent;
+        }
+
+        .category-tab:not(.active) {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+        }
+
+        .category-tab:not(.active):hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.5);
+        }
+
+        .season-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #ff00ff, #aa00ff);
+            color: #fff;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .real-time-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(0, 255, 136, 0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #00ff88;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="main-container">
+        <div class="container mx-auto px-4 py-8">
+            <div class="mb-8">
+                <h1 class="text-5xl font-bold mb-2 text-center" style="color: #00ff88;">🏆 GLOBAL LEADERBOARDS</h1>
+                <p class="text-center text-gray-400">Compete with the best hackers worldwide</p>
+            </div>
+
+            <div class="mb-8 text-center flex gap-4 justify-center items-center">
+                <button onclick="window.location.href='/'" class="cyber-btn cyber-btn-outline">← Back to Home</button>
+                <button onclick="window.location.href='/achievements'" class="cyber-btn">Achievements</button>
+                <div class="real-time-indicator">
+                    <div class="pulse-dot"></div>
+                    <span>LIVE</span>
+                </div>
+            </div>
+
+            <div class="panel mb-8">
+                <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+                    <div class="flex gap-2 items-center">
+                        <span class="season-badge">SEASON 1</span>
+                        <span class="text-gray-400 text-sm">Ends in 45 days</span>
+                    </div>
+                    <div class="text-sm text-gray-500">Updates in real-time via Socket.IO</div>
+                </div>
+
+                <div class="flex gap-2 mb-6 flex-wrap justify-center" id="category-tabs">
+                    <div class="category-tab active" data-category="top_earners" onclick="switchCategory('top_earners')">
+                        💰 Top Earners
+                    </div>
+                    <div class="category-tab" data-category="most_scans" onclick="switchCategory('most_scans')">
+                        🔍 Most Scans
+                    </div>
+                    <div class="category-tab" data-category="squad_leaders" onclick="switchCategory('squad_leaders')">
+                        👥 Squad Leaders
+                    </div>
+                    <div class="category-tab" data-category="speed_runners" onclick="switchCategory('speed_runners')">
+                        ⚡ Speed Runners
+                    </div>
+                    <div class="category-tab" data-category="streak_masters" onclick="switchCategory('streak_masters')">
+                        🔥 Streak Masters
+                    </div>
+                </div>
+
+                <div id="user-rank-card" class="mb-6" style="display: none;">
+                    <h3 class="text-xl font-bold mb-3" style="color: #00ff88;">Your Rank</h3>
+                    <div id="user-rank-content"></div>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-2xl font-bold" style="color: #00c8ff;">Top 100 <span id="category-name">Top Earners</span></h3>
+                </div>
+
+                <div id="leaderboard-list" class="space-y-2">
+                    <div class="text-center text-gray-500 py-8">Loading leaderboard...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let currentCategory = 'top_earners';
+        let currentSeason = 1;
+        let socket = null;
+        let leaderboardData = [];
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/session');
+                const data = await response.json();
+                
+                if (data.authenticated && data.user) {
+                    currentUser = data.user;
+                    await loadLeaderboard();
+                    initSocket();
+                } else {
+                    await loadLeaderboard();
+                }
+            } catch (error) {
+                console.error('Error checking auth:', error);
+            }
+        }
+
+        function initSocket() {
+            socket = io();
+
+            socket.on('connect', () => {
+                console.log('🔗 Connected to real-time leaderboard updates');
+                socket.emit('join-leaderboard', { category: currentCategory });
+            });
+
+            socket.on('leaderboard-update', (data) => {
+                console.log('📊 Leaderboard update received:', data);
+                if (data.category === currentCategory) {
+                    handleLeaderboardUpdate(data);
+                }
+            });
+
+            socket.on('rank-change', (data) => {
+                if (currentUser && data.userId === currentUser.id) {
+                    showRankChangeNotification(data);
+                }
+            });
+
+            socket.on('disconnect', () => {
+                console.log('❌ Disconnected from leaderboard updates');
+            });
+        }
+
+        function handleLeaderboardUpdate(data) {
+            if (data.fullUpdate) {
+                leaderboardData = data.entries;
+                displayLeaderboard();
+            } else {
+                const updatedEntry = data.entry;
+                const existingIndex = leaderboardData.findIndex(e => e.user_id === updatedEntry.user_id);
+                
+                if (existingIndex !== -1) {
+                    leaderboardData[existingIndex] = updatedEntry;
+                } else {
+                    leaderboardData.push(updatedEntry);
+                }
+                
+                leaderboardData.sort((a, b) => b.score - a.score);
+                displayLeaderboard();
+            }
+        }
+
+        function showRankChangeNotification(data) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(20,20,40,0.95));
+                border: 2px solid ${data.direction === 'up' ? '#00ff88' : '#ff0088'};
+                border-radius: 16px;
+                padding: 20px;
+                z-index: 10000;
+                animation: achievementSlideIn 0.6s ease-out;
+            `;
+            notification.innerHTML = `
+                <div class="text-center">
+                    <div class="text-4xl mb-2">${data.direction === 'up' ? '📈' : '📉'}</div>
+                    <div class="font-bold text-xl mb-2" style="color: ${data.direction === 'up' ? '#00ff88' : '#ff0088'}">
+                        ${data.direction === 'up' ? 'RANK UP!' : 'RANK DOWN'}
+                    </div>
+                    <div class="text-gray-300">
+                        ${data.oldRank} → ${data.newRank}
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 5000);
+        }
+
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch(`/api/leaderboards/${currentCategory}?season=${currentSeason}&limit=100`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    leaderboardData = data.leaderboard;
+                    displayLeaderboard();
+                    
+                    if (currentUser) {
+                        await loadUserRank();
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+            }
+        }
+
+        async function loadUserRank() {
+            try {
+                const response = await fetch(`/api/leaderboards/${currentCategory}/rank/${currentUser.id}?season=${currentSeason}`);
+                const data = await response.json();
+                
+                if (data.success && data.rank) {
+                    displayUserRank(data.rank, data.score);
+                } else {
+                    document.getElementById('user-rank-card').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading user rank:', error);
+                document.getElementById('user-rank-card').style.display = 'none';
+            }
+        }
+
+        function displayUserRank(rank, score) {
+            const card = document.getElementById('user-rank-card');
+            const content = document.getElementById('user-rank-content');
+            
+            card.style.display = 'block';
+            content.innerHTML = `
+                <div class="leaderboard-row user-row">
+                    <div class="rank-badge ${getRankClass(rank)}">${rank}</div>
+                    <img src="${currentUser.profileImageUrl || '/api/placeholder/50/50'}" class="profile-avatar" alt="Your Avatar">
+                    <div class="flex-1">
+                        <div class="font-bold text-lg" style="color: #00ff88;">${currentUser.username}</div>
+                        <div class="text-sm text-gray-400">That's you!</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold" style="color: #00c8ff;">${formatScore(score, currentCategory)}</div>
+                        <div class="text-xs text-gray-500">${getCategoryLabel(currentCategory)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayLeaderboard() {
+            const list = document.getElementById('leaderboard-list');
+            
+            if (leaderboardData.length === 0) {
+                list.innerHTML = '<div class="text-center text-gray-500 py-8">No entries yet. Be the first!</div>';
+                return;
+            }
+
+            list.innerHTML = leaderboardData.slice(0, 100).map((entry, index) => {
+                const rank = index + 1;
+                const isUser = currentUser && entry.user_id === currentUser.id;
+
+                return `
+                    <div class="leaderboard-row ${isUser ? 'user-row' : ''}" data-user-id="${entry.user_id}">
+                        <div class="rank-badge ${getRankClass(rank)}">${rank}</div>
+                        <img src="${entry.profile_image_url || '/api/placeholder/50/50'}" class="profile-avatar" alt="${entry.username}">
+                        <div class="flex-1">
+                            <div class="font-bold text-lg" style="color: ${isUser ? '#00ff88' : '#fff'};">${entry.username}</div>
+                            <div class="text-sm text-gray-400">${entry.rank || 'Rookie'}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold" style="color: #00c8ff;">${formatScore(entry.score, currentCategory)}</div>
+                            <div class="text-xs text-gray-500">${getCategoryLabel(currentCategory)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function switchCategory(category) {
+            if (category === currentCategory) return;
+
+            currentCategory = category;
+
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-category="${category}"]`).classList.add('active');
+
+            const categoryNames = {
+                top_earners: 'Top Earners',
+                most_scans: 'Most Scans',
+                squad_leaders: 'Squad Leaders',
+                speed_runners: 'Speed Runners',
+                streak_masters: 'Streak Masters'
+            };
+            document.getElementById('category-name').textContent = categoryNames[category];
+
+            if (socket) {
+                socket.emit('leave-leaderboard', { category: currentCategory });
+                socket.emit('join-leaderboard', { category });
+            }
+
+            loadLeaderboard();
+        }
+
+        function getRankClass(rank) {
+            if (rank === 1) return 'rank-1';
+            if (rank === 2) return 'rank-2';
+            if (rank === 3) return 'rank-3';
+            return 'rank-other';
+        }
+
+        function formatScore(score, category) {
+            if (category === 'top_earners') {
+                return (score / 100000000).toFixed(8) + ' BTC';
+            }
+            return score.toLocaleString();
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                top_earners: 'BTC Earned',
+                most_scans: 'Keys Scanned',
+                squad_leaders: 'Squad Power',
+                speed_runners: 'Fastest Time',
+                streak_masters: 'Day Streak'
+            };
+            return labels[category] || '';
+        }
+
+        window.addEventListener('load', checkAuth);
+
+        console.log('🏆 Leaderboards System Loaded');
+        console.log('📡 Real-time updates enabled via Socket.IO');
+    </script>
+</body>
+</html>

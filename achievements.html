@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements - Crypto Heist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @keyframes achievementSlideIn {
+            0% { transform: translateX(400px) scale(0.8); opacity: 0; }
+            60% { transform: translateX(-20px) scale(1.05); }
+            100% { transform: translateX(0) scale(1); opacity: 1; }
+        }
+
+        @keyframes achievementSlideOut {
+            0% { transform: translateX(0) scale(1); opacity: 1; }
+            100% { transform: translateX(400px) scale(0.8); opacity: 0; }
+        }
+
+        @keyframes particleBurst {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        @keyframes rarityGlow {
+            0%, 100% { box-shadow: 0 0 10px currentColor; }
+            50% { box-shadow: 0 0 25px currentColor, 0 0 35px currentColor; }
+        }
+
+        .achievement-notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(20,20,40,0.95));
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            min-width: 350px;
+            z-index: 10000;
+            animation: achievementSlideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .achievement-notification.hide {
+            animation: achievementSlideOut 0.4s ease-in forwards;
+        }
+
+        .particle {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleBurst 1s ease-out forwards;
+            z-index: 9999;
+        }
+
+        .rarity-common { 
+            border-color: #00ff88; 
+            animation: rarityGlow 2s infinite;
+        }
+        .rarity-rare { 
+            border-color: #00c8ff; 
+            animation: rarityGlow 2s infinite;
+        }
+        .rarity-epic { 
+            border-color: #ff00ff; 
+            animation: rarityGlow 2s infinite;
+        }
+        .rarity-legendary { 
+            border-color: #ffd700; 
+            animation: rarityGlow 2s infinite;
+        }
+
+        .achievement-card {
+            background: rgba(20, 20, 40, 0.9);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-card.unlocked {
+            border-color: var(--unlock-color);
+            box-shadow: 0 0 20px var(--unlock-color);
+        }
+
+        .achievement-card.locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        @keyframes progressFill {
+            from { width: 0; }
+        }
+
+        .progress-fill {
+            animation: progressFill 1s ease-out;
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .achievement-locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="main-container">
+        <div class="container mx-auto px-4 py-8">
+            <div class="mb-8">
+                <h1 class="text-5xl font-bold mb-2 text-center" style="color: #00ff88;">🏆 ACHIEVEMENTS</h1>
+                <p class="text-center text-gray-400">Unlock epic rewards and showcase your mastery</p>
+            </div>
+
+            <div class="mb-8 text-center">
+                <button onclick="window.location.href='/'" class="cyber-btn cyber-btn-outline mr-2">← Back to Home</button>
+                <button onclick="window.location.href='/profile'" class="cyber-btn">View Profile</button>
+            </div>
+
+            <div id="auth-prompt" class="panel text-center py-20" style="display: none;">
+                <p class="text-2xl mb-4">Please login to view your achievements</p>
+                <button onclick="login()" class="cyber-btn text-xl">Login</button>
+            </div>
+
+            <div id="achievements-content" style="display: none;">
+                <div class="panel mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="text-center">
+                            <div class="text-5xl font-bold mb-2" style="color: #00ff88;" id="unlocked-count">0</div>
+                            <div class="text-sm text-gray-400">Unlocked</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-5xl font-bold mb-2" style="color: #00c8ff;" id="completion-percentage">0%</div>
+                            <div class="text-sm text-gray-400">Completion</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-5xl font-bold mb-2" style="color: #ffd700;" id="total-xp-earned">0</div>
+                            <div class="text-sm text-gray-400">Total XP from Achievements</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="overall-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="mb-6 flex gap-4 justify-center flex-wrap">
+                    <button onclick="filterAchievements('all')" class="cyber-btn-outline active-filter" data-filter="all">All</button>
+                    <button onclick="filterAchievements('unlocked')" class="cyber-btn-outline" data-filter="unlocked">Unlocked</button>
+                    <button onclick="filterAchievements('locked')" class="cyber-btn-outline" data-filter="locked">Locked</button>
+                    <button onclick="filterAchievements('common')" class="cyber-btn-outline" data-filter="common">Common</button>
+                    <button onclick="filterAchievements('rare')" class="cyber-btn-outline" data-filter="rare">Rare</button>
+                    <button onclick="filterAchievements('epic')" class="cyber-btn-outline" data-filter="epic">Epic</button>
+                    <button onclick="filterAchievements('legendary')" class="cyber-btn-outline" data-filter="legendary">Legendary</button>
+                </div>
+
+                <div id="achievements-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="text-center text-gray-500 py-8 col-span-full">Loading achievements...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-container"></div>
+
+    <script>
+        let currentUser = null;
+        let currentFilter = 'all';
+        let userAchievements = [];
+        let allAchievements = [];
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/session');
+                const data = await response.json();
+                
+                if (data.authenticated && data.user) {
+                    currentUser = data.user;
+                    document.getElementById('auth-prompt').style.display = 'none';
+                    document.getElementById('achievements-content').style.display = 'block';
+                    await loadAchievements();
+                } else {
+                    document.getElementById('auth-prompt').style.display = 'block';
+                    document.getElementById('achievements-content').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error checking auth:', error);
+                document.getElementById('auth-prompt').style.display = 'block';
+            }
+        }
+
+        function login() {
+            window.location.href = '/api/auth/login';
+        }
+
+        async function loadAchievements() {
+            try {
+                const response = await fetch(`/api/achievements/user/${currentUser.id}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    userAchievements = data.userAchievements || [];
+                    allAchievements = data.allAchievements || [];
+                    
+                    updateStats(data);
+                    displayAchievements();
+                }
+            } catch (error) {
+                console.error('Error loading achievements:', error);
+            }
+        }
+
+        function updateStats(data) {
+            const unlockedCount = data.userAchievements.length;
+            const totalCount = data.allAchievements.length;
+            const completion = data.completionPercentage || 0;
+            const totalXP = data.userAchievements.reduce((sum, a) => sum + (a.xp_reward || 0), 0);
+
+            document.getElementById('unlocked-count').textContent = unlockedCount;
+            document.getElementById('completion-percentage').textContent = completion + '%';
+            document.getElementById('total-xp-earned').textContent = totalXP.toLocaleString();
+            document.getElementById('overall-progress').style.width = completion + '%';
+        }
+
+        function displayAchievements() {
+            const grid = document.getElementById('achievements-grid');
+            const userAchievementIds = new Set(userAchievements.map(a => a.id));
+            
+            const filtered = allAchievements.filter(achievement => {
+                const isUnlocked = userAchievementIds.has(achievement.id);
+                
+                if (currentFilter === 'unlocked') return isUnlocked;
+                if (currentFilter === 'locked') return !isUnlocked;
+                if (currentFilter === 'all') return true;
+                return achievement.rarity === currentFilter;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="text-center text-gray-500 py-8 col-span-full">No achievements found</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(achievement => {
+                const isUnlocked = userAchievementIds.has(achievement.id);
+                const unlockData = userAchievements.find(a => a.id === achievement.id);
+                const rarityColors = {
+                    common: '#00ff88',
+                    rare: '#00c8ff',
+                    epic: '#ff00ff',
+                    legendary: '#ffd700'
+                };
+                const color = rarityColors[achievement.rarity] || '#00ff88';
+
+                return `
+                    <div class="achievement-card ${isUnlocked ? 'unlocked' : 'locked'}" 
+                         style="${isUnlocked ? `--unlock-color: ${color}` : ''}"
+                         data-rarity="${achievement.rarity}"
+                         data-unlocked="${isUnlocked}">
+                        ${!isUnlocked ? '<div class="achievement-locked-overlay">🔒</div>' : ''}
+                        <div class="achievement-icon">${achievement.icon || '🏆'}</div>
+                        <div class="font-bold text-xl mb-2" style="color: ${color}">
+                            ${achievement.name}
+                        </div>
+                        <div class="text-sm text-gray-400 mb-3">${achievement.description}</div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-gray-500">Rarity: <span style="color: ${color}">${achievement.rarity.toUpperCase()}</span></span>
+                            <span style="color: #00ff88">+${achievement.xp_reward} XP</span>
+                        </div>
+                        ${isUnlocked ? `
+                            <div class="text-xs text-gray-500 mt-2">
+                                Unlocked: ${new Date(unlockData.unlocked_at).toLocaleDateString()}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterAchievements(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('[data-filter]').forEach(btn => {
+                btn.classList.remove('active-filter', 'cyber-btn');
+                btn.classList.add('cyber-btn-outline');
+            });
+            document.querySelector(`[data-filter="${filter}"]`).classList.add('active-filter', 'cyber-btn');
+            document.querySelector(`[data-filter="${filter}"]`).classList.remove('cyber-btn-outline');
+            displayAchievements();
+        }
+
+        function showAchievementNotification(achievement) {
+            const notification = document.createElement('div');
+            notification.className = `achievement-notification rarity-${achievement.rarity}`;
+            notification.innerHTML = `
+                <div class="flex items-center gap-4">
+                    <div class="text-6xl">${achievement.icon || '🏆'}</div>
+                    <div class="flex-1">
+                        <div class="text-sm text-gray-400">Achievement Unlocked!</div>
+                        <div class="font-bold text-2xl mb-1" style="color: var(--border-color)">${achievement.name}</div>
+                        <div class="text-sm text-gray-300">${achievement.description}</div>
+                        <div class="text-sm mt-2" style="color: #00ff88">+${achievement.xp_reward} XP</div>
+                    </div>
+                </div>
+            `;
+
+            const container = document.getElementById('notification-container');
+            container.appendChild(notification);
+
+            createParticleBurst(notification);
+            playUnlockSound();
+
+            setTimeout(() => {
+                notification.classList.add('hide');
+                setTimeout(() => notification.remove(), 500);
+            }, 5000);
+        }
+
+        function createParticleBurst(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const rarityColors = {
+                common: '#00ff88',
+                rare: '#00c8ff',
+                epic: '#ff00ff',
+                legendary: '#ffd700'
+            };
+
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const angle = (Math.PI * 2 * i) / 30;
+                const velocity = 100 + Math.random() * 100;
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity;
+
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.background = Object.values(rarityColors)[Math.floor(Math.random() * 4)];
+
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        function playUnlockSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 800;
+            gainNode.gain.value = 0.1;
+
+            oscillator.start();
+            oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
+        window.addEventListener('load', checkAuth);
+
+        console.log('🏆 Achievements System Loaded');
+        console.log('✨ Unlock achievements and earn exclusive rewards!');
+    </script>
+
+    <style>
+        .active-filter {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)) !important;
+            color: #000 !important;
+            border-color: transparent !important;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squad System - CRYPTO HEIST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <link href="/public/crypto-heist-unified.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at top, #0a0a2e 0%, #000 60%),
+                linear-gradient(135deg, #1a0033 0%, #000 50%, #001a33 100%);
+            z-index: 0;
+        }
+        
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+        }
+        
+        .hud-header {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-link {
+            color: #00ffff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .nav-link:hover {
+            background: rgba(0, 255, 255, 0.1);
+        }
+        
+        .cyber-btn {
+            background: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .cyber-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+        }
+        
+        .cyber-btn-outline {
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+        }
+        
+        .squad-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(255, 0, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .squad-card:hover {
+            transform: translateY(-2px);
+            border-color: #00ffff;
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .chat-container {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .message {
+            background: rgba(0, 255, 255, 0.1);
+            border-left: 3px solid #00ffff;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .message.own {
+            background: rgba(255, 0, 255, 0.1);
+            border-left-color: #ff00ff;
+        }
+        
+        .chat-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #fff;
+            padding: 0.75rem;
+            border-radius: 4px;
+            width: 100%;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .online-indicator {
+            width: 8px;
+            height: 8px;
+            background: #00ff00;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .typing-indicator {
+            color: #00ffff;
+            font-style: italic;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .input-field {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #fff;
+            padding: 0.75rem;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .stat-badge {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="main-container">
+        <header class="hud-header">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="logo">CRYPTO HEIST</div>
+                    
+                    <nav class="hidden md:flex gap-4">
+                        <a href="/" class="nav-link">Dashboard</a>
+                        <a href="/puzzles" class="nav-link">Puzzles</a>
+                        <a href="/city" class="nav-link">City</a>
+                        <a href="/squad" class="nav-link">Squad</a>
+                    </nav>
+                    
+                    <div class="flex items-center gap-4">
+                        <span id="username-display" class="text-sm text-gray-400"></span>
+                        <a href="/profile" class="nav-link">Profile</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="container mx-auto px-6 py-8">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-4xl font-bold" style="font-family: 'Orbitron', monospace;">
+                    <span class="text-[#00ffff]">SQUAD</span> <span class="text-[#ff00ff]">SYSTEM</span>
+                </h1>
+                <button onclick="openCreateSquadModal()" class="cyber-btn">
+                    + Create Squad
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold mb-4 text-[#00ffff]">Available Squads</h2>
+                        <div id="squads-list" class="grid grid-cols-1 gap-4">
+                        </div>
+                    </div>
+                    
+                    <div id="chat-section" style="display: none;">
+                        <h2 class="text-2xl font-bold mb-4 text-[#00ffff]">Chat</h2>
+                        <div class="mb-4 flex gap-2">
+                            <button onclick="switchChat('global')" class="cyber-btn cyber-btn-outline" id="global-chat-btn">
+                                Global Chat
+                            </button>
+                            <button onclick="switchChat('squad')" class="cyber-btn cyber-btn-outline" id="squad-chat-btn" style="display: none;">
+                                Squad Chat
+                            </button>
+                        </div>
+                        <div class="chat-container">
+                            <div class="flex justify-between items-center p-4 border-b border-[#00ffff]/30">
+                                <div>
+                                    <h3 class="font-bold" id="chat-title">Global Chat</h3>
+                                    <div class="text-sm text-gray-400" id="chat-subtitle">Lobby for all users</div>
+                                </div>
+                                <div class="text-sm">
+                                    <span class="online-indicator"></span>
+                                    <span id="online-count">0 online</span>
+                                </div>
+                            </div>
+                            <div class="chat-messages" id="messages-container">
+                            </div>
+                            <div id="typing-indicator" class="typing-indicator" style="display: none;"></div>
+                            <div class="p-4 border-t border-[#00ffff]/30">
+                                <form onsubmit="sendMessage(event)" class="flex gap-2">
+                                    <input 
+                                        type="text" 
+                                        id="message-input" 
+                                        class="chat-input" 
+                                        placeholder="Type a message..."
+                                        onkeyup="handleTyping()"
+                                    >
+                                    <button type="submit" class="cyber-btn">Send</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div id="current-squad-panel" style="display: none;">
+                        <h2 class="text-2xl font-bold mb-4 text-[#00ffff]">Your Squad</h2>
+                        <div class="squad-card mb-6">
+                            <h3 class="text-xl font-bold mb-2" id="squad-name"></h3>
+                            <p class="text-sm text-gray-400 mb-4" id="squad-description"></p>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <div class="text-xs text-gray-400">BTC Earned</div>
+                                    <div class="text-lg font-bold text-[#F7931A]" id="squad-btc">0.00</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400">Puzzles Solved</div>
+                                    <div class="text-lg font-bold text-[#00ffff]" id="squad-puzzles">0</div>
+                                </div>
+                            </div>
+                            
+                            <button onclick="leaveSquad()" class="cyber-btn cyber-btn-outline w-full">
+                                Leave Squad
+                            </button>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold mb-4 text-[#ff00ff]">Members</h3>
+                        <div id="members-list" class="space-y-2">
+                        </div>
+                    </div>
+                    
+                    <div id="online-users-panel">
+                        <h2 class="text-2xl font-bold mb-4 text-[#00ffff]">Online Users</h2>
+                        <div id="online-users-list" class="space-y-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="create-squad-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold mb-4 text-[#00ffff]">Create New Squad</h2>
+            <form onsubmit="createSquad(event)">
+                <input 
+                    type="text" 
+                    id="squad-name-input" 
+                    class="input-field" 
+                    placeholder="Squad Name" 
+                    required
+                    maxlength="100"
+                >
+                <textarea 
+                    id="squad-description-input" 
+                    class="input-field" 
+                    placeholder="Squad Description (optional)" 
+                    rows="3"
+                ></textarea>
+                <div class="flex gap-2">
+                    <button type="submit" class="cyber-btn flex-1">Create</button>
+                    <button type="button" onclick="closeCreateSquadModal()" class="cyber-btn cyber-btn-outline flex-1">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        let currentUser = null;
+        let currentSquad = null;
+        let globalSocket = null;
+        let squadSocket = null;
+        let dmSocket = null;
+        let currentChatMode = 'global';
+        let typingTimeout = null;
+        let onlineUsers = new Set();
+        
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/session');
+                const data = await response.json();
+                
+                if (data.authenticated) {
+                    currentUser = data.user;
+                    document.getElementById('username-display').textContent = currentUser.username || currentUser.email;
+                    document.getElementById('chat-section').style.display = 'block';
+                    initializeSockets();
+                    loadSquads();
+                    checkUserSquad();
+                } else {
+                    document.getElementById('username-display').textContent = 'Guest';
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        }
+        
+        function initializeSockets() {
+            const host = window.location.origin;
+            
+            globalSocket = io(`${host}/global-chat`);
+            squadSocket = io(`${host}/squad-chat`);
+            dmSocket = io(`${host}/dm`);
+            
+            globalSocket.on('connect', () => {
+                console.log('Connected to global chat');
+                globalSocket.emit('join', {
+                    userId: currentUser.id,
+                    username: currentUser.username || currentUser.email
+                });
+                loadGlobalMessages();
+            });
+            
+            globalSocket.on('message', (message) => {
+                if (currentChatMode === 'global') {
+                    displayMessage(message);
+                }
+            });
+            
+            globalSocket.on('user-status', (data) => {
+                if (data.status === 'online') {
+                    onlineUsers.add(data.username);
+                } else {
+                    onlineUsers.delete(data.username);
+                }
+                updateOnlineCount(data.onlineCount);
+                updateOnlineUsersList();
+            });
+            
+            globalSocket.on('user-typing', (data) => {
+                if (currentChatMode === 'global') {
+                    showTypingIndicator(data);
+                }
+            });
+            
+            squadSocket.on('connect', () => {
+                console.log('Connected to squad chat');
+                squadSocket.emit('join', {
+                    userId: currentUser.id,
+                    username: currentUser.username || currentUser.email
+                });
+            });
+            
+            squadSocket.on('message', (message) => {
+                if (currentChatMode === 'squad') {
+                    displayMessage(message);
+                }
+            });
+            
+            squadSocket.on('user-status', (data) => {
+                if (currentChatMode === 'squad' && data.squadId == currentSquad?.id) {
+                    updateOnlineCount(data.onlineCount);
+                }
+            });
+            
+            squadSocket.on('user-typing', (data) => {
+                if (currentChatMode === 'squad' && data.squadId == currentSquad?.id) {
+                    showTypingIndicator(data);
+                }
+            });
+        }
+        
+        async function loadSquads() {
+            try {
+                const response = await fetch('/api/squads');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displaySquads(data.squads);
+                }
+            } catch (error) {
+                console.error('Error loading squads:', error);
+            }
+        }
+        
+        function displaySquads(squads) {
+            const container = document.getElementById('squads-list');
+            
+            if (squads.length === 0) {
+                container.innerHTML = `
+                    <div class="squad-card text-center p-8">
+                        <p class="text-gray-400">No squads available. Create the first one!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = squads.map(squad => `
+                <div class="squad-card">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="text-xl font-bold">${squad.name}</h3>
+                            <p class="text-sm text-gray-400">Leader: ${squad.leader_name || 'Unknown'}</p>
+                        </div>
+                        <span class="stat-badge">${squad.total_members || 0}/${squad.max_members} members</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-3">${squad.description || 'No description'}</p>
+                    <div class="flex gap-4 mb-3 text-sm">
+                        <div>
+                            <span class="text-gray-400">BTC:</span>
+                            <span class="text-[#F7931A] font-bold">${parseFloat(squad.total_btc_earned || 0).toFixed(8)}</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400">Puzzles:</span>
+                            <span class="text-[#00ffff] font-bold">${squad.puzzles_solved || 0}</span>
+                        </div>
+                    </div>
+                    <button onclick="joinSquad(${squad.id})" class="cyber-btn w-full">
+                        Join Squad
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        async function checkUserSquad() {
+            try {
+                const response = await fetch('/api/squads');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const userSquad = data.squads.find(s => 
+                        s.leader_id === currentUser.id
+                    );
+                    
+                    if (userSquad) {
+                        currentSquad = userSquad;
+                        loadSquadDetails(userSquad.id);
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking user squad:', error);
+            }
+        }
+        
+        async function loadSquadDetails(squadId) {
+            try {
+                const response = await fetch(`/api/squads/${squadId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentSquad = data.squad;
+                    displaySquadPanel(data.squad, data.members);
+                    document.getElementById('squad-chat-btn').style.display = 'inline-block';
+                    
+                    squadSocket.emit('join-squad', squadId);
+                }
+            } catch (error) {
+                console.error('Error loading squad details:', error);
+            }
+        }
+        
+        function displaySquadPanel(squad, members) {
+            document.getElementById('current-squad-panel').style.display = 'block';
+            document.getElementById('squad-name').textContent = squad.name;
+            document.getElementById('squad-description').textContent = squad.description || 'No description';
+            document.getElementById('squad-btc').textContent = parseFloat(squad.total_btc_earned || 0).toFixed(8);
+            document.getElementById('squad-puzzles').textContent = squad.puzzles_solved || 0;
+            
+            const membersList = document.getElementById('members-list');
+            membersList.innerHTML = members.map(member => `
+                <div class="squad-card p-3 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-gradient-to-br from-[#00ffff] to-[#ff00ff] rounded-full flex items-center justify-center text-xs font-bold">
+                            ${(member.username || 'U')[0].toUpperCase()}
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">${member.username || 'Unknown'}</div>
+                            <div class="text-xs text-gray-400">${member.role}</div>
+                        </div>
+                    </div>
+                    ${member.role === 'leader' ? '<span class="stat-badge">👑</span>' : ''}
+                </div>
+            `).join('');
+        }
+        
+        function openCreateSquadModal() {
+            if (!currentUser) {
+                alert('Please login to create a squad');
+                window.location.href = '/api/auth/login';
+                return;
+            }
+            document.getElementById('create-squad-modal').classList.add('active');
+        }
+        
+        function closeCreateSquadModal() {
+            document.getElementById('create-squad-modal').classList.remove('active');
+            document.getElementById('squad-name-input').value = '';
+            document.getElementById('squad-description-input').value = '';
+        }
+        
+        async function createSquad(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('squad-name-input').value;
+            const description = document.getElementById('squad-description-input').value;
+            
+            try {
+                const response = await fetch('/api/squads', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, description })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    closeCreateSquadModal();
+                    loadSquads();
+                    loadSquadDetails(data.squad.id);
+                    alert('Squad created successfully!');
+                } else {
+                    alert(data.error || 'Failed to create squad');
+                }
+            } catch (error) {
+                console.error('Error creating squad:', error);
+                alert('Failed to create squad');
+            }
+        }
+        
+        async function joinSquad(squadId) {
+            if (!currentUser) {
+                alert('Please login to join a squad');
+                window.location.href = '/api/auth/login';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/squads/${squadId}/join`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    loadSquadDetails(squadId);
+                    alert('Joined squad successfully!');
+                } else {
+                    alert(data.error || 'Failed to join squad');
+                }
+            } catch (error) {
+                console.error('Error joining squad:', error);
+                alert('Failed to join squad');
+            }
+        }
+        
+        async function leaveSquad() {
+            if (!currentSquad) return;
+            
+            if (!confirm('Are you sure you want to leave this squad?')) return;
+            
+            try {
+                const response = await fetch(`/api/squads/${currentSquad.id}/leave`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentSquad = null;
+                    document.getElementById('current-squad-panel').style.display = 'none';
+                    document.getElementById('squad-chat-btn').style.display = 'none';
+                    switchChat('global');
+                    loadSquads();
+                    alert('Left squad successfully!');
+                } else {
+                    alert(data.error || 'Failed to leave squad');
+                }
+            } catch (error) {
+                console.error('Error leaving squad:', error);
+                alert('Failed to leave squad');
+            }
+        }
+        
+        async function switchChat(mode) {
+            currentChatMode = mode;
+            document.getElementById('messages-container').innerHTML = '';
+            
+            if (mode === 'global') {
+                document.getElementById('global-chat-btn').classList.remove('cyber-btn-outline');
+                document.getElementById('global-chat-btn').classList.add('cyber-btn');
+                document.getElementById('squad-chat-btn').classList.add('cyber-btn-outline');
+                document.getElementById('squad-chat-btn').classList.remove('cyber-btn');
+                
+                document.getElementById('chat-title').textContent = 'Global Chat';
+                document.getElementById('chat-subtitle').textContent = 'Lobby for all users';
+                
+                loadGlobalMessages();
+            } else if (mode === 'squad' && currentSquad) {
+                document.getElementById('global-chat-btn').classList.add('cyber-btn-outline');
+                document.getElementById('global-chat-btn').classList.remove('cyber-btn');
+                document.getElementById('squad-chat-btn').classList.remove('cyber-btn-outline');
+                document.getElementById('squad-chat-btn').classList.add('cyber-btn');
+                
+                document.getElementById('chat-title').textContent = currentSquad.name;
+                document.getElementById('chat-subtitle').textContent = 'Private squad chat';
+                
+                loadSquadMessages(currentSquad.id);
+            }
+        }
+        
+        async function loadGlobalMessages() {
+            try {
+                const response = await fetch('/api/chat/global?limit=50');
+                const data = await response.json();
+                
+                if (data.success) {
+                    data.messages.forEach(msg => displayMessage(msg));
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+        
+        async function loadSquadMessages(squadId) {
+            try {
+                const response = await fetch(`/api/squads/${squadId}/messages?limit=50`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    data.messages.forEach(msg => displayMessage(msg));
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+        
+        function displayMessage(message) {
+            const container = document.getElementById('messages-container');
+            const isOwn = currentUser && message.sender_id === currentUser.id;
+            
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${isOwn ? 'own' : ''}`;
+            messageEl.innerHTML = `
+                <div class="flex justify-between items-start mb-1">
+                    <span class="font-bold text-sm">${message.sender_name || 'Anonymous'}</span>
+                    <span class="text-xs text-gray-400">${new Date(message.created_at).toLocaleTimeString()}</span>
+                </div>
+                <div class="text-sm">${escapeHtml(message.content)}</div>
+            `;
+            
+            container.appendChild(messageEl);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function sendMessage(event) {
+            event.preventDefault();
+            
+            const input = document.getElementById('message-input');
+            const content = input.value.trim();
+            
+            if (!content) return;
+            
+            if (currentChatMode === 'global') {
+                globalSocket.emit('message', { content });
+            } else if (currentChatMode === 'squad' && currentSquad) {
+                squadSocket.emit('message', { content, squadId: currentSquad.id });
+            }
+            
+            input.value = '';
+            hideTypingIndicator();
+        }
+        
+        function handleTyping() {
+            if (currentChatMode === 'global') {
+                globalSocket.emit('typing', { isTyping: true });
+            } else if (currentChatMode === 'squad' && currentSquad) {
+                squadSocket.emit('typing', { isTyping: true, squadId: currentSquad.id });
+            }
+            
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                if (currentChatMode === 'global') {
+                    globalSocket.emit('typing', { isTyping: false });
+                } else if (currentChatMode === 'squad' && currentSquad) {
+                    squadSocket.emit('typing', { isTyping: false, squadId: currentSquad.id });
+                }
+            }, 1000);
+        }
+        
+        function showTypingIndicator(data) {
+            const indicator = document.getElementById('typing-indicator');
+            if (data.isTyping) {
+                indicator.textContent = `${data.username} is typing...`;
+                indicator.style.display = 'block';
+            } else {
+                indicator.style.display = 'none';
+            }
+        }
+        
+        function hideTypingIndicator() {
+            document.getElementById('typing-indicator').style.display = 'none';
+        }
+        
+        function updateOnlineCount(count) {
+            document.getElementById('online-count').textContent = `${count} online`;
+        }
+        
+        function updateOnlineUsersList() {
+            const container = document.getElementById('online-users-list');
+            
+            if (onlineUsers.size === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-400">No online users</p>';
+                return;
+            }
+            
+            container.innerHTML = Array.from(onlineUsers).map(username => `
+                <div class="squad-card p-2 flex items-center gap-2">
+                    <span class="online-indicator"></span>
+                    <span class="text-sm">${username}</span>
+                </div>
+            `).join('');
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        checkAuth();
+    </script>
+</body>
+</html>
