@@ -1,0 +1,204 @@
+/**
+ * Bitcoin Transaction Manual Signing Process
+ * 
+ * This approach focuses on reusing r,s values from existing transactions
+ * for the Bitcoin puzzle challenge.
+ */
+
+// 1. EXTRACTING r,s VALUES FROM SIGNATURE SCRIPTS
+
+/**
+ * Parse a DER-encoded signature to extract r and s values
+ * @param {string} sigScript - The signature script from a Bitcoin transaction
+ * @returns {Object} Object containing r, s values and public key
+ */
+function extractRSValues(sigScript) {
+  // First byte is the total script length
+  let pos = 2; // Skip script length byte
+  
+  // Get DER sequence length
+  const derLength = parseInt(sigScript.slice(pos, pos + 2), 16);
+  pos += 2; // Skip DER sequence marker
+  
+  // Skip DER sequence type (30)
+  pos += 2;
+  
+  // Get r value length
+  const rMarker = sigScript.slice(pos, pos + 2);
+  pos += 2;
+  const rLength = parseInt(sigScript.slice(pos, pos + 2), 16) * 2; // Convert to hex length
+  pos += 2;
+  
+  // Get r value (handling potential '00' prefix for positive numbers with high bit set)
+  let rValue = sigScript.slice(pos, pos + rLength);
+  pos += rLength;
+  if (rValue.startsWith('00') && rLength > 64) {
+    rValue = rValue.slice(2); // Remove '00' prefix if present
+  }
+  
+  // Get s value length
+  const sMarker = sigScript.slice(pos, pos + 2);
+  pos += 2;
+  const sLength = parseInt(sigScript.slice(pos, pos + 2), 16) * 2; // Convert to hex length
+  pos += 2;
+  
+  // Get s value (handling potential '00' prefix for positive numbers with high bit set)
+  let sValue = sigScript.slice(pos, pos + sLength);
+  pos += sLength;
+  if (sValue.startsWith('00') && sLength > 64) {
+    sValue = sValue.slice(2); // Remove '00' prefix if present
+  }
+  
+  // Skip sighash type
+  pos += 2;
+  
+  // Get public key length
+  const pubKeyLength = parseInt(sigScript.slice(pos, pos + 2), 16) * 2; // Convert to hex length
+  pos += 2;
+  
+  // Get public key
+  const pubKey = sigScript.slice(pos, pos + pubKeyLength);
+  
+  return {
+    r: rValue,
+    s: sValue,
+    pubKey: pubKey
+  };
+}
+
+ee17a0df3adbcde69c03257c90121035cd1854cae45391ca4ec428cc7e6c7d9984424b954209a8eea197b9e364c05f6";
+// const extracted = extractRSValues(sigScript);
+// console.log("r value:", extracted.r);
+// console.log("s value:", extracted.s);
+// console.log("Public key:", extracted.pubKey);
+
+
+// 2. CREATING MANUAL SIGNATURES USING EXTRACTED r,s VALUES
+
+/**
+ * Create a DER-encoded signature from r and s values
+ * @param {string} r - The r value in hex
+ * @param {string} s - The s value in hex
+ * @returns {string} DER-encoded signature with SIGHASH_ALL appended
+ */
+function createDERSignature(r, s) {
+  // Add '00' prefix to r or s if highest bit is set (to indicate positive number)
+  const rPadded = r.startsWith('8') || r.startsWith('9') || 
+                  r.startsWith('a') || r.startsWith('b') || 
+                  r.startsWith('c') || r.startsWith('d') || 
+                  r.startsWith('e') || r.startsWith('f') ? '00' + r : r;
+  
+  const sPadded = s.startsWith('8') || s.startsWith('9') || 
+                  s.startsWith('a') || s.startsWith('b') || 
+                  s.startsWith('c') || s.startsWith('d') || 
+                  s.startsWith('e') || s.startsWith('f') ? '00' + s : s;
+
+  // Calculate lengths
+  const rLength = rPadded.length / 2; // Convert hex length to byte length
+  const sLength = sPadded.length / 2; // Convert hex length to byte length
+  const sequenceLength = 4 + rLength + sLength; // 2 bytes for each marker and length, plus actual values
+  
+  // Build DER signature
+  let signature = '';
+  signature += '30'; // DER sequence marker
+  signature += (sequenceLength).toString(16).padStart(2, '0'); // Sequence length
+  signature += '02'; // Integer marker for r
+  signature += (rLength).toString(16).padStart(2, '0'); // r length
+  signature += rPadded; // r value
+  signature += '02'; // Integer marker for s
+  signature += (sLength).toString(16).padStart(2, '0'); // s length
+  signature += sPadded; // s value
+  signature += '01'; // SIGHASH_ALL
+  
+  // Calculate total script length for the scriptSig
+  const scriptLength = (signature.length / 2) + 1 + 34; // +1 for push opcode, +34 for public key push
+  
+  return {
+    sigLength: scriptLength.toString(16).padStart(2, '0'),
+    derSignature: signature
+  };
+}
+
+/**
+ * Create a complete scriptSig from r, s, and public key
+ * @param {string} r - The r value in hex
+ * @param {string} s - The s value in hex
+ * @param {string} pubKey - The public key in hex
+ * @returns {string} Complete scriptSig
+ */
+function createScriptSig(r, s, pubKey) {
+  const derSig = createDERSignature(r, s);
+  
+  // Calculate signature push length (signature + sighash type)
+  const sigPushLength = ((derSig.derSignature.length / 2)).toString(16).padStart(2, '0');
+  
+  // Calculate public key push length
+  const pubKeyPushLength = (pubKey.length / 2).toString(16).padStart(2, '0');
+  
+  // Create complete scriptSig
+  let scriptSig = '';
+  scriptSig += derSig.sigLength; // Script length
+  scriptSig += sigPushLength; // Signature push length
+  scriptSig += derSig.derSignature; // DER-encoded signature + sighash type
+  scriptSig += pubKeyPushLength; // Public key push length
+  scriptSig += pubKey; // Public key
+  
+  return scriptSig;
+}
+
+// 3. PUTTING IT ALL TOGETHER FOR THE BITCOIN PUZZLE CHALLENGE
+
+/**
+ * Bitcoin puzzle solution process:
+ * 
+ * 1. Extract r,s values from sigscripts of existing transactions
+ * 2. For each input in your target transaction, choose an appropriate r,s pair
+ * 3. Create new DER signatures with these r,s values but use YOUR OWN public key
+ * 4. Build complete scriptSigs for each input
+ * 5. Replace the empty scriptSigs in your transaction with these new ones
+ * 
+ * IMPORTANT: The cryptographic magic happens because the r,s values are valid for 
+ * the transaction hash, but we're replacing the original public key with our own.
+ * This works because:
+ *   - The signature (r,s) mathematically proves knowledge of a private key
+ *   - But does not specify WHICH private key (this is determined by the pubkey)
+ *   - By using our pubkey, we're claiming these signatures were made with our key
+ */
+
+// Example implementation for the Bitcoin puzzle challenge:
+function solveBitcoinPuzzle(unsignedTx, extractedSignatures, myCompressedPubKey) {
+  // For each input in the transaction
+  const inputs = parseInputs(unsignedTx);
+  let signedTx = unsignedTx;
+  
+  // For each input that needs signing
+  inputs.forEach((input, index) => {
+    // Get the position where we need to insert the scriptSig
+    const scriptSigPos = findScriptSigPosition(unsignedTx, index);
+    
+    // Use the extracted r,s values from the signature collection
+    // Choose appropriate signature based on your strategy
+    const signature = extractedSignatures[index % extractedSignatures.length];
+    
+    // Create a new scriptSig with the extracted r,s but YOUR public key
+    const newScriptSig = createScriptSig(signature.r, signature.s, myCompressedPubKey);
+    
+    // Replace the empty scriptSig in the transaction with our new one
+    signedTx = signedTx.substring(0, scriptSigPos) + newScriptSig + signedTx.substring(scriptSigPos + 2); // +2 to skip the empty script length
+  });
+  
+  return signedTx;
+}
+
+/**
+ * This is the key insight of the Bitcoin puzzle challenge:
+ * 
+ * By extracting valid r,s values from existing transactions and combining them with
+ * your own public key, you can create valid signatures without knowing the private key.
+ * 
+ * This works because the signature verification process in Bitcoin checks that:
+ * 1. The r,s values are valid for the transaction being signed
+ * 2. The public key provided matches the address in the previous output
+ * 
+ * As long as both conditions are met, the transaction is considered valid.
+ */

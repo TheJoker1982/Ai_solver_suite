@@ -1,0 +1,165 @@
+"
+Bico.Media
+Bico.Media is for the content creators. From the outside, it's a gateway to data stored in a bitcoin sv transaction. From the inside, its a way of thinking of static data in a dynamic context.
+
+A broad range of formats are supported, so you don't have to think about how data is stored in each transaction. Files are replicated to more than 100 data centres around the world as they are accessed. This, combined with a strict immutable cashing policy, gives you the best chances of reaching your files fast from a source close to you.
+
+Please consider donating to keep this service free: 1LJ83HTtnDMyx1h4YCoGJCoWwER8QQvEVn
+
+Add files to the BSV blockchain: add.bico.media
+
+Key concepts
+Lets you use Mustache as templating engine on the fly using Beard notation
+Lets you inject content from other transactions using B-inject notation
+Lets you keep the url after changing the content using B://DNT links
+Lets you use B:// urls as references in your javascript and html
+Lets you use C:// urls as references in your javascript and html
+Lets you use D:// urls as references in your javascript and html
+Lets you present markdown content as html (just add .html)
+Lets you wrap JSON data as JSONP to be consumed directly from any website
+Will try to figure things out if the data structure is homegrown
+Unwraps data stored as a data-url
+Decodes data stored in base64
+Supports large files in B://cat format
+Supports data added with Money Button
+Supports data following the B:// format
+Supports providing the hash of data as identifyer C:// style
+Experimental support for keeping your url while updating the content with D:// formatted adresses
+TLC for your content
+When you link to https://bico.media/[TX] you will always get the exact version of the original data. If you add anything else to the url the content will be treated kindly to bring out the best.
+
+We call it TLC content and it is our way of letting content creators share static content in a more dynamic context. Giving the creators the option to merge, join and transform data on the fly from the blockchain, Bico.Media hopes to spark new ways of thinking content distribution.
+
+Usage
+Any content on Bico.Media is fetched from the bitcoin blockchain bsv. To identify the right content you need the exact transaction ID - also known as a TX or TXID.
+
+Use the TX directly if you want an exact version of the original data
+
+https://bico.media/[TX]
+Add a file extension if you want Bico.Media to treat data (and support B:// urls)
+
+https://bico.media/[TX].[file extension]
+Got a markdown file? Link to a more readable html version.
+
+https://bico.media/[TX].html
+Got JSON data? Load them on any website using the JSONP format.
+
+https://bico.media/[TX]/jsonp/[MY FUNCTION NAME]
+Tired of placing the same footer in all of your posts? Include the content of another transaction.
+
+{{B://[TX]}
+Examples
+Image stored in B:// format
+
+https://bico.media/a3907e5b910f798c8d0fb450d483a0aefa5ce40ac74064b377603e5ea51deccb
+
+A website hosted 100% on chain
+
+https://bico.media/729dcc63aa3cf388296177e86a564f8cd5d112be1a3cd43f5c71195fe5eab716.html
+
+Image as data-url uploaded via money button
+
+https://bico.media/66a6e1eb5ebecca707a03740069461a6b8fa9cca3753d00009f49d1d68a15d25.jpg
+
+JSONP data from JSON
+
+https://bico.media/43e9b19a43dfa8a91f7a1e00ff04148c79c241b37e1cbfa86aeb598c085e5777/jsonp/myFn
+
+A markdown document using a B:// url to reference an image
+
+https://bico.media/3703530bf71b63ba76206b3bc5f5a1b4e701eba6b764120c3d37543b0dfd9f54.html
+
+A markdown document getting injected with content from other transactions
+
+https://bico.media/682be74ed0f13889360ad5488042736cf6d9814dbb75727197792d9829c2eea6.html
+
+A html document as a Mustache template for data
+
+https://bico.media/b2c1a2d01d060abaf84c0bebb9472f461c378dd2c58af3d19391866f33240a16.html
+
+A 746 KB image saved as B://cat
+
+https://bico.media/3bc9205b43bf8ca42856d798c2e959c18ffaaa5ff3212b11e9a07dd6cf303aa9
+
+An images referenced by the hash og the content (c:// style)
+
+https://bico.media/6bfab10d3801872d6df55bb4345433e418d1ca6ffb5002be99d4d673dcaf81bc
+
+How to "Upload"?
+To put a file on the (bsv) blockchain, you include it as data in a bitcoin transaction after an OP_RETURN script code.
+
+If you are not sure how to do it, I suggest the following:
+
+Make an account at moneybutton.com
+
+Put a few cents into your account
+
+Go to add.bico.media and upload the file
+
+Slide the money button
+
+Note the TX value displayed.
+
+Open bico.media/[TX]
+
+Bico.Media will always provide you with the raw content - unless you ask it to do stuff. To initiate any TLC (injection or templating), please add a file extension or a / to the tx.
+
+Abuse
+Bico.Media is committed to keeping the internet a safe place for all. As the service is a gateway to data stored on the bsv blockchain, we cannot verify the content. We are collaborating with the bsv community to limit access to any abusive or illegal material. Please direct any requests regarding this matter directly to abuse@bico.media.
+
+Good to know
+Features
+Is this ready for production? Yes, but as a free service Bico.Media does not provide any SLA for uptime.
+
+Bico.Media supports the B://inject protocol. This lets you use transactions like a templating system: When you include {{B://[tx]}} in content that is getting TLC the data from that transaction is injected into the current document. Works in a nested flow if you add an extra / to the tx. Example use case: Include header and footer for different blog posts so you can focus on creating content.
+
+More info about using B:// urls to reference data can be found here
+
+When a file extension is provided, the content will be subject to TLC including:
+
+Be un-wrapped if base64 encoding is detected from a homegrown transaction format.
+
+Get a MIME type from this list + this list so MIME type from data-url or B:// format will be overruled.
+
+Using JSONP allows you to bypass the same origin policy and load JSON from an external server into the JavaScript on your webpage. Use https://[tx]/jsonp/myFunc to have it call myFunc with the data. It will always call myFunc with valid javascript. If the transaction does not contain valid JSON it will try to parse the content with HJSON wich is much more forgiving regarding the syntax (like, behave nicely if you used singlequotes or added a comma after last entry in an array. If this also fails a string with the full content will be used.
+
+Need a specific mime type but dont want any transformation of the data? use https://bico.media/[TX]/[MIME type]/[MIME subtype]. Please remember that browsers will download the file if it does not know the MIME (sub)type.
+
+Bico.Media implements the B://eard protocol meaning that you can use content as a Mustache template when you add anything to the tx, like / or .html. To indicate that the document is a Mustache template you add the string {{mustache=B://}} anywhere in your content. You "load" data by referring a name to a transaction ID like this: {{someName=B://TX}} letting someName be available for your Musthache templating containing the HJSON understanding of data in the transaction with ID TX (if the parsing fails it will contain the full content as a string)
+
+The content of a B:// formatted transaction can be pre-gzipped. Provide application/gzip as media type in the transaction and make sure to use a file extension in the URL. The content will be served directly to the browser while asking the browser to unpack the data so no modifications of the content will occure.
+
+If you want your raw content without modification other than different mimetype and encoding add /[MIME type]/[sub MIME type]/[encoding] to the tx.
+
+If you want to see what data is used for the processing add /info to the tx.
+
+You can let a domain name point to a specific transaction. This way, you can update your content, and update your reference, but the URL stays the same. See more about B://DNT urls here
+
+Transactions with future safe usage of OP_RETURN (prepending OP_FALSE) are supported.
+
+Content from metanet transactions is only supported if seperated from the metanet information by "|".
+
+Quirks
+If more than one chunk of data is found after the OP_RETURN (and it's not formatted as B:// protocol) the flow will proceed with the largest chunk.
+
+If the TX does not have OP_RETURN data you will get a HTTP status 404.
+
+To enhance speed no parameters are allowed - so JSONP will not work with the conventional ?jsonp=myFunction way of using a parameter to set the function name.
+
+When providing your own mime type, any spaces in [MIME (sub)type] will be treated as a +.
+
+The experimental support for D:// formatted adresses forwards the user to the current transaction - so they cant copy the url from the browser in D:// format and share it. We are working to make sure its always the same url.
+
+Transactions shaped for Metanet are not supported. Please use Metapoint in your nodes to reference content.
+
+About Bico.Media
+Bico.media is created by sovereign human beings with an urge to let people reach the blockchain and its static data while providing a dynamic experience by combining, joining and merging content. Bico.Media is actively involved in the BSV community and is currently driving the process of maturing the description of the following initiatives and protocols:
+
+Inject content from one transaction into another with B://inject
+Muctache templating for blockchain content and data B://eard
+Liquid templating for blockchain content and data B://iquid
+Update content but keep the same URL with B://ynamic
+Concatenate content from the blockchain with B://cat
+Embracing templating engines with B://emplate
+Keeping content off the grid with Metapoint
+Please email hey@bico.media or send a message to @BicoDotMedia to contact Bico.Media."
