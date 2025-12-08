@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ai_solver_suite — Web Preview</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #111; color: #eee; }
+    header { padding: 12px 20px; background: #0b0b0b; display:flex; align-items:center; gap:16px; }
+    main { display:flex; height: calc(100vh - 56px); gap:12px; padding:12px; }
+    .left { width: 360px; background:#151515; padding:12px; box-sizing:border-box; overflow:auto; border-right:1px solid #222; }
+    .right { flex:1; background:#000; display:flex; flex-direction:column; }
+    iframe { flex:1; border: none; background:#fff; }
+    button { display:block; width:100%; margin:8px 0; padding:10px; border:none; background:#007bff; color:#fff; cursor:pointer; border-radius:4px; }
+    input { width:100%; padding:8px; margin:8px 0; box-sizing:border-box; }
+    .status { font-size:0.9rem; color:#9f9; margin-top:6px; word-break:break-all; }
+    .small { font-size:0.85rem; color:#aaa; }
+    .section-title { margin-top:12px; margin-bottom:6px; color:#ccc; font-weight:600; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="" alt="" style="width:36px;height:36px;border-radius:6px;background:#222;display:inline-block" />
+    <div>
+      <div style="font-weight:700">Ai_solver_suite — Preview</div>
+      <div class="small">Static preview + proxy smoke test</div>
+    </div>
+  </header>
+
+  <main>
+    <aside class="left">
+      <div class="section-title">Quick Controls</div>
+
+      <label class="small">Frontend entry (relative path)</label>
+      <input id="entryPath" value="blockchain-city.html" />
+
+      <button id="loadEntry">Load UI</button>
+
+      <div class="section-title">Proxy smoke tests</div>
+
+      <label class="small">Proxy base URL</label>
+      <input id="proxyBase" value="http://localhost:4000/proxy" />
+
+      <button id="btnBlockHeight">GET /blockstream/blocks/tip/height</button>
+      <div id="outHeight" class="status">—</div>
+
+      <button id="btnEthBlock">POST /eth (eth_blockNumber)</button>
+      <div id="outEth" class="status">—</div>
+
+      <div class="section-title">Notes</div>
+      <div class="small">
+        - Make sure the proxy (server/proxy-example.js) is running (PORT 4000).<br/>
+        - Make sure the frontend static server (serve or nginx) is running (port 3000 for dev or 80 for docker compose).<br/>
+        - If running with docker-compose the nginx static service maps root -> container port 80.
+      </div>
+    </aside>
+
+    <section class="right">
+      <iframe id="previewFrame" src="about:blank" title="App preview"></iframe>
+      <div style="padding:10px;background:#080808;color:#bbb;font-size:13px;border-top:1px solid #222">
+        Preview frame: <span id="frameSrc">none</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const entryInput = document.getElementById('entryPath');
+    const loadEntryBtn = document.getElementById('loadEntry');
+    const previewFrame = document.getElementById('previewFrame');
+    const frameSrcLabel = document.getElementById('frameSrc');
+    const proxyBaseInput = document.getElementById('proxyBase');
+    const outHeight = document.getElementById('outHeight');
+    const outEth = document.getElementById('outEth');
+
+    function resolvePreviewUrl(entryPath) {
+      // if entryPath is absolute (starts with http) use it, otherwise resolve to current origin
+      if (/^https?:\/\//i.test(entryPath)) {
+        return entryPath;
+      }
+      // Use root of the same host where preview page is served.
+      // When served via static server root, entryPath will be found.
+      return (window.location.origin) + '/' + entryPath.replace(/^\/+/,'');
+    }
+
+    loadEntryBtn.onclick = () => {
+      const entry = entryInput.value.trim() || 'blockchain-city.html';
+      const url = resolvePreviewUrl(entry);
+      previewFrame.src = url;
+      frameSrcLabel.textContent = url;
+    };
+
+    document.getElementById('btnBlockHeight').onclick = async () => {
+      outHeight.textContent = 'Fetching...';
+      try {
+        const base = proxyBaseInput.value.replace(/\/+$/,'');
+        const res = await fetch(base + '/blockstream/blocks/tip/height');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        outHeight.textContent = text;
+      } catch (err) {
+        outHeight.textContent = 'Error: ' + err.message;
+      }
+    };
+
+    document.getElementById('btnEthBlock').onclick = async () => {
+      outEth.textContent = 'Fetching...';
+      try {
+        const base = proxyBaseInput.value.replace(/\/+$/,'');
+        const res = await fetch(base + '/eth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 })
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        outEth.textContent = JSON.stringify(data).slice(0, 120) + (JSON.stringify(data).length > 120 ? '…' : '');
+      } catch (err) {
+        outEth.textContent = 'Error: ' + err.message;
+      }
+    };
+
+    // auto-load default entry if available
+    if (entryInput.value) loadEntryBtn.click();
+  </script>
+</body>
+</html>
